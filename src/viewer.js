@@ -76,7 +76,10 @@ export default function SetupGallery(canvasElement, polkadotAPI) {
     bounds: slotBounds, 
     slotMesh: wallSlot, 
     slotMaterial: artSlot.material, 
-    art: null 
+    art: null,
+    artist: "",
+    owner: "",
+    name: "",
   });
 
   SetupHUD();

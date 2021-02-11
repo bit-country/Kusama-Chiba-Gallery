@@ -36,7 +36,25 @@ export function SetupHUD() {
   const mintCancelButton = document.querySelector("#root .hud .mint-overlay button[name='cancel']");
 
   const detailsOverlay = document.querySelector("#root .hud .details-overlay");
+  const detailsImg = document.querySelector("#root .hud .details-overlay img.nft-image");
+  const detailsOwner = document.querySelector("#root .hud .details-overlay .ui.list .item[name='owner'] span.value");
+  const detailsArtist = document.querySelector("#root .hud .details-overlay .ui.list .item[name='artist'] span.value");
+  const detailsName = document.querySelector("#root .hud .details-overlay .ui.list .item[name='name'] span.value");
   const detailsCloseButton = document.querySelector("#root .hud .details-overlay button[name='close']");
+  const setDetailsOverVisibility = visible => {
+    if (visible) {
+      detailsOverlay.classList.remove("hidden");
+
+      const piece = getActivePiece();
+
+      detailsImg.src = piece.art;
+      detailsArtist.textContent = piece.artist;
+      detailsOwner.textContent = piece.owner;
+      detailsName.textContent = piece.name;
+    } else {
+      detailsOverlay.classList.add("hidden");
+    }
+  }
 
   loginMenuItem.onclick = () => {
     loginOverlay.classList.toggle("hidden");
@@ -77,6 +95,13 @@ export function SetupHUD() {
     }
 
     const imageInput = document.querySelector("#root .hud > .mint-overlay input[name='image']");
+    const ownerName = "Example";
+    const artistName = "Yourself";
+    const pieceNameInput = document.querySelector("#root .hud > .mint-overlay input[name='name']");
+
+    if (!pieceNameInput || pieceNameInput.value.length < 1) {
+      return;
+    }
 
     if (imageInput.files.length < 1) {
       return;
@@ -86,6 +111,9 @@ export function SetupHUD() {
 
     piece.art = uploadedImage;
     piece.slotMaterial.diffuseTexture = new Texture(uploadedImage, getScene());
+    piece.name = pieceNameInput.value;
+    piece.artist = artistName;
+    piece.owner = ownerName;
 
     mintOverlay.classList.toggle("hidden");
   }
@@ -99,7 +127,7 @@ export function SetupHUD() {
     
     if (event.key == "e" && piece) {
       if (piece.art && detailsOverlay.classList.contains("hidden")) {
-        detailsOverlay.classList.remove("hidden");
+        setDetailsOverVisibility(true);
       } else if (mintOverlay.classList.contains("hidden")) {
         mintOverlay.classList.remove("hidden");
       }
