@@ -1,14 +1,15 @@
-import { 
+import {
   Color3, 
-  HemisphericLight, 
+  DirectionalLight,
   MeshBuilder, 
-  SpotLight, 
+  ShadowGenerator,
   StandardMaterial, 
   Vector3
 } from "@babylonjs/core";
 import SetupEngine from "./engine";
 import { SetupPlayer } from "./gameplay";
 import { SetupHUD } from "./hud";
+import { CreateLight } from "./lightCreator";
 import { addPiecePosition } from "./state";
 
 export default function SetupGallery(canvasElement, polkadotAPI) {
@@ -16,8 +17,22 @@ export default function SetupGallery(canvasElement, polkadotAPI) {
     engine,
     scene
   } = SetupEngine(canvasElement);
-
+  
   SetupPlayer(canvasElement);
+  
+  const light = new DirectionalLight("Skylight", new Vector3(0, -1, 1), scene);
+  light.diffuse = new Color3(0.4, 0.4, 0.4);
+  light.shadowMinZ = 1;
+  light.shadowMaxZ = 10;
+  light.contactHardeningLightSizeUVRatio = 1;
+
+  const shadowGenerator = new ShadowGenerator(1024, light);
+  shadowGenerator.useContactHardeningShadow = true;
+  shadowGenerator.filteringQuality = ShadowGenerator.QUALITY_LOW;
+  
+  const ground = MeshBuilder.CreateGround("Ground", { width: 100, height: 100 });
+  ground.checkCollisions = true;
+  ground.receiveShadows = true;
 
   const wallSouth = MeshBuilder
     .CreateBox("SouthernWall", { width: 100, height: 3, depth: 1 }, scene);
@@ -41,29 +56,17 @@ export default function SetupGallery(canvasElement, polkadotAPI) {
   wallEast.position = new Vector3(50, 1.5, 0);
   wallEast.checkCollisions = true;
 
-  const light = new HemisphericLight("Skylight", new Vector3(0, 1, 0), scene);
-  light.diffuse = new Color3(0.4, 0.4, 0.4);
-
-  const ground = MeshBuilder.CreateGround("Ground", { width: 100, height: 100 });
-  ground.checkCollisions = true;
-
   const slotPos = new Vector3(0, 1, 5);
   const slotDimensions = { width: 2, height: 2, depth: 0.25 };
   const slotBounds = 2;
   const wallSlot = MeshBuilder.CreateBox("Slot", { width: 2, height: 2, depth: 0.25 });
   wallSlot.position = slotPos;
+  wallSlot.checkCollisions = true;
+  wallSlot.receiveShadows = true;
 
-  const artLight = new SpotLight(
-    "ArtLight", 
-    new Vector3(0, slotDimensions.height, -(slotDimensions.depth + 0.4)), 
-    new Vector3(0, -1, 0.3), 
-    Math.PI / 3, 
-    32
-  );
-  artLight.intensity = 3;
-  artLight.range = 4;
+  shadowGenerator.addShadowCaster(wallSlot);
 
-  artLight.parent = wallSlot;
+  const artLight = CreateLight(slotDimensions, wallSlot);
 
   const artSlot = MeshBuilder.CreatePlane("ArtPiece", { width: 2, height: 2 });
   artSlot.parent = wallSlot

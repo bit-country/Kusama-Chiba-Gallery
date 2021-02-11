@@ -1,6 +1,6 @@
 import {
   Engine, 
-  Scene, 
+  Scene,
 } from "@babylonjs/core";
 import { SetShowNFTDetails } from "./hud";
 import { getPieces, getCamera, setEngine, setScene, setActivePiece, getActivePiece } from "./state";
