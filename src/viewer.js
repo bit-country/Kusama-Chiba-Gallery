@@ -1,16 +1,18 @@
 import {
   Color3, 
   DirectionalLight,
+  HemisphericLight,
   MeshBuilder, 
   ShadowGenerator,
-  StandardMaterial, 
+  StandardMaterial,
   Vector3
 } from "@babylonjs/core";
 import SetupEngine from "./engine";
 import { SetupPlayer } from "./gameplay";
 import { SetupHUD } from "./hud";
-import { CreateLight } from "./lightCreator";
-import { addPiecePosition } from "./state";
+import Slot from "./Models/Slot";
+import { CreateSlot } from "./slotCreator";
+import { setGround } from "./state";
 
 export default function SetupGallery(canvasElement, polkadotAPI) {
   const {
@@ -20,19 +22,24 @@ export default function SetupGallery(canvasElement, polkadotAPI) {
   
   SetupPlayer(canvasElement);
   
-  const light = new DirectionalLight("Skylight", new Vector3(0, -1, 1), scene);
-  light.diffuse = new Color3(0.4, 0.4, 0.4);
-  light.shadowMinZ = 1;
-  light.shadowMaxZ = 10;
-  light.contactHardeningLightSizeUVRatio = 1;
+  const light = new HemisphericLight("Skylight", new Vector3(0, 1, 0), scene);
+  light.diffuse = new Color3(0.05, 0.1, 0.15);
+  // Disable shadows
+  // light.shadowMinZ = 1;
+  // light.shadowMaxZ = 10;
+  // light.contactHardeningLightSizeUVRatio = 1;
 
-  const shadowGenerator = new ShadowGenerator(1024, light);
-  shadowGenerator.useContactHardeningShadow = true;
-  shadowGenerator.filteringQuality = ShadowGenerator.QUALITY_LOW;
+  // const shadowGenerator = new ShadowGenerator(1024, light);
+  // shadowGenerator.useContactHardeningShadow = true;
+  // shadowGenerator.filteringQuality = ShadowGenerator.QUALITY_LOW;
   
   const ground = MeshBuilder.CreateGround("Ground", { width: 100, height: 100 });
+  ground.material = new StandardMaterial("GroundMat", scene);
+  ground.material.maxSimultaneousLights = 12
   ground.checkCollisions = true;
   ground.receiveShadows = true;
+
+  setGround(ground);
 
   const wallSouth = MeshBuilder
     .CreateBox("SouthernWall", { width: 100, height: 3, depth: 1 }, scene);
@@ -56,34 +63,15 @@ export default function SetupGallery(canvasElement, polkadotAPI) {
   wallEast.position = new Vector3(50, 1.5, 0);
   wallEast.checkCollisions = true;
 
-  const slotPos = new Vector3(0, 1, 5);
-  const slotDimensions = { width: 2, height: 2, depth: 0.25 };
-  const slotBounds = 2;
-  const wallSlot = MeshBuilder.CreateBox("Slot", { width: 2, height: 2, depth: 0.25 });
-  wallSlot.position = slotPos;
-  wallSlot.checkCollisions = true;
-  wallSlot.receiveShadows = true;
+  CreateSlot(new Slot(new Vector3(0, 1, 5), { width: 2, height: 2, depth: 0.25 }, 2));
 
-  shadowGenerator.addShadowCaster(wallSlot);
+  CreateSlot(new Slot(new Vector3(4, 1, 5), { width: 4, height: 2, depth: 0.25 }, 2));
 
-  const artLight = CreateLight(slotDimensions, wallSlot);
+  CreateSlot(new Slot(new Vector3(8, 1, 5), { width: 4, height: 2, depth: 0.25 }, 2));
 
-  const artSlot = MeshBuilder.CreatePlane("ArtPiece", { width: 2, height: 2 });
-  artSlot.parent = wallSlot
-  artSlot.position = new Vector3(0, 0, -(slotDimensions.depth / 2 + 0.01));
-  artSlot.material = new StandardMaterial("ArtPieceMat");
+  CreateSlot(new Slot(new Vector3(-4, 1, 5), { width: 4, height: 2, depth: 0.25 }, 2));
 
-  addPiecePosition({ 
-    position: slotPos, 
-    dimensions: slotDimensions, 
-    bounds: slotBounds, 
-    slotMesh: wallSlot, 
-    slotMaterial: artSlot.material, 
-    art: null,
-    artist: "",
-    owner: "",
-    name: "",
-  });
+  CreateSlot(new Slot(new Vector3(-8, 1, 5), { width: 4, height: 2, depth: 0.25 }, 2));
 
   SetupHUD();
 }

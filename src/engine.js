@@ -1,5 +1,6 @@
 import {
   Engine, 
+  GlowLayer, 
   Scene,
 } from "@babylonjs/core";
 import { SetShowNFTDetails } from "./hud";
@@ -10,6 +11,8 @@ export default function SetupEngine(canvasElement) {
 
   const scene = new Scene(engine);
   scene.gravity.y = -0.15;
+
+  const glowLayer = new GlowLayer("GlowLayer", scene);
 
   function gameTick() {
     const pieces = getPieces();

@@ -4,7 +4,16 @@ let state = {
   engine: null,
   scene: null,
   activePiece: null,
+  ground: null
 };
+
+export function getGround() {
+  return state.ground;
+}
+
+export function setGround(ground) {
+  state.ground = ground;
+}
 
 export function getPieces() {
   return state.pieces;

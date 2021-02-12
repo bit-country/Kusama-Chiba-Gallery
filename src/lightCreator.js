@@ -17,6 +17,7 @@ export function CreateLight(slotDimensions, parentMesh) {
   const shadowGenerator = new ShadowGenerator(128, artLight);
   shadowGenerator.addShadowCaster(parentMesh);
   shadowGenerator.useBlurExponentialShadowMap = true;
+  shadowGenerator.filteringQuality = ShadowGenerator.QUALITY_LOW;
 
   return artLight;
 }
