@@ -12,7 +12,8 @@ export default function SetupEngine(canvasElement) {
   const scene = new Scene(engine);
   scene.gravity.y = -0.15;
 
-  const glowLayer = new GlowLayer("GlowLayer", scene);
+  const glowLayer = new GlowLayer("GlowLayer", scene, { blurKernelSize: 64 });
+  glowLayer.intensity = 1;
 
   function gameTick() {
     const pieces = getPieces();

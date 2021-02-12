@@ -1,4 +1,4 @@
-import { Texture } from "@babylonjs/core";
+import { Texture, VideoTexture } from "@babylonjs/core";
 import { getActivePiece, getScene } from "./state";
 
 export function SetShowNFTDetails(visible) {
@@ -107,10 +107,24 @@ export function SetupHUD() {
       return;
     }
 
-    const uploadedImage = URL.createObjectURL(imageInput.files[0]);
+    const uploadedMedia = URL.createObjectURL(imageInput.files[0]);
+    if (imageInput.files[0].type.includes("image")) {
+      piece.slotMaterial.diffuseTexture = new Texture(uploadedMedia, getScene());
+      
+      if (piece.emissive) {
+        piece.slotMaterial.emissiveTexture = new Texture(uploadedMedia, getScene());
+        piece.slotMaterial.emissiveColor = new Color3(1, 1, 1);
+      }
+    } else if (imageInput.files[0].type.includes("video")) {
+      piece.slotMaterial.diffuseTexture = new VideoTexture("VideoPiece", uploadedMedia, getScene());
 
-    piece.art = uploadedImage;
-    piece.slotMaterial.diffuseTexture = new Texture(uploadedImage, getScene());
+      if (piece.emissive) {
+        piece.slotMaterial.emissiveTexture = new VideoTexture("VideoPiece", uploadedMedia, getScene());
+        piece.slotMaterial.emissiveColor = new Color3(1, 1, 1);
+      }
+    }
+
+    piece.art = uploadedMedia;
     piece.name = pieceNameInput.value;
     piece.artist = artistName;
     piece.owner = ownerName;

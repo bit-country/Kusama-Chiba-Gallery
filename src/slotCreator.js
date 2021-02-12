@@ -1,4 +1,5 @@
 import {
+  Color3,
   MeshBuilder, 
   StandardMaterial, 
   Vector3
@@ -6,7 +7,7 @@ import {
 import { CreateLight } from "./lightCreator";
 import { addPiecePosition, getGround } from "./state";
 
-export function CreateSlot(slot, shadowGenerator) {
+export function CreateSlot(slot, light, shadowGenerator) {
   const {
     dimensions: slotDimensions,
     position: slotPos,
@@ -22,8 +23,7 @@ export function CreateSlot(slot, shadowGenerator) {
     shadowGenerator.addShadowCaster(wallSlot);
   }
 
-  const artLight = CreateLight(slotDimensions, wallSlot);
-
+  const artLight = CreateLight(slotDimensions, light, wallSlot);
   
   const artSlot = MeshBuilder.CreatePlane("ArtPiece", { width: slotDimensions.width, height: slotDimensions.height });
   artSlot.parent = wallSlot;
@@ -42,5 +42,6 @@ export function CreateSlot(slot, shadowGenerator) {
     artist: "",
     owner: "",
     name: "",
+    emissive: slot.emissive,
   });
 }

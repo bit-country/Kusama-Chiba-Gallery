@@ -1,11 +1,11 @@
 import { ShadowGenerator, SpotLight, Vector3 } from "@babylonjs/core";
 
-export function CreateLight(slotDimensions, parentMesh) {
+export function CreateLight(slotDimensions, light, parentMesh) {
   const artLight = new SpotLight(
     "ArtLight", 
     new Vector3(0, slotDimensions.height + 0.5, -(slotDimensions.depth + 1)), 
     new Vector3(0, -1, 0.4), 
-    Math.PI / 3, 
+    light.angleInRadians ?? Math.PI / 3, 
     32
   );
   artLight.intensity = 4;
@@ -13,6 +13,7 @@ export function CreateLight(slotDimensions, parentMesh) {
   artLight.parent = parentMesh;
   artLight.shadowMinZ = 1;
   artLight.shadowMaxZ = 10;
+  artLight.diffuse = light.colour;
 
   const shadowGenerator = new ShadowGenerator(128, artLight);
   shadowGenerator.addShadowCaster(parentMesh);
