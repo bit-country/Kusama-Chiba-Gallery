@@ -2,13 +2,13 @@ const path = require("path");
 
 module.exports = {
   mode: "development",
-  entry: "./src/index",
+  entry: "./src/client/index",
   output: {
     path: path.resolve(__dirname, "dist")
   },
   devServer: {
-    port: 8080,
-    contentBase: path.join(__dirname, "dist")
+    port: 8081,
+    contentBase: './src/client'
   },
   module: {
     rules: [
