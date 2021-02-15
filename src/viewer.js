@@ -64,13 +64,13 @@ export default function SetupGallery(canvasElement, polkadotAPI) {
   wallEast.position = new Vector3(50, 1.5, 0);
   wallEast.checkCollisions = true;
 
-  CreateSlot(new Slot(new Vector3(0, 1, 5), { width: 2, height: 2, depth: 0.25 }, 2, true), new Light(new Color3(0.8, 0.1, 0.7)));
+  CreateSlot(new Slot(new Vector3(0, 1, 5), { width: 2, height: 2, depth: 0.25 }, 2, false), new Light(new Color3(0.8, 0.1, 0.7)));
 
-  CreateSlot(new Slot(new Vector3(4, 1, 5), { width: 4, height: 2, depth: 0.25 }, 2, true), new Light(new Color3(0.7, 0.1, 0.8)));
+  CreateSlot(new Slot(new Vector3(4, 1, 5), { width: 4, height: 2, depth: 0.25 }, 2, false), new Light(new Color3(0.7, 0.1, 0.8)));
 
   CreateSlot(new Slot(new Vector3(8, 1, 5), { width: 4, height: 2, depth: 0.25 }, 2, false), new Light(new Color3(0.1, 0.8, 0.7)));
 
-  CreateSlot(new Slot(new Vector3(-4, 1, 5), { width: 4, height: 2, depth: 0.25 }, 2, true), new Light(new Color3(0.1, 0.7, 0.8)));
+  CreateSlot(new Slot(new Vector3(-4, 1, 5), { width: 4, height: 2, depth: 0.25 }, 2, false), new Light(new Color3(0.1, 0.7, 0.8)));
 
   CreateSlot(new Slot(new Vector3(-8, 1, 5), { width: 4, height: 2, depth: 0.25 }, 2, false), new Light(new Color3(0.8, 0.1, 0.5)));
 
