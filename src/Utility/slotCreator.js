@@ -5,7 +5,7 @@ import {
   Vector3
 } from "@babylonjs/core";
 import { CreateLight } from "./lightCreator";
-import { addPiecePosition, getGround } from "./state";
+import { addPiecePosition, getGround } from "../Model/state";
 
 export function CreateSlot(slot, light, shadowGenerator) {
   const {

@@ -10,10 +10,11 @@ import {
 import SetupEngine from "./engine";
 import { SetupPlayer } from "./gameplay";
 import { SetupHUD } from "./hud";
-import Light from "./Models/Light";
-import Slot from "./Models/Slot";
-import { CreateSlot } from "./slotCreator";
-import { setGround } from "./state";
+import Light from "../Model/Light";
+import Slot from "../Model/Slot";
+import { CreateSlot } from "../Utility/slotCreator";
+import { setGround } from "../Model/state";
+import API from "../Integration/API";
 
 export default function SetupGallery(canvasElement, polkadotAPI) {
   const {
@@ -25,14 +26,6 @@ export default function SetupGallery(canvasElement, polkadotAPI) {
   
   const light = new HemisphericLight("Skylight", new Vector3(0, 1, 0), scene);
   light.diffuse = new Color3(0.05, 0.1, 0.15);
-  // Disable shadows
-  // light.shadowMinZ = 1;
-  // light.shadowMaxZ = 10;
-  // light.contactHardeningLightSizeUVRatio = 1;
-
-  // const shadowGenerator = new ShadowGenerator(1024, light);
-  // shadowGenerator.useContactHardeningShadow = true;
-  // shadowGenerator.filteringQuality = ShadowGenerator.QUALITY_LOW;
   
   const ground = MeshBuilder.CreateGround("Ground", { width: 100, height: 100 });
   ground.material = new StandardMaterial("GroundMat", scene);
@@ -75,4 +68,8 @@ export default function SetupGallery(canvasElement, polkadotAPI) {
   CreateSlot(new Slot(new Vector3(-8, 1, 5), { width: 4, height: 2, depth: 0.25 }, 2, false), new Light(new Color3(0.8, 0.1, 0.5)));
 
   SetupHUD();
+
+  const api = new API();
+
+  api.display();
 }

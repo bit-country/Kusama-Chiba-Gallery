@@ -1,4 +1,5 @@
-import SetupGallery from "./viewer";
+import "@babel/polyfill";
+import SetupGallery from "./Gallery/gallery";
 
 // Basic form validation check, stop default behaviour.
 const forms = document.getElementsByTagName("form");

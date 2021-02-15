@@ -1,5 +1,5 @@
 import { Texture, VideoTexture } from "@babylonjs/core";
-import { getActivePiece, getScene } from "./state";
+import { getActivePiece, getScene } from "../Model/state";
 
 export function SetShowNFTDetails(visible) {
   const NFTDetailsIcon = document.querySelector("#root .hud .nft-details-item");

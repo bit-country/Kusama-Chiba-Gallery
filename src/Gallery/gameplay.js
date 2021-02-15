@@ -2,7 +2,7 @@ import {
   UniversalCamera, 
   Vector3
 } from "@babylonjs/core"
-import { getScene, setCamera } from "./state";
+import { getScene, setCamera } from "../Model/state";
 
 export function SetupPlayer(canvasElement) {
   const scene = getScene();

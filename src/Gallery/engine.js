@@ -4,7 +4,7 @@ import {
   Scene,
 } from "@babylonjs/core";
 import { SetShowNFTDetails } from "./hud";
-import { getPieces, getCamera, setEngine, setScene, setActivePiece, getActivePiece } from "./state";
+import { getPieces, getCamera, setEngine, setScene, setActivePiece, getActivePiece } from "../Model/state";
 
 export default function SetupEngine(canvasElement) {
   const engine = new Engine(canvasElement);
