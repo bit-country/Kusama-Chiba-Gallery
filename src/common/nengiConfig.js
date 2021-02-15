@@ -1,10 +1,7 @@
 import nengi from 'nengi'
 import PlayerCharacter from './entity/PlayerCharacter'
 import Identity from './message/Identity'
-import WeaponFired from './message/WeaponFired'
 import MoveCommand from './command/MoveCommand'
-import FireCommand from './command/FireCommand'
-import Obstacle from './entity/Obstacle'
 
 const config = {
     UPDATE_RATE: 20, 
@@ -23,16 +20,13 @@ const config = {
     protocols: {
         entities: [
             ['PlayerCharacter', PlayerCharacter],
-            ['Obstacle', Obstacle]
         ],
         localMessages: [],
         messages: [
             ['Identity', Identity],
-            ['WeaponFired', WeaponFired]
         ],
         commands: [
             ['MoveCommand', MoveCommand],
-            ['FireCommand', FireCommand]
         ],
         basics: []
     }

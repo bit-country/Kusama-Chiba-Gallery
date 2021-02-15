@@ -11,9 +11,8 @@ class PlayerCharacter {
       size: 1,
       faceColors,
     });
-    this.mesh.ellipsoid = new BABYLON.Vector3(0.5, 0.5, 0.5);
+    this.mesh.ellipsoid = new BABYLON.Vector3(1, 1, 1);
     this.mesh.checkCollisions = true;
-
     this.hitpoints = 100;
     this.isAlive = true;
     this.speed = 5;
