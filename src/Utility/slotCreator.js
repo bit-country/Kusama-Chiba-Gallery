@@ -15,30 +15,23 @@ export function CreateSlot(slot, light, shadowGenerator) {
     id
   } = slot;
 
-  const wallSlot = MeshBuilder.CreateBox("Slot", { width: slotDimensions.width, height: slotDimensions.height, depth: slotDimensions.depth });
-  wallSlot.position = slotPos;
-  wallSlot.checkCollisions = true;
-  wallSlot.receiveShadows = true;
+  const artSlot = MeshBuilder.CreatePlane("ArtPiece", { width: slotDimensions.width, height: slotDimensions.height });
+  artSlot.position = slotPos;
+  artSlot.material = new StandardMaterial("ArtPieceMat");
 
   if (shadowGenerator) {
-    shadowGenerator.addShadowCaster(wallSlot);
+    shadowGenerator.addShadowCaster(artSlot);
   }
-
-  const artLight = CreateLight(slotDimensions, light, wallSlot);
   
-  const artSlot = MeshBuilder.CreatePlane("ArtPiece", { width: slotDimensions.width, height: slotDimensions.height });
-  artSlot.parent = wallSlot;
-  artSlot.position = new Vector3(0, 0, -(slotDimensions.depth / 2 + 0.01));
-  artSlot.material = new StandardMaterial("ArtPieceMat");
-  
-  artLight.includedOnlyMeshes.push(wallSlot, artSlot, getGround());
+  const artLight = CreateLight(slotDimensions, light, artSlot);
+  artLight.includedOnlyMeshes.push(artSlot, getGround());
 
   addPiecePosition({
     id,
     position: slotPos,
     dimensions: slotDimensions,
     bounds: slotBounds,
-    slotMesh: wallSlot,
+    slotMesh: artSlot,
     slotMaterial: artSlot.material,
     art: null,
     artist: "",

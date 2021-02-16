@@ -2,11 +2,14 @@ import {
   Color3, 
   DirectionalLight,
   HemisphericLight,
+  Mesh,
   MeshBuilder, 
+  SceneLoader, 
   ShadowGenerator,
   StandardMaterial,
   Texture,
-  Vector3
+  Vector3,
+  Vector4
 } from "@babylonjs/core";
 import SetupEngine from "./engine";
 import { SetupPlayer } from "./gameplay";
@@ -16,6 +19,8 @@ import Slot from "../Model/Slot";
 import { CreateSlot } from "../Utility/slotCreator";
 import { getPieces, getScene, setGround } from "../Model/state";
 import API from "../Integration/API";
+import * as LOADERS from "@babylonjs/loaders";
+
 
 export default function SetupGallery(canvasElement, polkadotAPI) {
   const {
@@ -28,13 +33,20 @@ export default function SetupGallery(canvasElement, polkadotAPI) {
   const light = new HemisphericLight("Skylight", new Vector3(0, 1, 0), scene);
   light.diffuse = new Color3(0.05, 0.1, 0.15);
   
-  const ground = MeshBuilder.CreateGround("Ground", { width: 100, height: 100 });
-  ground.material = new StandardMaterial("GroundMat", scene);
-  ground.material.maxSimultaneousLights = 12
-  ground.checkCollisions = true;
-  ground.receiveShadows = true;
+  SceneLoader.ImportMesh("", "/assets/Ground.obj", "", scene, mesh => {
+    const ground = mesh[0];
 
-  setGround(ground);
+    ground.scaling = new Vector3(100, 1, 100);
+    ground.material = new StandardMaterial("GroundMat", scene);
+    ground.material.maxSimultaneousLights = 12
+    ground.material.diffuseTexture = new Texture("/assets/Ground.png", scene, false, true, Texture.TRILINEAR_SAMPLINGMODE);
+    ground.material.emissiveColor = new Color3(0.1, 0.1, 0.1);
+    ground.material.emissiveTexture = new Texture("/assets/Ground-Emissive.png", scene, false, true, Texture.TRILINEAR_SAMPLINGMODE);
+    ground.checkCollisions = true;
+    ground.receiveShadows = true;
+    
+    setGround(ground);
+  })
 
   const wallSouth = MeshBuilder
     .CreateBox("SouthernWall", { width: 100, height: 3, depth: 1 }, scene);
@@ -94,6 +106,7 @@ export default function SetupGallery(canvasElement, polkadotAPI) {
     for (let piece of pieces) {
       const position = positions.find(pos => pos.id == piece.positionId);
 
+      // TODO Allow for different aspect ratio textures.
       position.slotMaterial.diffuseTexture = new Texture(piece.image, getScene());
     }
   })
