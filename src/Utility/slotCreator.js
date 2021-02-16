@@ -12,6 +12,7 @@ export function CreateSlot(slot, light, shadowGenerator) {
     dimensions: slotDimensions,
     position: slotPos,
     bounds: slotBounds,
+    id
   } = slot;
 
   const wallSlot = MeshBuilder.CreateBox("Slot", { width: slotDimensions.width, height: slotDimensions.height, depth: slotDimensions.depth });
@@ -33,6 +34,7 @@ export function CreateSlot(slot, light, shadowGenerator) {
   artLight.includedOnlyMeshes.push(wallSlot, artSlot, getGround());
 
   addPiecePosition({
+    id,
     position: slotPos,
     dimensions: slotDimensions,
     bounds: slotBounds,
