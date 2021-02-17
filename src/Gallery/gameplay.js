@@ -38,25 +38,14 @@ export function SetupPlayer(canvasElement) {
   camera.inputs.attached.keyboard.keysUpward = [];
   camera.inputs.attached.keyboard.keysDownward = [];
 
-  // scene.onPointerObservable.add((pointerInfo) => {
-  //   if (pointerInfo.type == PointerEventTypes.POINTERDOWN) {
-  //     const result = scene.pick(scene.pointerX, scene.pointerY);
+  scene.onPointerObservable.add((pointerInfo) => {
+    if (pointerInfo.type == PointerEventTypes.POINTERDOWN) {
+      const result = scene.pick(scene.pointerX, scene.pointerY);
 
-  //     console.log(result)
-      
-  //     const decal = MeshBuilder.CreateDecal("Seam", result.pickedMesh, { 
-  //       position: result.pickedPoint, 
-  //       size: new Vector3(1, 1, 1),
-  //       normal: result.getNormal(true)
-  //     }, scene);
-
-  //     decal.material = new StandardMaterial("DecalMat", scene);
-  //     decal.material.diffuseTexture = new Texture("/assets/Decal.png", scene);
-  //     decal.material.zOffset = -2;
-  //     decal.material.emissiveTexture = new Texture("/assets/Decal-Emissive2.png", scene);
-  //     decal.material.emissiveColor = new Color3(0.2, 0.2, 0.2);
-  //   }
-  // })
+      console.log(result.pickedPoint);
+      console.log(result.getNormal(true));
+    }
+  })
 
   setCamera(camera);
 }

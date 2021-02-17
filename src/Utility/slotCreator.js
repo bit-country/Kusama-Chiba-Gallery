@@ -12,12 +12,15 @@ export function CreateSlot(slot, light, shadowGenerator) {
     dimensions: slotDimensions,
     position: slotPos,
     bounds: slotBounds,
+    rotation: slotRot,
     id
   } = slot;
 
   const artSlot = MeshBuilder.CreatePlane("ArtPiece", { width: slotDimensions.width, height: slotDimensions.height });
   artSlot.position = slotPos;
+  artSlot.rotation = slotRot;
   artSlot.material = new StandardMaterial("ArtPieceMat");
+  artSlot.material.specularColor = new Color3(0.1, 0.1, 0.1);
 
   if (shadowGenerator) {
     shadowGenerator.addShadowCaster(artSlot);
