@@ -33,42 +33,29 @@ export default function SetupGallery(canvasElement, polkadotAPI) {
   const light = new HemisphericLight("Skylight", new Vector3(0, 1, 0), scene);
   light.diffuse = new Color3(0.05, 0.1, 0.15);
   
-  SceneLoader.ImportMesh("", "/assets/Ground.obj", "", scene, mesh => {
-    const ground = mesh[0];
+  SceneLoader.ImportMesh("", "/assets/Building.obj", "", scene, mesh => {
+    for (let submesh of mesh) {
+      submesh.material = new StandardMaterial("BuildingMat", scene);
+      submesh.material.maxSimultaneousLights = 12;
+      submesh.checkCollisions = true;
+      submesh.receiveShadows = true;
+    }
 
-    ground.scaling = new Vector3(100, 1, 100);
-    ground.material = new StandardMaterial("GroundMat", scene);
-    ground.material.maxSimultaneousLights = 12
-    ground.material.diffuseTexture = new Texture("/assets/Ground.png", scene, false, true, Texture.TRILINEAR_SAMPLINGMODE);
-    ground.material.emissiveColor = new Color3(0.1, 0.1, 0.1);
-    ground.material.emissiveTexture = new Texture("/assets/Ground-Emissive.png", scene, false, true, Texture.TRILINEAR_SAMPLINGMODE);
-    ground.checkCollisions = true;
-    ground.receiveShadows = true;
-    
-    setGround(ground);
+    setGround(mesh[0]);
+    debugger;
+
+    const decal = MeshBuilder.CreateDecal("Seam", mesh[0], { 
+      position: new Vector3(2.010, 1.110, 3.641),
+      size: new Vector3(1, 1, 1),
+      normal: Vector3.Down
+    }, scene);
+
+    decal.material = new StandardMaterial("DecalMat", scene);
+    decal.material.diffuseTexture = new Texture("/assets/Decal.png", scene);
+    decal.material.zOffset = -2;
+    decal.material.emissiveTexture = new Texture("/assets/Decal-Emissive2.png", scene);
+    decal.material.emissiveColor = new Color3(0.2, 0.2, 0.2);
   })
-
-  const wallSouth = MeshBuilder
-    .CreateBox("SouthernWall", { width: 100, height: 3, depth: 1 }, scene);
-  
-  wallSouth.position = new Vector3(0, 1.5, -50);
-  wallSouth.addRotation(0, Math.PI, 0);
-  wallSouth.checkCollisions = true;
-
-  const wallWest = wallSouth.createInstance("WesternWall");
-  wallWest.addRotation(0, 1.57, 0);
-  wallWest.position = new Vector3(-50, 1.5, 0);
-  wallWest.checkCollisions = true;
-
-  const wallNorth = wallSouth.createInstance("NorthernWall");
-  wallNorth.addRotation(0, Math.PI, 0);
-  wallNorth.position = new Vector3(0, 1.5, 50);
-  wallNorth.checkCollisions = true;
-
-  const wallEast = wallSouth.createInstance("EasternWall");
-  wallEast.addRotation(0, -1.57, 0);
-  wallEast.position = new Vector3(50, 1.5, 0);
-  wallEast.checkCollisions = true;
 
   // CreateSlot(new Slot(new Vector3(0, 1, 5), { width: 2, height: 2, depth: 0.25 }, 2, false), new Light(new Color3(0.8, 0.1, 0.7)));
 
