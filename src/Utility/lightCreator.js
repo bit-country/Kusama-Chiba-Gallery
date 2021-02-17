@@ -9,7 +9,7 @@ export function CreateLight(slotDimensions, light, parentMesh) {
     32
   );
   artLight.intensity = 4;
-  artLight.range = 4;
+  artLight.range = 6;
   artLight.parent = parentMesh;
   artLight.shadowMinZ = 1;
   artLight.shadowMaxZ = 10;

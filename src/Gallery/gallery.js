@@ -31,18 +31,21 @@ export default function SetupGallery(canvasElement, polkadotAPI) {
   SetupPlayer(canvasElement);
   
   const light = new HemisphericLight("Skylight", new Vector3(0, 1, 0), scene);
-  light.diffuse = new Color3(0.05, 0.1, 0.15);
+  light.diffuse = new Color3(0.6, 0.5, 0.6);
   
-  SceneLoader.ImportMesh("", "/assets/Building.obj", "", scene, mesh => {
+  SceneLoader.ImportMesh("", "/assets/Building3.obj", "", scene, mesh => {
+    //debugger;
     for (let submesh of mesh) {
-      submesh.material = new StandardMaterial("BuildingMat", scene);
+      if (mesh[0] != submesh) {
+        submesh.parent = mesh[0];
+      }
+      //submesh.material = new StandardMaterial("BuildingMat", scene);
       submesh.material.maxSimultaneousLights = 12;
       submesh.checkCollisions = true;
       submesh.receiveShadows = true;
     }
 
     setGround(mesh[0]);
-    debugger;
 
     const decal = MeshBuilder.CreateDecal("Seam", mesh[0], { 
       position: new Vector3(2.010, 1.110, 3.641),
@@ -55,6 +58,10 @@ export default function SetupGallery(canvasElement, polkadotAPI) {
     decal.material.zOffset = -2;
     decal.material.emissiveTexture = new Texture("/assets/Decal-Emissive2.png", scene);
     decal.material.emissiveColor = new Color3(0.2, 0.2, 0.2);
+
+    engine.runRenderLoop(() => {
+      scene.render();
+    });
   })
 
   // CreateSlot(new Slot(new Vector3(0, 1, 5), { width: 2, height: 2, depth: 0.25 }, 2, false), new Light(new Color3(0.8, 0.1, 0.7)));
