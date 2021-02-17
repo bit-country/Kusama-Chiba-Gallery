@@ -4,6 +4,7 @@ import {
   HemisphericLight,
   Mesh,
   MeshBuilder, 
+  PointLight, 
   SceneLoader, 
   ShadowGenerator,
   StandardMaterial,
@@ -35,14 +36,16 @@ export default function SetupGallery(canvasElement, polkadotAPI) {
   
   const light = new HemisphericLight("Skylight", new Vector3(0, 1, 0), scene);
   light.diffuse = new Color3(0.6, 0.5, 0.6);
+
+  //const bottomRightWingLight = new PointLight("BottomRightWing", new Vector3(-5, 2.8, 15), scene);
   
-  SceneLoader.ImportMesh("", "/assets/Building3.obj", "", scene, mesh => {
+  SceneLoader.ImportMesh("", "/assets/Building4.obj", "", scene, mesh => {
     for (let submesh of mesh) {
       if (mesh[0] != submesh) {
         submesh.parent = mesh[0];
       }
 
-      submesh.material.maxSimultaneousLights = 12;
+      submesh.material.maxSimultaneousLights = 10;
       submesh.checkCollisions = true;
       submesh.receiveShadows = true;
     }
