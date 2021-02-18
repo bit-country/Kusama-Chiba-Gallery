@@ -2,35 +2,41 @@ import {
   ArcRotateCamera,
   Vector3,
   SceneLoader,
-  TargetCamera,
+  HemisphericLight,
+  Color3,
   ActionManager,
   ExecuteCodeAction,
 } from "@babylonjs/core";
 import { getScene, setCamera } from "./state";
 import "@babylonjs/loaders/glTF";
+
+let meshSpeed = 0.1;
+let meshSpeedBackwards = 0.1;
+let meshRotationSpeed = 0.1;
+
 export function SetupPlayer(canvasElement) {
   const scene = getScene();
 
   var camera = new ArcRotateCamera(
     "playerCamera",
+    Math.PI / -2,
     Math.PI / 2,
-    Math.PI / 4,
-    10,
+    5,
     new Vector3(0, 1, 0),
     scene
   );
   scene.activeCamera = camera;
   scene.activeCamera.attachControl(canvasElement, true);
-  // camera.lowerRadiusLimit = 2;
-  // camera.upperRadiusLimit = 10;
-  // camera.wheelDeltaPercentage = 0.01;
-  //camera.ellipsoid = new Vector3(0.25, 0.5, 0.25);
-  // camera.applyGravity = true;
-  //camera.checkCollisions = true;
-  // camera._needMoveForGravity = true; // Enable gravity calculation continuously. Sleeps without movement if false.
+  camera.lowerRadiusLimit = 5;
+  camera.upperRadiusLimit = 10;
+  camera.wheelDeltaPercentage = 0.01;
+  camera.ellipsoid = new Vector3(0.25, 0.5, 0.25);
+  camera.applyGravity = true;
+  camera.checkCollisions = true;
+  camera._needMoveForGravity = true; // Enable gravity calculation continuously. Sleeps without movement if false.
+  camera.speed = 0.4;
 
   // Speed at which we move.
-  camera.speed = 0.3;
 
   // Input constants
   const UP_ARROW = 38,
@@ -58,6 +64,9 @@ export function SetupPlayer(canvasElement) {
       inputMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
     })
   );
+  var light = new HemisphericLight("light1", new Vector3(0, 1, 0), scene);
+  light.intensity = 0.6;
+  light.specular = Color3.Black();
   // Binding for movement.
   // camera.inputs.attached.keyboard.keysUp = [UP_ARROW, W_KEY];
   // camera.inputs.attached.keyboard.keysDown = [DOWN_ARROW, S_KEY];
@@ -73,12 +82,14 @@ export function SetupPlayer(canvasElement) {
   ).then(({ meshes }) => {
     debugger;
     let mesh = meshes[0];
-    mesh.scaling.scaleInPlace(0.04);
+    mesh.scaling.scaleInPlace(0.05);
     var animating = true;
-    var meshSpeed = 0.1;
-    var meshSpeedBackwards = 0.1;
-    var meshRotationSpeed = 0.1;
+
     camera.target = mesh;
+    const walkAnim = scene.getAnimationGroupByName("Walking");
+    const walkBackAnim = scene.getAnimationGroupByName("WalkingBack");
+    const idleAnim = scene.getAnimationGroupByName("Idle");
+    const sambaAnim = scene.getAnimationGroupByName("Samba");
 
     //Rendering loop (executed for everyframe)
     scene.onBeforeRenderObservable.add(() => {
@@ -100,7 +111,7 @@ export function SetupPlayer(canvasElement) {
         mesh.rotate(Vector3.Up(), meshRotationSpeed);
         keydown = true;
       }
-      if (inputMap["b"]) {
+      if (inputMap["t"]) {
         keydown = true;
       }
 
@@ -110,30 +121,30 @@ export function SetupPlayer(canvasElement) {
           animating = true;
           if (inputMap["s"]) {
             //Walk backwards
-            // walkBackAnim.start(
-            //   true,
-            //   1.0,
-            //   walkBackAnim.from,
-            //   walkBackAnim.to,
-            //   false
-            // );
-          } else if (inputMap["b"]) {
+            walkBackAnim.start(
+              true,
+              1.0,
+              walkBackAnim.from,
+              walkBackAnim.to,
+              false
+            );
+          } else if (inputMap["t"]) {
             //Samba!
-            //  sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
+            sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
           } else {
             //Walk
-            //    walkAnim.start(true, 1.0, walkAnim.from, walkAnim.to, false);
+            walkAnim.start(true, 1.0, walkAnim.from, walkAnim.to, false);
           }
         }
       } else {
         if (animating) {
           //Default animation is idle when no key is down
-          //  idleAnim.start(true, 1.0, idleAnim.from, idleAnim.to, false);
+          idleAnim.start(true, 1.0, idleAnim.from, idleAnim.to, false);
 
           //Stop all animations besides Idle Anim when no key is down
-          // sambaAnim.stop();
-          // walkAnim.stop();
-          // walkBackAnim.stop();
+          sambaAnim.stop();
+          walkAnim.stop();
+          walkBackAnim.stop();
 
           //Ensure animation are played only once per rendering loop
           animating = false;
