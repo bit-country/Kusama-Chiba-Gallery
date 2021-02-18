@@ -4,15 +4,23 @@ let state = {
   engine: null,
   scene: null,
   activePiece: null,
-  ground: null
+  building: null,
+  bottomRightWing: null,
+  bottomLeftWing: null,
+  topRightWing: null,
+  topLeftWing: null,
+  topFrontWing: null,
+  topBackWing: null,
+  bottomFloor: null,
+  roof: null,
 };
 
-export function getGround() {
-  return state.ground;
+export function getBuildingMeshes() {
+  return state.building;
 }
 
-export function setGround(ground) {
-  state.ground = ground;
+export function setBuildingMeshes(building) {
+  state.building = building;
 }
 
 export function getPieces() {

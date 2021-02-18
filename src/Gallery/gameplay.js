@@ -7,7 +7,7 @@ import {
   UniversalCamera, 
   Vector3
 } from "@babylonjs/core"
-import { getGround, getScene, setCamera } from "../Model/state";
+import { getBuildingMeshes, getScene, setCamera } from "../Model/state";
 
 export function SetupPlayer(canvasElement) {
   const scene = getScene();

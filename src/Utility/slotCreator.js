@@ -5,9 +5,9 @@ import {
   Vector3
 } from "@babylonjs/core";
 import { CreateLight } from "./lightCreator";
-import { addPiecePosition, getGround } from "../Model/state";
+import { addPiecePosition, getBuildingMeshes } from "../Model/state";
 
-export function CreateSlot(slot, light, shadowGenerator) {
+export function CreateSlot(slot, light, containingMesh, shadowGenerator) {
   const {
     dimensions: slotDimensions,
     position: slotPos,
@@ -27,7 +27,11 @@ export function CreateSlot(slot, light, shadowGenerator) {
   }
   
   const artLight = CreateLight(slotDimensions, light, artSlot);
-  artLight.includedOnlyMeshes.push(artSlot, getGround());
+  artLight.includedOnlyMeshes.push(artSlot);
+
+  if (containingMesh) {
+    artLight.includedOnlyMeshes.push(containingMesh);
+  }
 
   addPiecePosition({
     id,

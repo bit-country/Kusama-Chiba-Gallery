@@ -18,7 +18,7 @@ import { SetupHUD } from "./hud";
 import Light from "../Model/Light";
 import Slot from "../Model/Slot";
 import { CreateSlot } from "../Utility/slotCreator";
-import { getPieces, getScene, setGround } from "../Model/state";
+import { getPieces, getScene, setBuildingMeshes, getBuildingMeshes } from "../Model/state";
 import API from "../Integration/API";
 import * as LOADERS from "@babylonjs/loaders";
 
@@ -39,30 +39,19 @@ export default function SetupGallery(canvasElement, polkadotAPI) {
 
   //const bottomRightWingLight = new PointLight("BottomRightWing", new Vector3(-5, 2.8, 15), scene);
   
-  SceneLoader.ImportMesh("", "/assets/Building4.obj", "", scene, mesh => {
+  SceneLoader.ImportMesh("", "/assets/Building5.obj", "", scene, mesh => {
+    setBuildingMeshes(mesh);
+
     for (let submesh of mesh) {
       if (mesh[0] != submesh) {
         submesh.parent = mesh[0];
       }
 
+      // Be careful not to exceed max GL vertex buffers
       submesh.material.maxSimultaneousLights = 10;
       submesh.checkCollisions = true;
       submesh.receiveShadows = true;
     }
-
-    setGround(mesh[0]);
-
-    const decal = MeshBuilder.CreateDecal("Seam", mesh[0], { 
-      position: new Vector3(2.010, 1.110, 3.641),
-      size: new Vector3(1, 1, 1),
-      normal: Vector3.Down
-    }, scene);
-
-    decal.material = new StandardMaterial("DecalMat", scene);
-    decal.material.diffuseTexture = new Texture("/assets/Decal.png", scene);
-    decal.material.zOffset = -2;
-    decal.material.emissiveTexture = new Texture("/assets/Decal-Emissive2.png", scene);
-    decal.material.emissiveColor = new Color3(0.2, 0.2, 0.2);
 
     engine.runRenderLoop(() => {
       scene.render();
@@ -83,6 +72,7 @@ export default function SetupGallery(canvasElement, polkadotAPI) {
 
   API.getPositions().then(positions => {
     for (let slot of positions) {
+
       CreateSlot(
         new Slot(
           new Vector3(slot.position.x, slot.position.y + slot.height / 2, slot.position.z), 
