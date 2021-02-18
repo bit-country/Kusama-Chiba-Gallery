@@ -7,14 +7,15 @@ import {
   ActionManager,
   ExecuteCodeAction,
 } from "@babylonjs/core";
-import { getScene, setCamera } from "./state";
+import { getGameRoom, getScene, setCamera } from "./state";
 import "@babylonjs/loaders/glTF";
+import { PLAYER_MOVEMENT } from "../common/MessageTypes";
 
 let meshSpeed = 0.1;
 let meshSpeedBackwards = 0.1;
 let meshRotationSpeed = 0.1;
 
-export function SetupPlayer(canvasElement) {
+export function SetupPlayer() {
   const scene = getScene();
 
   var camera = new ArcRotateCamera(
@@ -26,7 +27,7 @@ export function SetupPlayer(canvasElement) {
     scene
   );
   scene.activeCamera = camera;
-  scene.activeCamera.attachControl(canvasElement, true);
+  scene.activeCamera.attachControl(document.getElementById("canvas"), true);
   camera.lowerRadiusLimit = 5;
   camera.upperRadiusLimit = 10;
   camera.wheelDeltaPercentage = 0.01;
@@ -34,7 +35,7 @@ export function SetupPlayer(canvasElement) {
   camera.applyGravity = true;
   camera.checkCollisions = true;
   camera._needMoveForGravity = true; // Enable gravity calculation continuously. Sleeps without movement if false.
-  camera.speed = 0.4;
+  camera.speed = 0.3;
 
   // Speed at which we move.
 
@@ -116,6 +117,17 @@ export function SetupPlayer(canvasElement) {
 
       //Manage animations to be played
       if (keydown) {
+        console.log(mesh.rotation);
+        getGameRoom().send(PLAYER_MOVEMENT, {
+          position: mesh.position,
+          rotation: {
+            left: inputMap["a"],
+            right: inputMap["d"],
+            // forward: inputMap["w"],
+            // backward: inputMap["s"],
+          },
+        });
+
         if (!animating) {
           animating = true;
           if (inputMap["s"]) {

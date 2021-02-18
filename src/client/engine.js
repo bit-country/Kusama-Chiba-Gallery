@@ -1,10 +1,13 @@
-import {
-  Engine, 
-  GlowLayer, 
-  Scene,
-} from "@babylonjs/core";
+import { Engine, GlowLayer, Scene } from "@babylonjs/core";
 import { SetShowNFTDetails } from "./hud";
-import { getPieces, getCamera, setEngine, setScene, setActivePiece, getActivePiece } from "./state";
+import {
+  getPieces,
+  getCamera,
+  setEngine,
+  setScene,
+  setActivePiece,
+  getActivePiece,
+} from "./state";
 
 export default function SetupEngine(canvasElement) {
   const engine = new Engine(canvasElement);
@@ -25,28 +28,36 @@ export default function SetupEngine(canvasElement) {
       const {
         position: slotPos,
         dimensions: slotDimensions,
-        bounds: slotBounds
+        bounds: slotBounds,
       } = activePiece;
 
-      if ((camera.position.x < (slotPos.x - slotDimensions.width / 2) - slotBounds || camera.position.x > (slotPos.x + slotDimensions.width / 2) + slotBounds)
-        || (camera.position.z < (slotPos.z - slotDimensions.depth / 2) - slotBounds || camera.position.z > (slotPos.z + slotDimensions.depth / 2) + slotBounds)) {
-          SetShowNFTDetails(false);
-          setActivePiece(null);
-      } 
+      if (
+        camera.position.x < slotPos.x - slotDimensions.width / 2 - slotBounds ||
+        camera.position.x > slotPos.x + slotDimensions.width / 2 + slotBounds ||
+        camera.position.z < slotPos.z - slotDimensions.depth / 2 - slotBounds ||
+        camera.position.z > slotPos.z + slotDimensions.depth / 2 + slotBounds
+      ) {
+        SetShowNFTDetails(false);
+        setActivePiece(null);
+      }
     }
 
     for (let piece of pieces) {
       const {
         position: slotPos,
         dimensions: slotDimensions,
-        bounds: slotBounds
+        bounds: slotBounds,
       } = piece;
 
-      if ((camera.position.x > (slotPos.x - slotDimensions.width / 2) - slotBounds && camera.position.x < (slotPos.x + slotDimensions.width / 2) + slotBounds)
-        && (camera.position.z > (slotPos.z - slotDimensions.depth / 2) - slotBounds && camera.position.z < (slotPos.z + slotDimensions.depth / 2) + slotBounds)) {
-          SetShowNFTDetails(true);
-          setActivePiece(piece);
-      } 
+      if (
+        camera.position.x > slotPos.x - slotDimensions.width / 2 - slotBounds &&
+        camera.position.x < slotPos.x + slotDimensions.width / 2 + slotBounds &&
+        camera.position.z > slotPos.z - slotDimensions.depth / 2 - slotBounds &&
+        camera.position.z < slotPos.z + slotDimensions.depth / 2 + slotBounds
+      ) {
+        SetShowNFTDetails(true);
+        setActivePiece(piece);
+      }
     }
   }
 
@@ -59,7 +70,7 @@ export default function SetupEngine(canvasElement) {
   const resizeHandler = () => {
     const {
       width,
-      height
+      height,
     } = canvasElement.parentElement.getBoundingClientRect();
 
     canvasElement.width = width;
@@ -76,6 +87,6 @@ export default function SetupEngine(canvasElement) {
 
   return {
     engine,
-    scene
+    scene,
   };
 }

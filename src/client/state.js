@@ -4,7 +4,8 @@ let state = {
   engine: null,
   scene: null,
   activePiece: null,
-  ground: null
+  ground: null,
+  gameRoom: null,
 };
 
 export function getGround() {
@@ -55,6 +56,12 @@ export function setScene(scene) {
   state.scene = scene;
 }
 
-export function SetupState() {
-  
-};
+export function SetupState() {}
+
+export function getGameRoom() {
+  return state.gameRoom;
+}
+
+export function setGameRoom(room) {
+  state.gameRoom = room;
+}
