@@ -29,7 +29,6 @@ const gameServer = new Server({
 gameServer.define("gallery", GameRoom);
 
 app.post("/room/new", (request, response) => {
-  debugger;
   gameServer.define(request.body.name, GameRoom);
   console.log(`Created: ${request.body.name}`);
   return response.status(201).send(`Created: ${request.body.name}`);

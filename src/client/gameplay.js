@@ -80,7 +80,6 @@ export function SetupPlayer(canvasElement) {
     null,
     scene
   ).then(({ meshes }) => {
-    debugger;
     let mesh = meshes[0];
     mesh.scaling.scaleInPlace(0.05);
     var animating = true;

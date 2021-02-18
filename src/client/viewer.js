@@ -39,7 +39,7 @@ export default function SetupGallery(canvasElement, polkadotAPI) {
   ground.material.maxSimultaneousLights = 12;
   ground.checkCollisions = true;
   ground.receiveShadows = true;
-
+  ground.position.y = 0;
   setGround(ground);
 
   const wallSouth = MeshBuilder.CreateBox(
