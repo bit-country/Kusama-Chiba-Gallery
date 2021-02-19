@@ -7,9 +7,9 @@ import {
   ActionManager,
   ExecuteCodeAction,
 } from "@babylonjs/core";
-import { getGameRoom, getScene, setCamera } from "./state";
+import { getGameRoom, getScene, setCamera } from "../Model/state";
 import "@babylonjs/loaders/glTF";
-import { PLAYER_MOVEMENT } from "../common/MessageTypes";
+import { PLAYER_MOVEMENT } from "../../common/MessageTypes";
 
 let meshSpeed = 0.1;
 let meshSpeedBackwards = 0.1;

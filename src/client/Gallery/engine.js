@@ -7,7 +7,7 @@ import {
   setScene,
   setActivePiece,
   getActivePiece,
-} from "./state";
+} from "../Model/state";
 
 export default function SetupEngine(canvasElement) {
   const engine = new Engine(canvasElement);
