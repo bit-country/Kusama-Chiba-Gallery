@@ -14,12 +14,12 @@
   "devDependencies": {
     "@babel/core": "^7.12.13",
     "@babel/preset-env": "^7.12.13",
-    "@babylonjs/core": "^4.2.0",
     "@babylonjs/gui": "^4.2.0",
     "@babylonjs/loaders": "^4.2.0",
     "babel-loader": "^8.2.2"
   },
   "dependencies": {
+    "@babylonjs/core": "^4.2.0",
     "@colyseus/schema": "^1.0.12",
     "axios": "^0.21.1",
     "colyseus": "^0.14.7",

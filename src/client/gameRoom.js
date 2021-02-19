@@ -1,11 +1,10 @@
 /* eslint-disable */
 
-import { SceneLoader, Vector3, TargetCamera } from "@babylonjs/core";
+import { Vector3 } from "@babylonjs/core";
 import * as Colyseus from "colyseus.js";
-// import * as HUD from "./HUD/HUDPlayerList";
 import Axios from "axios";
 import Player from "../common/entities/Player";
-import { getScene, getCamera, setGameRoom } from "./state";
+import { getScene, setGameRoom } from "./state";
 import { SetupPlayer } from "./gameplay";
 // import SetupPlayerHUD from "../gameClient/HUD/HUDPlayerList";
 const gameHttpEndpoint = "http://localhost:2657";
@@ -13,7 +12,8 @@ const gameWS = "ws://localhost:2657";
 
 const client = new Colyseus.Client(gameWS);
 const worldName = "gallery";
-const username = "Daniel ";
+const username = "Daniel";
+
 // multiplayer
 export const JoinOrCreateRoom = () => {
   client.joinOrCreate(worldName, { username }).then((room) => {
@@ -21,8 +21,12 @@ export const JoinOrCreateRoom = () => {
     room.state.players.onAdd = (player, currentSession) => {
       const { sessionId } = room;
       if (currentSession !== sessionId) {
-        const p = new Player(player);
+        const p = new Player(player, sessionId);
+      } else {
+        console.log(`MY session ID: ${sessionId}`);
+        const d = new Player(player, sessionId);
       }
+
       // TODO: create the current player obj here to get the position from server
     };
     room.onStateChange((state) => {
@@ -30,13 +34,16 @@ export const JoinOrCreateRoom = () => {
     });
     room.onMessage("updatePosition", ({ sessionId, position, rotation }) => {
       // Update the postion for other player
+      debugger;
+      const s = window.animationGroup1;
+      s.play();
       const player = getScene().getMeshByName(sessionId);
       player.position = new Vector3(position.x, position.y, position.z);
       if (rotation.left || rotation.right) {
         player.rotate(Vector3.Up(), rotation.left ? -0.1 : 0.1);
       }
-      const walkAnim = player.getAnimationGroupByName("Walking");
-      ///  getScene().getAnimationGroupByName("Walking");
+      //const walkAnim = player.getAnimationGroupByName("Walking");
+      getScene().getAnimationGroupByName("Walking");
       walkAnim.start(true, 1.0, walkAnim.from, walkAnim.to, false);
     });
     room.onMessage("removePlayer", ({ sessionId, players }) => {

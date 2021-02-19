@@ -7,7 +7,7 @@ import {
   ActionManager,
   ExecuteCodeAction,
 } from "@babylonjs/core";
-import { getGameRoom, getScene, setCamera } from "./state";
+import { getCamera, getGameRoom, getScene, setCamera } from "./state";
 import "@babylonjs/loaders/glTF";
 import { PLAYER_MOVEMENT } from "../common/MessageTypes";
 
@@ -36,22 +36,6 @@ export function SetupPlayer() {
   camera.checkCollisions = true;
   camera._needMoveForGravity = true; // Enable gravity calculation continuously. Sleeps without movement if false.
   camera.speed = 0.3;
-
-  // Speed at which we move.
-
-  // Input constants
-  const UP_ARROW = 38,
-    W_KEY = 87;
-  const RIGHT_ARROW = 39,
-    D_KEY = 68;
-  const LEFT_ARROW = 37,
-    A_KEY = 65;
-  const DOWN_ARROW = 40,
-    S_KEY = 83;
-  const SPACE_KEY = 32,
-    CONTROL_KEY = 17;
-  const SHIFT_KEY = 16,
-    ALT_KEY = 18;
   // Keyboard events
   var inputMap = {};
   scene.actionManager = new ActionManager(scene);
@@ -69,12 +53,6 @@ export function SetupPlayer() {
   light.intensity = 0.6;
   light.specular = Color3.Black();
   // Binding for movement.
-  // camera.inputs.attached.keyboard.keysUp = [UP_ARROW, W_KEY];
-  // camera.inputs.attached.keyboard.keysDown = [DOWN_ARROW, S_KEY];
-  // camera.inputs.attached.keyboard.keysLeft = [LEFT_ARROW, A_KEY];
-  // camera.inputs.attached.keyboard.keysRight = [RIGHT_ARROW, D_KEY];
-  // camera.inputs.attached.keyboard.keysUpward = [];
-  // camera.inputs.attached.keyboard.keysDownward = [];
   SceneLoader.ImportMeshAsync(
     null,
     `./graphics/character/HVGirl.glb`,
@@ -85,7 +63,7 @@ export function SetupPlayer() {
     mesh.scaling.scaleInPlace(0.05);
     var animating = true;
 
-    camera.target = mesh;
+    getCamera().target = mesh;
     const walkAnim = scene.getAnimationGroupByName("Walking");
     const walkBackAnim = scene.getAnimationGroupByName("WalkingBack");
     const idleAnim = scene.getAnimationGroupByName("Idle");

@@ -15,13 +15,18 @@ import Slot from "./Models/Slot";
 import { CreateSlot } from "./slotCreator";
 import { setGround } from "./state";
 import { JoinOrCreateRoom } from "./gameRoom";
+import Player from "../common/entities/Player";
 export default function SetupGallery(canvasElement, polkadotAPI) {
   const { engine, scene } = SetupEngine(canvasElement);
-  SetupPlayer();
 
+  // SetupPlayer();
   JoinOrCreateRoom();
-  const light = new HemisphericLight("Skylight", new Vector3(0, 1, 0), scene);
-  light.diffuse = new Color3(0.05, 0.1, 0.15);
+  // const light = new HemisphericLight("Skylight", new Vector3(0, 1, 0), scene);
+  // light.diffuse = new Color3(0.05, 0.1, 0.15);
+ 
+  var light = new HemisphericLight("light1", new Vector3(0, 1, 0), scene);
+  light.intensity = 0.6;
+  light.specular = Color3.Black();
   // Disable shadows
   // light.shadowMinZ = 1;
   // light.shadowMaxZ = 10;
