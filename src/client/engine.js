@@ -63,10 +63,6 @@ export default function SetupEngine(canvasElement) {
 
   scene.beforeRender = gameTick;
 
-  engine.runRenderLoop(() => {
-    scene.render();
-  });
-
   const resizeHandler = () => {
     const {
       width,
