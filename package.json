@@ -4,8 +4,8 @@
   "description": "",
   "main": "./client/index.js",
   "scripts": {
-    "start": "npx npm-run-all --parallel server client",
-    "server": "npx nodemon ./src/server/index.js --ignore public",
+    "start": "npm-run-all --parallel server client",
+    "server": "nodemon ./src/server/index.js --ignore public",
     "client": "webpack serve",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -20,13 +20,15 @@
     "babel-loader": "^8.2.2"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.12.1",
     "@colyseus/schema": "^1.0.12",
     "axios": "^0.21.1",
     "colyseus": "^0.14.7",
     "colyseus.js": "^0.14.1",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
+    "nodemon": "^2.0.7",
     "npm-run-all": "^4.1.5",
-    "@babel/polyfill": "^7.12.1",
     "webpack": "^5.21.2",
     "webpack-cli": "^4.5.0",
     "webpack-dev-server": "^3.11.2"
