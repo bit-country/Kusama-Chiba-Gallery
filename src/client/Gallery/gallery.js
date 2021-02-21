@@ -187,6 +187,7 @@ export default function SetupGallery(canvasElement, polkadotAPI) {
           }
   
           position.slotMaterial.diffuseTexture = new Texture(piece.image, getScene());
+          position.art = piece.image;
         };     
       }
     })
