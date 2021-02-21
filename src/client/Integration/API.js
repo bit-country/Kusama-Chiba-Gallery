@@ -45,7 +45,7 @@ export default new (class API {
         const collectionAssets = Object.entries(collectionData.data.assets).map(item => item[1]);
 
         for (let piece of collectionAssets) {
-          if (++current >= this.maxPieces) {
+          if (++current > this.maxPieces) {
             break;
           }
 

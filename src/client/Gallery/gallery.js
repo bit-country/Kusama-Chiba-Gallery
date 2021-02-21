@@ -133,11 +133,15 @@ export default function SetupGallery(canvasElement, polkadotAPI) {
     });
   
     API.getPieces().then(pieces => {
-      debugger;
       const positions = getPieces();
   
+      let index = 0;
       for (let piece of pieces) {
-        const position = positions.find(pos => pos.id == piece.positionId);
+        if (index > positions.length) {
+          return;
+        }
+
+        const position = positions[index++];
   
         // Dynamic Canvas
         // Allow for different aspect ratio textures.
