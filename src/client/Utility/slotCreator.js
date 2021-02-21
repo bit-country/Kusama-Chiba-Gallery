@@ -7,7 +7,7 @@ import {
 import { CreateLight } from "./lightCreator";
 import { addPiecePosition, getBuildingMeshes } from "../Model/state";
 
-export function CreateSlot(slot, light, containingMesh, shadowGenerator) {
+export function CreateSlot(slot, light, containingMeshes, shadowGenerator) {
   const {
     dimensions: slotDimensions,
     position: slotPos,
@@ -26,11 +26,11 @@ export function CreateSlot(slot, light, containingMesh, shadowGenerator) {
     shadowGenerator.addShadowCaster(artSlot);
   }
   
-  const artLight = CreateLight(slotDimensions, light, artSlot);
+  const artLight = CreateLight(slotDimensions, light, artSlot, containingMeshes);
   artLight.includedOnlyMeshes.push(artSlot);
 
-  if (containingMesh) {
-    artLight.includedOnlyMeshes.push(containingMesh);
+  if (containingMeshes) {
+    artLight.includedOnlyMeshes.push(...containingMeshes);
   }
 
   addPiecePosition({

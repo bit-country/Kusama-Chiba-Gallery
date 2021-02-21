@@ -5,16 +5,22 @@ let state = {
   scene: null,
   activePiece: null,
   building: null,
-  bottomRightWing: null,
-  bottomLeftWing: null,
-  topRightWing: null,
-  topLeftWing: null,
-  topFrontWing: null,
-  topBackWing: null,
-  bottomFloor: null,
-  roof: null,
+  sections: {
+    bottomRightWing: [],
+    bottomLeftWing: [],
+    topRightWing: [],
+    topLeftWing: [],
+    topFrontWing: [],
+    topBackWing: [],
+    bottomFloor: [],
+    roof: [],
+  },  
   gameRoom: null,
 };
+
+export function getSections() {
+  return state.sections;
+}
 
 export function getBuildingMeshes() {
   return state.building;

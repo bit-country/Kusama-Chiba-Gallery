@@ -6,6 +6,7 @@ import {
   Color3,
   ActionManager,
   ExecuteCodeAction,
+  PointerEventTypes,
 } from "@babylonjs/core";
 import { getGameRoom, getScene, setCamera } from "../Model/state";
 import "@babylonjs/loaders/glTF";
@@ -26,6 +27,7 @@ export function SetupPlayer() {
     new Vector3(0, 1, 0),
     scene
   );
+
   scene.activeCamera = camera;
   scene.activeCamera.attachControl(document.getElementById("canvas"), true);
   camera.lowerRadiusLimit = 5;
@@ -34,7 +36,6 @@ export function SetupPlayer() {
   camera.ellipsoid = new Vector3(0.25, 0.5, 0.25);
   camera.applyGravity = true;
   camera.checkCollisions = true;
-  camera._needMoveForGravity = true; // Enable gravity calculation continuously. Sleeps without movement if false.
   camera.speed = 0.3;
 
   // Speed at which we move.
@@ -52,22 +53,24 @@ export function SetupPlayer() {
     CONTROL_KEY = 17;
   const SHIFT_KEY = 16,
     ALT_KEY = 18;
+
   // Keyboard events
   var inputMap = {};
+
   scene.actionManager = new ActionManager(scene);
+
   scene.actionManager.registerAction(
     new ExecuteCodeAction(ActionManager.OnKeyDownTrigger, function (evt) {
       inputMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
     })
   );
+
   scene.actionManager.registerAction(
     new ExecuteCodeAction(ActionManager.OnKeyUpTrigger, function (evt) {
       inputMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
     })
   );
-  var light = new HemisphericLight("light1", new Vector3(0, 1, 0), scene);
-  light.intensity = 0.6;
-  light.specular = Color3.Black();
+
   // Binding for movement.
   // camera.inputs.attached.keyboard.keysUp = [UP_ARROW, W_KEY];
   // camera.inputs.attached.keyboard.keysDown = [DOWN_ARROW, S_KEY];
@@ -75,6 +78,7 @@ export function SetupPlayer() {
   // camera.inputs.attached.keyboard.keysRight = [RIGHT_ARROW, D_KEY];
   // camera.inputs.attached.keyboard.keysUpward = [];
   // camera.inputs.attached.keyboard.keysDownward = [];
+
   SceneLoader.ImportMeshAsync(
     null,
     `./graphics/character/HVGirl.glb`,
@@ -94,6 +98,7 @@ export function SetupPlayer() {
     //Rendering loop (executed for everyframe)
     scene.onBeforeRenderObservable.add(() => {
       var keydown = false;
+
       //Manage the movements of the character (e.g. position, direction)
       if (inputMap["w"]) {
         mesh.moveWithCollisions(mesh.forward.scaleInPlace(meshSpeed));
@@ -163,5 +168,15 @@ export function SetupPlayer() {
       }
     });
   });
+
+  scene.onPointerObservable.add((pointerInfo) => {
+    if (pointerInfo.type == PointerEventTypes.POINTERDOWN) {
+      const result = scene.pick(scene.pointerX, scene.pointerY);
+
+      console.log(result.pickedPoint);
+      console.log(result.getNormal(true));
+    }
+  })
+
   setCamera(camera);
 }
