@@ -43,7 +43,7 @@ export default function SetupGallery(canvasElement, polkadotAPI) {
 
   //const bottomRightWingLight = new PointLight("BottomRightWing", new Vector3(-5, 2.8, 15), scene);
   
-  SceneLoader.ImportMesh("", "/assets/Building5.obj", "", scene, mesh => {
+  SceneLoader.ImportMesh("", "/assets/Building6.obj", "", scene, mesh => {
     setBuildingMeshes(mesh);
 
     for (let submesh of mesh) {

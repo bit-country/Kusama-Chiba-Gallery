@@ -88,6 +88,7 @@ export function SetupPlayer() {
     let mesh = meshes[0];
     mesh.scaling.scaleInPlace(0.05);
     var animating = true;
+    mesh.ellipsoidOffset = new Vector3(0, 1, 0);
 
     setPlayer(mesh);
 
@@ -100,6 +101,8 @@ export function SetupPlayer() {
     //Rendering loop (executed for everyframe)
     scene.onBeforeRenderObservable.add(() => {
       var keydown = false;
+
+      mesh.moveWithCollisions(scene.gravity);
 
       //Manage the movements of the character (e.g. position, direction)
       if (inputMap["w"]) {
