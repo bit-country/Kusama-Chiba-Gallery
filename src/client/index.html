@@ -67,7 +67,8 @@
       #root .hud > .register-overlay,
       #root .hud > .login-overlay,
       #root .hud > .mint-overlay,
-      #root .hud > .details-overlay {
+      #root .hud > .details-overlay,
+      #root .hud > .navigator-overlay {
         position: fixed;
         top: 0;
         left: 0;
@@ -81,7 +82,8 @@
       #root .hud > .register-overlay > form,
       #root .hud > .login-overlay > form,
       #root .hud > .mint-overlay > form,
-      #root .hud > .details-overlay > .details {
+      #root .hud > .details-overlay > .details,
+      #root .hud > .navigator-overlay > .navigator {
         background-color: white;
         width: 30em;
         padding: 1em;
@@ -92,7 +94,8 @@
       #root .hud > .register-overlay.hidden,
       #root .hud > .login-overlay.hidden,
       #root .hud > .mint-overlay.hidden,
-      #root .hud > .details-overlay.hidden {
+      #root .hud > .details-overlay.hidden,
+      #root .hud > .navigator-overlay.hidden {
         display: none;
       }
 
@@ -107,6 +110,19 @@
 
       #root .hud > .details-overlay .item .title {
         font-weight: bold;
+      }
+
+      #root .hud .navigator-overlay > .navigator {
+        width: 80em;
+      }
+
+      #root .hud .navigator-overlay > .navigator > #galleries-container {
+        overflow: auto;
+        max-height: 30em;
+      }
+
+      #root .hud .navigator-overlay > .navigator > #galleries-container > div.item {
+
       }
     </style>
     <link rel="stylesheet" href="/css/all.css">
@@ -361,7 +377,7 @@
               Gallery Directory
             </h2>
             
-            <div id="galleries-container" class="row">
+            <div id="galleries-container" class="row p-4">
             </div>
             <div class="text-right">
               <button class="btn btn-secondary" name="close">

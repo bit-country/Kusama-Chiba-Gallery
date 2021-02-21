@@ -1,6 +1,7 @@
 const BASE_URL = "http://cervin.everdreamsoft.com/api/v1"
 import positions from "../positions.json";
 import pieces from "../pieces.json";
+import { setNFTCollections } from "../Model/state";
 
 export default new (class API {
   maxPieces = 10;
@@ -71,7 +72,7 @@ export default new (class API {
 
       setNFTCollections(collections.data);
 
-      return collections;
+      return collections.data;
     } catch (error) {
 
     }

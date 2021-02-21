@@ -1,4 +1,5 @@
 import { Texture, VideoTexture } from "@babylonjs/core";
+import API from "../Integration/API";
 import { getActivePiece, getScene } from "../Model/state";
 
 export function SetShowNFTDetails(visible) {
@@ -15,13 +16,14 @@ export function SetShowNavigator(visible) {
   const navigatorIcon = document.querySelector("#root .hud .navigator-item");
 
   if (visible) {
-    navigatorIcon.classList.remove("hidden");
+    navigatorIcon.classList.remove("hidden");  
   } else {
     navigatorIcon.classList.add("hidden");
   }
 }
 
 export function SetupHUD() {
+  // Menu section
   const menu = document.querySelector("#root .hud .menu");
   const menuOverlay = document.querySelector("#root .hud .menu-overlay");
 
@@ -29,43 +31,13 @@ export function SetupHUD() {
     menuOverlay.classList.toggle("hidden");
   }
 
+
+  // Login section
   const loginMenuItem = document.querySelector("#root .hud .menu-overlay #login-menu-item");
   const loginTopItem = document.querySelector("#root .hud .login-item");
   const loginOverlay = document.querySelector("#root .hud .login-overlay");
   const loginButton = document.querySelector("#root .hud .login-overlay button[name='login']");
   const loginCancelButton = document.querySelector("#root .hud .login-overlay button[name='cancel']");
-
-  const registerMenuItem = document.querySelector("#root .hud .menu-overlay #register-menu-item");
-  const registerOverlay = document.querySelector("#root .hud .register-overlay");
-  const registerButton = document.querySelector("#root .hud .register-overlay button[name='register']");
-  const registerCancelButton = document.querySelector("#root .hud .register-overlay button[name='cancel']");
-
-  const mintMenuItem = document.querySelector("#root .hud .menu-overlay #mint-menu-item");
-  const mintOverlay = document.querySelector("#root .hud .mint-overlay");
-  const mintButton = document.querySelector("#root .hud .mint-overlay button[name='mint']");
-  const mintCancelButton = document.querySelector("#root .hud .mint-overlay button[name='cancel']");
-
-  const detailsOverlay = document.querySelector("#root .hud .details-overlay");
-  const detailsImg = document.querySelector("#root .hud .details-overlay img.nft-image");
-  const detailsOwner = document.querySelector("#root .hud .details-overlay .ui.list .item[name='owner'] span.value");
-  const detailsArtist = document.querySelector("#root .hud .details-overlay .ui.list .item[name='artist'] span.value");
-  const detailsName = document.querySelector("#root .hud .details-overlay .ui.list .item[name='name'] span.value");
-  const detailsCloseButton = document.querySelector("#root .hud .details-overlay button[name='close']");
-  const setDetailsOverVisibility = visible => {
-    if (visible) {
-      detailsOverlay.classList.remove("hidden");
-
-      const piece = getActivePiece();
-
-      // TODO Allow for videos?
-      detailsImg.src = piece.art;
-      detailsArtist.textContent = piece.artist;
-      detailsOwner.textContent = piece.owner;
-      detailsName.textContent = piece.name;
-    } else {
-      detailsOverlay.classList.add("hidden");
-    }
-  }
 
   loginMenuItem.onclick = () => {
     loginOverlay.classList.toggle("hidden");
@@ -81,6 +53,12 @@ export function SetupHUD() {
   }
 
 
+  // Register section
+  const registerMenuItem = document.querySelector("#root .hud .menu-overlay #register-menu-item");
+  const registerOverlay = document.querySelector("#root .hud .register-overlay");
+  const registerButton = document.querySelector("#root .hud .register-overlay button[name='register']");
+  const registerCancelButton = document.querySelector("#root .hud .register-overlay button[name='cancel']");
+
   registerMenuItem.onclick = () => {
     registerOverlay.classList.toggle("hidden");
     menuOverlay.classList.toggle("hidden");
@@ -90,6 +68,12 @@ export function SetupHUD() {
     registerOverlay.classList.toggle("hidden");
   }
 
+
+  // Mint section
+  const mintMenuItem = document.querySelector("#root .hud .menu-overlay #mint-menu-item");
+  const mintOverlay = document.querySelector("#root .hud .mint-overlay");
+  const mintButton = document.querySelector("#root .hud .mint-overlay button[name='mint']");
+  const mintCancelButton = document.querySelector("#root .hud .mint-overlay button[name='cancel']");
 
   mintMenuItem.onclick = () => {
     mintOverlay.classList.toggle("hidden");
@@ -150,21 +134,103 @@ export function SetupHUD() {
   }
 
 
+  // Details section
+  const detailsOverlay = document.querySelector("#root .hud .details-overlay");
+  const detailsImg = document.querySelector("#root .hud .details-overlay img.nft-image");
+  const detailsOwner = document.querySelector("#root .hud .details-overlay .ui.list .item[name='owner'] span.value");
+  const detailsArtist = document.querySelector("#root .hud .details-overlay .ui.list .item[name='artist'] span.value");
+  const detailsName = document.querySelector("#root .hud .details-overlay .ui.list .item[name='name'] span.value");
+  const detailsCloseButton = document.querySelector("#root .hud .details-overlay button[name='close']");
+
+  const setDetailsOverVisibility = visible => {
+    if (visible) {
+      detailsOverlay.classList.remove("hidden");
+
+      const piece = getActivePiece();
+
+      // TODO Allow for videos?
+      detailsImg.src = piece.art;
+      detailsArtist.textContent = piece.artist;
+      detailsOwner.textContent = piece.owner;
+      detailsName.textContent = piece.name;
+    } else {
+      detailsOverlay.classList.add("hidden");
+    }
+  }
+
+  detailsCloseButton.onclick = () => {
+    detailsOverlay.classList.toggle("hidden");
+  }
+
+
+  const navigatorOverlay = document.querySelector("#root .hud .navigator-overlay");
+  const galleriesContainer = document.querySelector("#root .hud #galleries-container");
+  const navigatorCloseButton = document.querySelector("#root .hud .navigator-overlay button[name='close']");
+
+  navigatorCloseButton.onclick = () => {
+    navigatorOverlay.classList.add("hidden");
+  }
+
+  // Keybinding listener - handles opening menus on interaction
   function keylistener(event) {
     const piece = getActivePiece();
-    
-    if (event.key == "e" && piece) {
-      if (piece.art && detailsOverlay.classList.contains("hidden")) {
+    const navigatorIsHidden = navigatorOverlay.classList.contains("hidden");
+
+    if (event.key == "e") {
+      if (navigatorIsHidden) {
+        navigatorOverlay.classList.remove("hidden");
+
+        API.getCollections().then(collections => {
+          let child;
+          while (child = galleriesContainer.firstChild) {
+            galleriesContainer.removeChild(child);
+          }
+
+          if (!collections || collections.length < 1) {
+            return;
+          }
+
+          for (let collection of collections) {
+            const item = document.createElement("div");
+            item.className = "card item col-xl-3 col-lg-4 col-md-6 col-12";
+
+            const itemImage = document.createElement("img");
+            itemImage.className = "card-img-top";
+            itemImage.src = collection.image;
+            item.appendChild(itemImage);
+
+            const itemBody = document.createElement("div");
+            itemBody.className = "card-body";
+            item.appendChild(itemBody);
+
+            const itemTitle = document.createElement("div");
+            itemTitle.className = "card-title";
+            itemTitle.textContent = collection.name;
+            itemBody.appendChild(itemTitle);
+
+            const itemText = document.createElement("div");
+            itemText.className = "card-text";
+            itemText.textContent = collection.description;
+            itemBody.appendChild(itemText);
+
+            const itemButton = document.createElement("button");
+            itemButton.className = "btn btn-primary";
+            itemButton.textContent = "View";
+            itemButton.onclick = () => {
+              // TODO navigate to gallery
+            }
+            itemBody.appendChild(itemButton);
+
+            galleriesContainer.appendChild(item);
+          }
+        });  
+      } else if (piece && piece.art && detailsOverlay.classList.contains("hidden")) {
         setDetailsOverVisibility(true);
-      } else if (mintOverlay.classList.contains("hidden")) {
+      } else if (piece && mintOverlay.classList.contains("hidden")) {
         mintOverlay.classList.remove("hidden");
       }
     }
   }
 
   window.addEventListener("keypress", keylistener);
-
-  detailsCloseButton.onclick = () => {
-    detailsOverlay.classList.toggle("hidden");
-  }
 }
