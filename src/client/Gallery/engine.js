@@ -1,5 +1,5 @@
 import { Engine, GlowLayer, Scene } from "@babylonjs/core";
-import { SetShowNFTDetails } from "./hud";
+import { SetShowNavigator, SetShowNFTDetails } from "./hud";
 import {
   getPieces,
   getCamera,
@@ -23,6 +23,12 @@ export default function SetupEngine(canvasElement) {
     const camera = getCamera();
 
     const activePiece = getActivePiece();
+
+    if (camera.position.x > 8 && camera.position.y < 3 && camera.position.z > -2 && camera.position.z < 2) {
+      SetShowNavigator(true);
+    } else {
+      SetShowNavigator(false);
+    }
 
     if (activePiece) {
       const {
@@ -49,6 +55,7 @@ export default function SetupEngine(canvasElement) {
         bounds: slotBounds,
       } = piece;
 
+      // TODO update to use player, or consider using picking instead.
       if (
         camera.position.x > slotPos.x - slotDimensions.width / 2 - slotBounds &&
         camera.position.x < slotPos.x + slotDimensions.width / 2 + slotBounds &&

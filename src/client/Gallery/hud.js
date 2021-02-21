@@ -11,6 +11,16 @@ export function SetShowNFTDetails(visible) {
   }
 }
 
+export function SetShowNavigator(visible) {
+  const navigatorIcon = document.querySelector("#root .hud .navigator-item");
+
+  if (visible) {
+    navigatorIcon.classList.remove("hidden");
+  } else {
+    navigatorIcon.classList.add("hidden");
+  }
+}
+
 export function SetupHUD() {
   const menu = document.querySelector("#root .hud .menu");
   const menuOverlay = document.querySelector("#root .hud .menu-overlay");
@@ -47,6 +57,7 @@ export function SetupHUD() {
 
       const piece = getActivePiece();
 
+      // TODO Allow for videos?
       detailsImg.src = piece.art;
       detailsArtist.textContent = piece.artist;
       detailsOwner.textContent = piece.owner;
@@ -69,6 +80,7 @@ export function SetupHUD() {
     loginOverlay.classList.toggle("hidden");
   }
 
+
   registerMenuItem.onclick = () => {
     registerOverlay.classList.toggle("hidden");
     menuOverlay.classList.toggle("hidden");
@@ -77,6 +89,7 @@ export function SetupHUD() {
   registerCancelButton.onclick = () => {
     registerOverlay.classList.toggle("hidden");
   }
+
 
   mintMenuItem.onclick = () => {
     mintOverlay.classList.toggle("hidden");
@@ -135,6 +148,7 @@ export function SetupHUD() {
   mintCancelButton.onclick = () => {
     mintOverlay.classList.toggle("hidden");
   }
+
 
   function keylistener(event) {
     const piece = getActivePiece();
