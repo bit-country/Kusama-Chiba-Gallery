@@ -1,15 +1,14 @@
 const path = require("path");
+const nodeExternals = require("webpack-node-externals");
+
 module.exports = {
   mode: "development",
-  entry: "./src/client/index",
+  target: "node",
+  entry: "./src/server/index",
+  externals: [nodeExternals()],
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "main.js"
-  },
-  devServer: {
-    port: 8081,
-    //contentBase: path.join(__dirname, "dist"),
-    contentBase: "./src/client",
+    filename: "server.js"
   },
   module: {
     rules: [

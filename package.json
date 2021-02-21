@@ -4,20 +4,25 @@
   "description": "",
   "main": "./client/index.js",
   "scripts": {
-    "start": "npm-run-all --parallel server client",
-    "server": "nodemon ./src/server/index.js --ignore public",
-    "client": "webpack serve",
+    "start": "npm-run-all --parallel server-build server-run client",
+    "server-build": "webpack watch --config webpack.server.config.js",
+    "server-run": "nodemon ./dist/server.js --ignore public",
+    "client": "webpack serve --config webpack.config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.12.13",
+    "@babel/plugin-proposal-class-properties": "^7.12.13",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.12.13",
+    "@babel/plugin-proposal-optional-chaining": "^7.12.17",
     "@babel/preset-env": "^7.12.13",
     "@babylonjs/core": "^4.2.0",
     "@babylonjs/gui": "^4.2.0",
     "@babylonjs/loaders": "^4.2.0",
-    "babel-loader": "^8.2.2"
+    "babel-loader": "^8.2.2",
+    "webpack-node-externals": "^2.5.2"
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",

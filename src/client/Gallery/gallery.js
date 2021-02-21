@@ -21,6 +21,7 @@ import { CreateSlot } from "../Utility/slotCreator";
 import { getPieces, getScene, setBuildingMeshes, getBuildingMeshes } from "../Model/state";
 import API from "../Integration/API";
 import * as LOADERS from "@babylonjs/loaders";
+import { JoinOrCreateRoom } from "./gameRoom";
 
 // Related to Dynamic Canvas sizing
 // Max/min dimension scales
@@ -33,6 +34,8 @@ export default function SetupGallery(canvasElement, polkadotAPI) {
   } = SetupEngine(canvasElement);
   
   SetupPlayer(canvasElement);
+
+  JoinOrCreateRoom();
   
   const light = new HemisphericLight("Skylight", new Vector3(0, 1, 0), scene);
   light.diffuse = new Color3(0.6, 0.5, 0.6);

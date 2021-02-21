@@ -1,4 +1,4 @@
-import { getScene } from "../../client/state.js";
+import { getScene } from "../../client/Model/state.js";
 import { SceneLoader, Vector3 } from "@babylonjs/core";
 
 export default class Player {
