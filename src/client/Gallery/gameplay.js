@@ -8,7 +8,7 @@ import {
   ExecuteCodeAction,
   PointerEventTypes,
 } from "@babylonjs/core";
-import { getGameRoom, getScene, setCamera } from "../Model/state";
+import { getGameRoom, getScene, setCamera, setPlayer } from "../Model/state";
 import "@babylonjs/loaders/glTF";
 import { PLAYER_MOVEMENT } from "../../common/MessageTypes";
 
@@ -88,6 +88,8 @@ export function SetupPlayer() {
     let mesh = meshes[0];
     mesh.scaling.scaleInPlace(0.05);
     var animating = true;
+
+    setPlayer(mesh);
 
     camera.target = mesh;
     const walkAnim = scene.getAnimationGroupByName("Walking");

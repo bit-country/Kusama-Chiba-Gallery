@@ -7,6 +7,7 @@ import {
   setScene,
   setActivePiece,
   getActivePiece,
+  getPlayer,
 } from "../Model/state";
 
 export default function SetupEngine(canvasElement) {
@@ -24,7 +25,10 @@ export default function SetupEngine(canvasElement) {
 
     const activePiece = getActivePiece();
 
-    if (camera.position.x > 8 && camera.position.y < 3 && camera.position.z > -2 && camera.position.z < 2) {
+    if (camera.target.x > 8 &&
+      camera.target.y < 3 &&
+      camera.target.z > -2 && 
+      camera.target.z < 2) {
       SetShowNavigator(true);
     } else {
       SetShowNavigator(false);
@@ -38,10 +42,10 @@ export default function SetupEngine(canvasElement) {
       } = activePiece;
 
       if (
-        camera.position.x < slotPos.x - slotDimensions.width / 2 - slotBounds ||
-        camera.position.x > slotPos.x + slotDimensions.width / 2 + slotBounds ||
-        camera.position.z < slotPos.z - slotDimensions.depth / 2 - slotBounds ||
-        camera.position.z > slotPos.z + slotDimensions.depth / 2 + slotBounds
+        camera.target.x < slotPos.x - slotDimensions.width / 2 - slotBounds ||
+        camera.target.x > slotPos.x + slotDimensions.width / 2 + slotBounds ||
+        camera.target.z < slotPos.z - slotDimensions.depth / 2 - slotBounds ||
+        camera.target.z > slotPos.z + slotDimensions.depth / 2 + slotBounds
       ) {
         SetShowNFTDetails(false);
         setActivePiece(null);
@@ -57,10 +61,10 @@ export default function SetupEngine(canvasElement) {
 
       // TODO update to use player, or consider using picking instead.
       if (
-        camera.position.x > slotPos.x - slotDimensions.width / 2 - slotBounds &&
-        camera.position.x < slotPos.x + slotDimensions.width / 2 + slotBounds &&
-        camera.position.z > slotPos.z - slotDimensions.depth / 2 - slotBounds &&
-        camera.position.z < slotPos.z + slotDimensions.depth / 2 + slotBounds
+        camera.target.x > slotPos.x - slotDimensions.width / 2 - slotBounds &&
+        camera.target.x < slotPos.x + slotDimensions.width / 2 + slotBounds &&
+        camera.target.z > slotPos.z - slotDimensions.depth / 2 - slotBounds &&
+        camera.target.z < slotPos.z + slotDimensions.depth / 2 + slotBounds
       ) {
         SetShowNFTDetails(true);
         setActivePiece(piece);

@@ -1,6 +1,7 @@
 let state = {
   pieces: [],
   camera: null,
+  player: null,
   engine: null,
   scene: null,
   activePiece: null,
@@ -54,6 +55,14 @@ export function getCamera() {
 
 export function setCamera(camera) {
   state.camera = camera;
+}
+
+export function getPlayer() {
+  return state.player;
+}
+
+export function setPlayer(player) {
+  state.player = player;
 }
 
 export function getEngine() {
