@@ -1,0 +1,356 @@
+<html>
+  <head>
+    <style>
+      #root .hud {
+        width: 0;
+        height: 0;
+      }
+
+      #root .hud > .menu {
+        position: fixed;
+        top: 1em;
+        left: 1em;
+        transition: color 100ms ease-out;
+        cursor: pointer;
+      }
+
+      #root .hud > .menu:hover {
+        color: white;
+      }
+
+      #root .hud > .menu-overlay {
+        position: fixed;
+        top: 3em;
+        left: 1em;
+      }
+
+      #root .hud > .menu-overlay.hidden {
+        display: none;
+      }
+
+      #root .hud > .title {
+        position: fixed;
+        top: 0.9em;
+        left: 3em;
+        color: white;
+      }
+
+      #root .hud > .title h2 {
+        font-size: 1.3em;
+      }
+
+      #root .hud > .login-item {
+        position: fixed;
+        top: 1em;
+        right: 1em;
+        color: white;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+
+      #root .hud > .login-item:hover {
+        color: teal;
+      }
+
+      #root .hud > .nft-details-item {
+        position: fixed;
+        top: calc(50% - 1em);
+        left: calc(50% - 1em);
+      }
+
+      #root .hud > .nft-details-item.hidden {
+        display: none;
+      }
+
+      #root .hud > .register-overlay,
+      #root .hud > .login-overlay,
+      #root .hud > .mint-overlay,
+      #root .hud > .details-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #root .hud > .register-overlay > form,
+      #root .hud > .login-overlay > form,
+      #root .hud > .mint-overlay > form,
+      #root .hud > .details-overlay > .details {
+        background-color: white;
+        width: 30em;
+        padding: 1em;
+        border-radius: 1em;
+        box-shadow: rgba(0, 0, 0, 0.25) 0 0 1em 0;
+      }
+
+      #root .hud > .register-overlay.hidden,
+      #root .hud > .login-overlay.hidden,
+      #root .hud > .mint-overlay.hidden,
+      #root .hud > .details-overlay.hidden {
+        display: none;
+      }
+
+      #root .hud > .details-overlay > .details {
+        width: 80em;
+      }
+
+      #root .hud > .details-overlay .nft-image {
+        width: 100%;
+        object-fit: contain;
+      }
+
+      #root .hud > .details-overlay .item .title {
+        font-weight: bold;
+      }
+    </style>
+    <link rel="stylesheet" href="/css/all.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+  </head>
+  <body>
+    <div id="root" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
+      <div class="hud">
+
+        <!-- HUD Menu Button and Overlay - Top Left -->
+        <div class="menu">
+          <i class="fas fa-bars"></i>
+        </div>
+        <div class="menu-overlay hidden">
+          <div class="list-group">
+            <button
+              class="list-group-item list-group-item-action item" 
+              id="login-menu-item"
+            >
+              Login
+            </button>
+            <button 
+              href="#"
+              class="list-group-item list-group-item-action item" 
+              id="register-menu-item"
+            >
+              Register
+            </button>
+            <button 
+              href="#"
+              class="list-group-item list-group-item-action item" 
+              id="mint-menu-item"
+            >
+              Mint
+            </button>
+          </div>
+        </div>
+
+        <!-- HUD Title - Top Left -->
+        <div class="title">
+          <h2>
+            Chiba Gallery
+          </h2>
+        </div>
+
+        <!-- HUD Item For Login - Top Right -->
+        <div class="login-item">
+          Login
+        </div>
+
+        <!-- HUD View Details Icon - Centre -->
+        <div class="nft-details-item hidden">
+          <i class="bi bi-eye-fill text-white"></i>
+        </div>
+
+        <!-- Registration Overlay -->
+        <div class="register-overlay hidden">
+          <form class="needs-validation" novalidate>
+            <h2 class="mb-4">
+              Register
+            </h2>
+
+            <div class="form-group">
+              <label for="register-name">
+                Name
+              </label>
+              <input 
+                id="register-name" 
+                class="form-control"
+                type="text" 
+                placeholder="Name" 
+                required
+              >
+              <div class="invalid-feedback">
+                You must enter a name.
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="register-password">
+                Password
+              </label>
+              <input 
+                id="register-password" 
+                class="form-control"
+                type="password" 
+                placeholder="Password" 
+                required
+              >
+              <div class="invalid-feedback">
+                You must enter a password.
+              </div>
+            </div>
+            <div class="form-group text-right">
+              <button type="submit" class="btn btn-primary" name="register">
+                Register
+              </button>
+              <button type="button" class="btn btn-secondary" name="cancel">
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Login Overlay -->
+        <div class="login-overlay hidden">
+          <form class="needs-validation" novalidate>
+            <h2 class="mb-4">
+              Login
+            </h2>
+
+            <div class="form-group">
+              <label for="login-name">
+                Name
+              </label>
+              <input 
+                id="login-name" 
+                class="form-control"
+                type="text" 
+                placeholder="Name" 
+                required
+              >
+              <div class="invalid-feedback">
+                You must enter a name.
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="login-password">
+                Password
+              </label>
+              <input 
+                id="login-password" 
+                class="form-control"
+                type="password" 
+                placeholder="Password" 
+                required
+              >
+              <div class="invalid-feedback">
+                You must enter a password.
+              </div>
+            </div>
+            <div class="form-group text-right">
+              <button type="submit" class="btn btn-primary" name="login">
+                Login
+              </button>
+              <button type="button" class="btn btn-secondary" name="cancel">
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Minting NFT Overlay -->
+        <div class="mint-overlay hidden">
+          <form class="needs-validation" novalidate>
+            <h2 class="mb-4">
+              Mint
+            </h2>
+
+            <div class="form-group">
+              <label for="mint-file">
+                Image or Video
+              </label>
+              <input 
+                id="mint-file"
+                class="form-control"
+                type="file" 
+                placeholder="Image" 
+                name="image" 
+                required
+              >
+              <div class="invalid-feedback">
+                You must select an image or video.
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="mint-name">
+                Name
+              </label>
+              <input 
+                id="mint-name" 
+                class="form-control"
+                type="text" 
+                placeholder="Name" 
+                name="name" 
+                required
+              >
+              <div class="invalid-feedback">
+                You must enter a name.
+              </div>
+            </div>
+            <div class="form-group text-right">
+              <button type="submit" class="btn btn-primary" name="mint">
+                Mint
+              </button>
+              <button type="button" class="btn btn-secondary" name="cancel">
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- NFT Details Overlay -->
+        <div class="details-overlay hidden">
+          <div class="details">
+            <h2 class="mb-4">
+              Details
+            </h2>
+            
+            <div class="row row-cols-2">
+              <div class="col">
+                <img 
+                  class="nft-image"
+                />
+              </div>
+              <div class="col">
+                <div class="list-group">
+                  <div class="list-group-item item" name="owner">
+                    <span class="title">Owner:</span>
+                    <span class="value">Someone</span>
+                  </div>
+                  <div class="list-group-item item" name="name">
+                    <span class="title">Name:</span>
+                    <span class="value">Neuromancer</span>
+                  </div>
+                  <div class="list-group-item item" name="artist">
+                    <span class="title">Artist:</span>
+                    <span class="value">William Gibson</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="text-right">
+              <button class="btn btn-secondary" name="close">
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <canvas id="canvas" width="1024" height="768"></canvas>
+
+      <script src="/main.js"></script>
+    </div>
+  </body>
+</html>

@@ -4,6 +4,7 @@ module.exports = {
   entry: "./src/client/index",
   output: {
     path: path.resolve(__dirname, "dist"),
+    filename: "main.js"
   },
   devServer: {
     port: 8081,
@@ -19,6 +20,11 @@ module.exports = {
           loader: "babel-loader",
           options: {
             presets: ["@babel/preset-env"],
+            plugins: [
+              "@babel/plugin-proposal-class-properties",
+              "@babel/plugin-proposal-optional-chaining",
+              "@babel/plugin-proposal-nullish-coalescing-operator"
+            ]
           },
         },
       },

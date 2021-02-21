@@ -1,4 +1,4 @@
-import { getGameRoom, getScene } from "../../client/state.js";
+import { getGameRoom, getScene } from "../../client/Model/state.js";
 import {
   SceneLoader,
   Vector3,
