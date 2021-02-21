@@ -58,4 +58,22 @@ export default new (class API {
 
     }    
   }
+
+  async getCollections() {
+    try {
+      const response = await fetch(`${BASE_URL}/collections`);
+      
+      if (!response.ok) {
+        throw new Error();
+      }
+      
+      const collections = await response.json();
+
+      setNFTCollections(collections.data);
+
+      return collections;
+    } catch (error) {
+
+    }
+  }
 })();

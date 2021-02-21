@@ -16,6 +16,8 @@ let state = {
     roof: [],
   },  
   gameRoom: null,
+  collections: [],
+  assets: null,
 };
 
 export function getSections() {
@@ -78,4 +80,20 @@ export function getGameRoom() {
 
 export function setGameRoom(room) {
   state.gameRoom = room;
+}
+
+export function setNFTCollections(collections) {
+  state.collections = collections;
+}
+
+export function getNFTCollections() {
+  return state.collections;
+}
+
+export function setNFTAssets(assets) {
+  state.assets = assets;
+}
+
+export function getNFTAssets(assets) {
+  return state.assets;
 }
