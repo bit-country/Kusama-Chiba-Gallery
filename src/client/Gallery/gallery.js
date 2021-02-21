@@ -133,6 +133,7 @@ export default function SetupGallery(canvasElement, polkadotAPI) {
     });
   
     API.getPieces().then(pieces => {
+      debugger;
       const positions = getPieces();
   
       for (let piece of pieces) {
