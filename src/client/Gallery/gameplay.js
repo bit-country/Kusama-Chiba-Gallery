@@ -10,16 +10,21 @@ import {
   FollowCamera,
   UniversalCamera,
   FreeCameraKeyboardMoveInput,
+  Mesh,
 } from "@babylonjs/core";
-import { getCamera, getGameRoom, getLocalPlayer, getScene, setCamera, setLocalPlayer, setPlayer } from "../Model/state";
+import { getCamera, getEngine, getGameRoom, getLocalPlayer, getScene, setCamera, setLocalPlayer, setPlayer } from "../Model/state";
 import "@babylonjs/loaders/glTF";
 import { PLAYER_MOVE, PLAYER_STOP } from "../../common/MessageTypes";
+import { pointerInput } from "./inputManager";
 
 let meshSpeed = 0.1;
 let meshSpeedBackwards = 0.1;
 let meshRotationSpeed = 0.1;
 
+const cameraOffset = new Vector3(5, 24, -30);
+
 export function SetupPlayer() {
+  const engine = getEngine();
   const scene = getScene();
   let player = getLocalPlayer();
   let camera = getCamera();
@@ -27,7 +32,7 @@ export function SetupPlayer() {
   if (!camera) {
     camera = new UniversalCamera(
       "playerCamera",
-      new Vector3(5, 24, -10),
+      new Vector3(cameraOffset.x, 0, cameraOffset.z),
       scene
     );
   
@@ -85,12 +90,18 @@ export function SetupPlayer() {
     ).then(({ meshes }) => {
       let mesh = meshes[0];
       mesh.scaling.scaleInPlace(0.05);
+      mesh.scaling.x *= -1;
       var animating = true;
       mesh.ellipsoidOffset = new Vector3(0, 1, 0);
   
       setLocalPlayer(mesh);
       setPlayer(mesh);
-      camera.parent = mesh;
+
+      const cameraMesh = new Mesh("cameraArm", scene, mesh);
+      cameraMesh.position.y = cameraOffset.y;
+      camera.parent = cameraMesh;
+      
+      scene.onPointerObservable.add(pointerInput.bind(null, engine, camera), PointerEventTypes.POINTERDOWN | PointerEventTypes.POINTERUP | PointerEventTypes.POINTERMOVE);
   
       const walkAnim = scene.getAnimationGroupByName("Walking");
       const walkBackAnim = scene.getAnimationGroupByName("WalkingBack");
@@ -113,11 +124,11 @@ export function SetupPlayer() {
           keydown = true;
         }
         if (inputMap["a"]) {
-          mesh.rotate(Vector3.Up(), -meshRotationSpeed);
+          mesh.moveWithCollisions(mesh.right.scaleInPlace(-meshSpeed));
           keydown = true;
         }
         if (inputMap["d"]) {
-          mesh.rotate(Vector3.Up(), meshRotationSpeed);
+          mesh.moveWithCollisions(mesh.right.scaleInPlace(meshSpeed));
           keydown = true;
         }
         if (inputMap["t"]) {
@@ -174,7 +185,7 @@ export function SetupPlayer() {
   }
 
   scene.activeCamera = camera;
-  scene.activeCamera.detachControl(document.getElementById("canvas"));
+  scene.activeCamera.detachControl(document.getElementById("canvas"), true);
 
   setCamera(camera);
 }
