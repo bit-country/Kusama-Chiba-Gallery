@@ -27,7 +27,8 @@ export function SetupPlayer() {
       Math.PI / -2,
       Math.PI / 2,
       5,
-      new Vector3(0, 1, 0)
+      new Vector3(0, 1, 0),
+      scene
     );
   
     camera.lowerRadiusLimit = 5;
