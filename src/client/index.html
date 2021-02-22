@@ -84,11 +84,21 @@
       #root .hud > .mint-overlay > form,
       #root .hud > .details-overlay > .details,
       #root .hud > .navigator-overlay > .navigator {
-        background-color: white;
+        background-color: #8a8087c2;
         width: 30em;
         padding: 1em;
         border-radius: 1em;
         box-shadow: rgba(0, 0, 0, 0.25) 0 0 1em 0;
+        opacity: 0.8;
+        transition-property: all 100ms ease-in-out;
+      }
+
+      #root .hud > .register-overlay > form:hover,
+      #root .hud > .login-overlay > form:hover,
+      #root .hud > .mint-overlay > form:hover,
+      #root .hud > .details-overlay > .details:hover,
+      #root .hud > .navigator-overlay > .navigator:hover {
+        opacity: 1;
       }
 
       #root .hud > .register-overlay.hidden,
@@ -374,13 +384,22 @@
         <!-- Navigator Overlay -->
         <div class="navigator-overlay hidden">
           <div class="navigator">
-            <h2 class="mb-4">
-              Gallery Directory
-            </h2>
-            
-            <div id="galleries-container" class="row p-4 m-n1">
+            <div class="row row-cols-2">
+              <div class="col">
+                <h2 class="mb-4">
+                  Gallery Directory
+                </h2>
+              </div>
+              <div class="col">
+                <button id="go-to-lobby" class="btn btn-secondary float-right">
+                  Go To Lobby <i class="bi bi-house-door-fill"></i>
+                </button>
+              </div>
             </div>
-            <div class="text-right">
+            
+            <div id="galleries-container" class="row p-4 mx-n1">
+            </div>
+            <div class="text-right mt-4">
               <button class="btn btn-secondary" name="close">
                 Close
               </button>

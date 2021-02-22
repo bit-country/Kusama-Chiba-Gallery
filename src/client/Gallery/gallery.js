@@ -20,15 +20,12 @@ import { SetShowNavigator, SetShowNFTDetails, SetupHUD } from "./hud";
 import Light from "../Model/Light";
 import Slot from "../Model/Slot";
 import { CreateSlot } from "../Utility/slotCreator";
-import { getPieces, getScene, setBuildingMeshes, getBuildingMeshes, getSections, getEngine, getActivePiece, getCamera, setActivePiece, setScene, setGalleryScene, addPiecePosition } from "../Model/state";
+import { getPieces, getScene, setBuildingMeshes, getBuildingMeshes, getSections, getEngine, getActivePiece, getCamera, setActivePiece, setScene, setGalleryScene, addPiecePosition, setActiveNavigator } from "../Model/state";
 import API from "../Integration/API";
 import * as LOADERS from "@babylonjs/loaders";
 import { JoinOrCreateRoom } from "./gameRoom";
 import { FLOOR, WING } from "../constants";
-
-// Related to Dynamic Canvas sizing
-// Max/min dimension scales
-const maxDimensionRatio = 1.25, minDimensionRatio = 0.8;
+import dynamicCanvas from "../Utility/dynamicCanvas";
 
 export default function SetupGallery() {
   const engine = getEngine();
@@ -50,8 +47,10 @@ export default function SetupGallery() {
       camera.target.z > -2 && 
       camera.target.z < 2) {
       SetShowNavigator(true);
+      setActiveNavigator(true);
     } else {
       SetShowNavigator(false);
+      setActiveNavigator(false);
     }
 
     if (activePiece) {
@@ -199,50 +198,7 @@ export default function SetupGallery() {
   
         // Dynamic Canvas
         // Allow for different aspect ratio textures.
-        const image = document.createElement("img");
-        image.src = piece.image;
-        image.onload = () => {
-          // Ratio of height to width
-          const ratio = image.naturalHeight / image.naturalWidth;
-  
-          // Prevent any one dimension exceeding the max
-          if (ratio > maxDimensionRatio) { // If our image is too tall
-            // Find the scale of ratio to max ratio
-            const difRatio = maxDimensionRatio / ratio;
-  
-            let finalXRatio, finalYRatio;
-            finalXRatio = difRatio; // Reduce width to match scale
-            finalYRatio = maxDimensionRatio; // Set height to max
-  
-            position.slotMesh.scaling = new Vector3(finalXRatio, finalYRatio, 1);
-          } else if (ratio < minDimensionRatio) { // If our image is too wide
-            // Find the difference from min ratio
-            const difRatio = minDimensionRatio - ratio;
-  
-            // Find the ratio between difference and actual
-            const increaseRatio = difRatio / ratio;
-  
-            let finalXRatio, finalYRatio;
-            if (increaseRatio > maxDimensionRatio) { 
-              // We would have to increase width beyond max to keep ratio
-              // so we'll max the width and reduce the height to maintain ratio
-              finalXRatio = maxDimensionRatio;
-              finalYRatio = ratio * finalXRatio;
-            } else {
-              // We can still increase the width while keeping the height at min
-              finalXRatio = 1 + increaseRatio;
-              finalYRatio = minDimensionRatio;
-            }
-            
-            position.slotMesh.scaling = new Vector3(finalXRatio, finalYRatio, 1);
-          } else {
-            // Current ratio won't hit any limits so we can apply easily.
-            position.slotMesh.scaling = new Vector3(1, ratio, 1);
-          }
-  
-          position.slotMaterial.diffuseTexture = new Texture(piece.image, scene);
-          position.art = piece.image;
-        };     
+        dynamicCanvas(scene, position, piece.image); 
       }
     })
   })

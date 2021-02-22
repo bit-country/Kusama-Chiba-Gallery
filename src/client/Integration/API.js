@@ -13,7 +13,7 @@ export default new (class API {
     return positionsLobby; 
   }
 
-  async getPieces(maxPieces) {
+  async getPieces(maxPieces = 10) {
     try {
       const response = await fetch(`${BASE_URL}/events`);
       
@@ -67,5 +67,31 @@ export default new (class API {
     } catch (error) {
 
     }
+  }
+
+  async getCollectionPieces(id, maxPieces = 9) {
+    try {      
+      const collection = await fetch(`${BASE_URL}/collections/${id}`);
+      
+      if (!collection.ok) {
+        throw new Error();
+      }
+      
+      const collectionData = await collection.json();
+      const collectionAssets = Object.entries(collectionData.data.assets).map(item => item[1]);
+      
+      let current = 0, pieces = [];
+      for (let piece of collectionAssets) {
+        if (++current > maxPieces) {
+          break;
+        }
+
+        pieces.push({ name: piece.name, image: piece.imgUrl });
+      }
+
+      return pieces;
+    } catch (error) {
+
+    }    
   }
 })();

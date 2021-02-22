@@ -1,7 +1,7 @@
 import { Texture, VideoTexture } from "@babylonjs/core";
 import API from "../Integration/API";
-import { getActivePiece, getGalleryScene, getLobbyScene, getScene, setScene } from "../Model/state";
-import { ChangeScene } from "../Utility/sceneChanger";
+import { getActiveNavigator, getActivePiece, getGalleryScene, getLobbyScene, getScene, setScene } from "../Model/state";
+import { ChangeScene, GoToGallery, GoToLobby } from "../Utility/sceneChanger";
 
 export function SetShowNFTDetails(visible) {
   const NFTDetailsIcon = document.querySelector("#root .hud .nft-details-item");
@@ -166,19 +166,26 @@ export function SetupHUD() {
 
   const navigatorOverlay = document.querySelector("#root .hud .navigator-overlay");
   const galleriesContainer = document.querySelector("#root .hud #galleries-container");
+  const navigatorGoToLobbyButton = document.querySelector("#root .hud .navigator-overlay button#go-to-lobby")
   const navigatorCloseButton = document.querySelector("#root .hud .navigator-overlay button[name='close']");
 
   navigatorCloseButton.onclick = () => {
     navigatorOverlay.classList.add("hidden");
   }
 
+  navigatorGoToLobbyButton.onclick = () => {
+    navigatorOverlay.classList.add("hidden");
+
+    GoToLobby();
+  }
+
   // Keybinding listener - handles opening menus on interaction
   function keylistener(event) {
     const piece = getActivePiece();
-    const navigatorIsHidden = navigatorOverlay.classList.contains("hidden");
+    const navigator = getActiveNavigator();
 
     if (event.key == "e") {
-      if (navigatorIsHidden) {
+      if (navigator && navigatorOverlay.classList.contains("hidden")) {
         navigatorOverlay.classList.remove("hidden");
 
         API.getCollections().then(collections => {
@@ -222,7 +229,9 @@ export function SetupHUD() {
             itemButton.className = "btn btn-outline-primary";
             itemButton.textContent = "View ";
             itemButton.onclick = () => {
-              // TODO navigate to gallery
+              GoToGallery(collection.id);
+
+              navigatorOverlay.classList.add("hidden");
             }
 
             const itemButtonIcon = document.createElement("i");

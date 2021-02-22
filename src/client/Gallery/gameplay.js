@@ -180,15 +180,5 @@ export function SetupPlayer() {
   scene.activeCamera = camera;
   scene.activeCamera.attachControl(document.getElementById("canvas"), true);
 
-
-  scene.onPointerObservable.add((pointerInfo) => {
-    if (pointerInfo.type == PointerEventTypes.POINTERDOWN) {
-      const result = scene.pick(scene.pointerX, scene.pointerY);
-
-      console.log(result.pickedPoint);
-      console.log(result.getNormal(true));
-    }
-  })
-
   setCamera(camera);
 }

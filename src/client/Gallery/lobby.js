@@ -20,7 +20,7 @@ import { SetShowNavigator, SetShowNFTDetails, SetupHUD } from "./hud";
 import Light from "../Model/Light";
 import Slot from "../Model/Slot";
 import { CreateSlot } from "../Utility/slotCreator";
-import { getPieces, getScene, setBuildingMeshes, getBuildingMeshes, getSections, getEngine, getActivePiece, getCamera, setActivePiece, setScene, setLobbyScene, addPiecePosition } from "../Model/state";
+import { getPieces, getScene, setBuildingMeshes, getBuildingMeshes, getSections, getEngine, getActivePiece, getCamera, setActivePiece, setScene, setLobbyScene, addPiecePosition, setActiveNavigator, setLobbyMesh } from "../Model/state";
 import API from "../Integration/API";
 import * as LOADERS from "@babylonjs/loaders";
 import { JoinOrCreateRoom } from "./gameRoom";
@@ -46,8 +46,10 @@ export default function SetupLobby() {
       camera.target.z > -2 && 
       camera.target.z < 2) {
       SetShowNavigator(true);
+      setActiveNavigator(true);
     } else {
       SetShowNavigator(false);
+      setActiveNavigator(false);
     }
 
     if (activePiece) {
@@ -102,27 +104,6 @@ export default function SetupLobby() {
       submesh.receiveShadows = true;
     }
 
-    API.getPositionsLobby().then(positions => {
-      for (let slot of positions) {
-          const slotInfo = CreateSlot(
-          new Slot(
-            new Vector3(slot.position.x, slot.position.y + slot.height / 2, slot.position.z), 
-            new Vector3(slot.rotation.x, slot.rotation.y, slot.rotation.z),
-            { width: slot.width, height: slot.height, depth: 0.25 }, 
-            2, 
-            false,
-            slot._id
-          ), 
-          new Light(
-            new Color3(slot.light.color.x, slot.light.color.y, slot.light.color.z),
-            slot.light.angle
-          ),
-          mesh,
-          scene
-        );
-
-        addPiecePosition(scene, slotInfo);
-      }
-    });
+    setLobbyMesh(mesh);
   });
 }

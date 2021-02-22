@@ -40,6 +40,7 @@ export function CreateSlot(slot, light, containingMeshes, scene, shadowGenerator
     bounds: slotBounds,
     slotMesh: artSlot,
     slotMaterial: artSlot.material,
+    slotLight: artLight,
     art: null,
     artist: "",
     owner: "",

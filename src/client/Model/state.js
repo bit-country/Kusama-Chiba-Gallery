@@ -10,7 +10,9 @@ let state = {
   lobby: null,
   gallery: null,
   activePiece: null,
+  activeNavigator: null,
   building: null,
+  lobbyMesh: null,
   sections: {
     bottomRightWing: [],
     bottomLeftWing: [],
@@ -38,6 +40,14 @@ export function setBuildingMeshes(building) {
   state.building = building;
 }
 
+export function getLobbyMesh() {
+  return state.lobbyMesh;
+}
+
+export function setLobbyMesh(mesh) {
+  state.lobbyMesh = mesh;
+}
+
 export function getPieces(scene) {
   if (!scene) {
     if (state.scene == state.gallery) {
@@ -46,11 +56,27 @@ export function getPieces(scene) {
       return state.piecesLobby;
     }
   }
-  
+
   if (scene == state.gallery) {
     return state.piecesGallery;
   } else {
     return state.piecesLobby;
+  }
+}
+
+export function clearPieces(scene) {
+  if (!scene) {
+    if (state.scene == state.gallery) {
+      state.piecesGallery = [];
+    } else {
+      state.piecesLobby = [];
+    }
+  }
+
+  if (scene == state.gallery) {
+    state.piecesGallery = [];
+  } else {
+    state.piecesLobby = [];
   }
 }
 
@@ -146,6 +172,14 @@ export function setNFTAssets(assets) {
   state.assets = assets;
 }
 
-export function getNFTAssets(assets) {
+export function getNFTAssets() {
   return state.assets;
+}
+
+export function getActiveNavigator() {
+  return state.activeNavigator;
+}
+
+export function setActiveNavigator(status) {
+  state.activeNavigator = status;
 }
