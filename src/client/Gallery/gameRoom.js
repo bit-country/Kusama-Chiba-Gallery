@@ -5,8 +5,9 @@ import * as Colyseus from "colyseus.js";
 // import * as HUD from "./HUD/HUDPlayerList";
 import Axios from "axios";
 import Player from "../../common/entities/Player";
-import { getScene, getCamera, setGameRoom } from "../Model/state";
+import { getScene, getCamera, setGameRoom, getPlayer } from "../Model/state";
 import { SetupPlayer } from "./gameplay";
+import { PLAYER_MOVE, PLAYER_STOP } from "../../common/MessageTypes";
 // import SetupPlayerHUD from "../gameClient/HUD/HUDPlayerList";
 const gameHttpEndpoint = "http://localhost:2657";
 const gameWS = "ws://localhost:2657";
@@ -21,27 +22,44 @@ export const JoinOrCreateRoom = () => {
     room.state.players.onAdd = (player, currentSession) => {
       const { sessionId } = room;
       if (currentSession !== sessionId) {
-        const p = new Player(player);
+        debugger;
+        new Player(player);
+      } else {
+        //TODO: update current player position & sync with the server
+        //const t = getPlayer(currentSession);
       }
-      // TODO: create the current player obj here to get the position from server
     };
     room.onStateChange((state) => {
       console.log("the room state has been updated:", state);
     });
-    room.onMessage("updatePosition", ({ sessionId, position, rotation }) => {
-      // Update the postion for other player
-      const player = getScene().getMeshByName(sessionId);
-      player.position = new Vector3(position.x, position.y, position.z);
-      if (rotation.left || rotation.right) {
-        player.rotate(Vector3.Up(), rotation.left ? -0.1 : 0.1);
+    room.onMessage(
+      "updatePosition",
+      ({ sessionId, position, rotation, movement }) => {
+        const player = getPlayer(sessionId);
+        const walking = player.Walking;
+
+        if (movement === PLAYER_MOVE) {
+          // Update the postion for other player
+          player.mesh.position = new Vector3(
+            position.x,
+            position.y,
+            position.z
+          );
+          if (rotation.left || rotation.right) {
+            player.mesh.rotate(Vector3.Up(), rotation.left ? -0.1 : 0.1);
+          }
+          walking.start(true, 1.0, walking.from, walking.to, false);
+        } else {
+          // player stop
+          const idle = player.Idle;
+          walking.stop();
+          idle.start(true, 1.0, idel.from, idel.to, false);
+        }
       }
-      const walkAnim = player.getAnimationGroupByName("Walking");
-      ///  getScene().getAnimationGroupByName("Walking");
-      walkAnim.start(true, 1.0, walkAnim.from, walkAnim.to, false);
-    });
+    );
     room.onMessage("removePlayer", ({ sessionId, players }) => {
-      const player = getScene().getMeshByName(sessionId);
-      player.dispose();
+      const player = getPlayer(sessionId);
+      player.mesh.dispose();
     });
 
     room.onLeave(() => {});

@@ -5,6 +5,7 @@ let state = {
   cameraLobby: null,
   playerGallery: null,
   playerLobby: null,
+  players: [],
   engine: null,
   scene: null,
   lobby: null,
@@ -13,6 +14,7 @@ let state = {
   activeNavigator: null,
   building: null,
   lobbyMesh: null,
+  container: null,
   sections: {
     bottomRightWing: [],
     bottomLeftWing: [],
@@ -22,7 +24,7 @@ let state = {
     topBackWing: [],
     bottomFloor: [],
     roof: [],
-  },  
+  },
   gameRoom: null,
   collections: [],
   assets: null,
@@ -108,16 +110,24 @@ export function setCamera(camera) {
   }
 }
 
-export function getPlayer() {
+export function getLocalPlayer() {
   return state.scene == state.gallery ? state.playerGallery : state.playerLobby;
 }
 
-export function setPlayer(player) {
+export function setLocalPlayer(player) {
   if (state.scene == state.gallery) {
     state.playerGallery = player;
   } else {
     state.playerLobby = player;
   }
+}
+
+export function getPlayer(sessionId) {
+  return state.players.find((x) => x.id === sessionId);
+}
+
+export function setPlayer(player) {
+  state.players.push(player);
 }
 
 export function getEngine() {
@@ -182,4 +192,12 @@ export function getActiveNavigator() {
 
 export function setActiveNavigator(status) {
   state.activeNavigator = status;
+}
+
+export function getContainer() {
+  return state.container;
+}
+
+export function setContainer(container) {
+  state.container = container;
 }
