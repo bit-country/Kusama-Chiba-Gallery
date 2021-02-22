@@ -20,11 +20,12 @@ import { SetShowNavigator, SetShowNFTDetails, SetupHUD } from "./hud";
 import Light from "../Model/Light";
 import Slot from "../Model/Slot";
 import { CreateSlot } from "../Utility/slotCreator";
-import { getPieces, getScene, setBuildingMeshes, getBuildingMeshes, getSections, getEngine, getActivePiece, getCamera, setActivePiece, setScene, setLobbyScene, addPiecePosition, setActiveNavigator, setLobbyMesh } from "../Model/state";
+import { getPieces, getScene, setBuildingMeshes, getBuildingMeshes, getSections, getEngine, getActivePiece, getCamera, setActivePiece, setScene, setGalleryScene, addPiecePosition, setActiveNavigator } from "../Model/state";
 import API from "../Integration/API";
 import * as LOADERS from "@babylonjs/loaders";
 import { JoinOrCreateRoom } from "./gameRoom";
 import { FLOOR, WING } from "../constants";
+import dynamicCanvas from "../Utility/dynamicCanvas";
 
 export default function SetupLobby() {
   const engine = getEngine();
@@ -91,19 +92,114 @@ export default function SetupLobby() {
   }
 
   scene.beforeRender = gameTick;
-  setLobbyScene(scene);
+  setGalleryScene(scene);
   
   const light = new HemisphericLight("Skylight", new Vector3(0, 1, 0), scene);
   light.diffuse = new Color3(0.6, 0.5, 0.6);
   
-  SceneLoader.ImportMesh("", "/assets/Gallery.obj", "", scene, mesh => {
+  SceneLoader.ImportMesh("", "/assets/Building6.obj", "", scene, mesh => {
+    setBuildingMeshes(mesh);
+
     for (let submesh of mesh) {
+      // Names are flipped.
+      if (submesh.name.includes("BottomLeftWing")) {
+        getSections().bottomRightWing.push(submesh);
+      } else if (submesh.name.includes("BottomRightWing")) {
+        getSections().bottomLeftWing.push(submesh);
+      } else if (submesh.name.includes("BottomFloor")) {
+        getSections().bottomFloor.push(submesh);
+      } else if (submesh.name.includes("TopFloorFront")) {
+        getSections().topFrontWing.push(submesh);
+      } else if (submesh.name.includes("TopFloorBack")) {
+        getSections().topBackWing.push(submesh);
+      } else if (submesh.name.includes("TopRightWing")) {
+        getSections().topLeftWing.push(submesh);
+      } else if (submesh.name.includes("TopLeftWing")) {
+        getSections().topRightWing.push(submesh);
+      } else if (submesh.name.includes("Roof")) {
+        getSections().roof.push(submesh);
+      }
+
       // Be careful not to exceed max GL vertex buffers
       submesh.material.maxSimultaneousLights = 10;
       submesh.checkCollisions = true;
       submesh.receiveShadows = true;
     }
 
-    setLobbyMesh(mesh);
-  });
+    API.getPositionsGallery().then(positions => {
+      for (let slot of positions) {
+  
+        let floor = FLOOR.BOTTOM; 
+        if (slot.position.y >= 3) {
+          floor = FLOOR.TOP; 
+        }
+  
+        let wing = WING.CENTRE;
+        if (slot.position.z > 12) {
+          wing = WING.RIGHT;
+        } else if (slot.position.z < -12) {
+          wing = WING.LEFT;
+        } else if (slot.position.x > 10) {
+          wing = WING.BACK;
+        } else if (slot.position.x < -10) {
+          wing = WING.FRONT;
+        } // If none then it's centre
+  
+        let section = null;
+        switch(wing) {
+          case WING.CENTRE:
+            section = getSections().bottomFloor;
+            break;
+          case WING.LEFT:
+            section = floor == FLOOR.BOTTOM ? getSections().bottomLeftWing : getSections().topLeftWing;
+            break
+          case WING.RIGHT:
+            section = floor == FLOOR.BOTTOM ? getSections().bottomRightWing : getSections().topRightWing;
+            break
+          case WING.FRONT:
+            section = getSections().topFrontWing;
+            break
+          case WING.BACK:
+            section = getSections().topBackWing;
+            break
+        }
+  
+        const slotInfo = CreateSlot(
+          new Slot(
+            new Vector3(slot.position.x, slot.position.y + slot.height / 2, slot.position.z), 
+            new Vector3(slot.rotation.x, slot.rotation.y, slot.rotation.z),
+            { width: slot.width, height: slot.height, depth: 0.25 }, 
+            2, 
+            false,
+            slot._id
+          ), 
+          new Light(
+            new Color3(slot.light.color.x, slot.light.color.y, slot.light.color.z),
+            slot.light.angle
+          ),
+          section,
+          scene
+        );
+
+        addPiecePosition(scene, slotInfo);
+      }
+    });
+  
+    API.getPieces(10).then(pieces => {
+      const positions = getPieces(scene);
+  
+      let index = 0;
+      for (let piece of pieces) {
+        if (index > positions.length) {
+          return;
+        }
+
+        const position = positions[index++];
+  
+        // Dynamic Canvas
+        // Allow for different aspect ratio textures.
+        dynamicCanvas(scene, position, piece.image); 
+      }
+    })
+  })
 }

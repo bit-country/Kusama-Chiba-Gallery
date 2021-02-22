@@ -1,10 +1,10 @@
 import "@babel/polyfill";
 import SetupEngine from "./Gallery/engine";
-import SetupGallery from "./Gallery/gallery";
+import SetupLobby from "./Gallery/lobby";
 import { SetupPlayer } from "./Gallery/gameplay";
 import { JoinOrCreateRoom } from "./Gallery/gameRoom";
 import { SetupHUD } from "./Gallery/hud";
-import SetupLobby from "./Gallery/lobby";
+import SetupGallery from "./Gallery/gallery";
 import { getGalleryScene, getLobbyScene, setScene } from "./Model/state";
 import { ChangeScene } from "./Utility/sceneChanger";
 
@@ -27,8 +27,8 @@ const result = document.getElementById("canvas");
 
 SetupEngine(result);
 
-SetupGallery();
 SetupLobby();
+SetupGallery();
 SetupHUD();
 
 ChangeScene(getGalleryScene());
