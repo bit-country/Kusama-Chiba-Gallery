@@ -1,35 +1,35 @@
-/* eslint-disable */
-
 import { Vector3 } from "@babylonjs/core";
 import * as Colyseus from "colyseus.js";
-import Player from "../../../common/entities/Player";
-import { setGameRoom, getPlayer } from "../../Model/state";
-import { PLAYER_MOVE } from "../../../common/MessageTypes";
+import Player from "../../common/entities/Player";
+import { setGameRoom, getPlayer } from "../Model/state";
+import {
+  PLAYER_MOVE,
+  BROADCAST_PLAYER_POSITION,
+} from "../../common/MessageTypes";
+import axios from "axios";
 
+// import SetupPlayerHUD from "../gameClient/HUD/HUDPlayerList";
 const gameHttpEndpoint = "http://localhost:2657";
 const gameWS = "ws://localhost:2657";
 
 const client = new Colyseus.Client(gameWS);
-const lobby = "lobby";
 
-export const EnterLobby = (username) => {
-  client.joinOrCreate(lobby, { username }).then((room) => {
+const JoinOrCreateGallery = (gallery, username) => {
+  client.joinOrCreate(gallery, { username }).then((room) => {
     setGameRoom(room);
     room.state.players.onAdd = (player, currentSession) => {
+      console.log(`entered a gallery - ${gallery}`);
       const { sessionId } = room;
       if (currentSession !== sessionId) {
-        debugger;
         new Player(player);
       } else {
         //TODO: update current player position & sync with the server
         //const t = getPlayer(currentSession);
       }
     };
-    room.onStateChange((state) => {
-      console.log("the room state has been updated:", state);
-    });
+
     room.onMessage(
-      "updatePosition",
+      BROADCAST_PLAYER_POSITION,
       ({ sessionId, position, rotation, movement }) => {
         const player = getPlayer(sessionId);
         if (player) {
@@ -54,7 +54,7 @@ export const EnterLobby = (username) => {
         }
       }
     );
-    room.onMessage("removePlayer", ({ sessionId, players }) => {
+    room.onMessage("removePlayer", ({ sessionId }) => {
       const player = getPlayer(sessionId);
       player.mesh.dispose();
     });
@@ -62,3 +62,21 @@ export const EnterLobby = (username) => {
     room.onLeave(() => {});
   });
 };
+// multiplayer
+export const EnterRoom = (galleryName, username) => {
+  // check whether the room is defined in the server or not.
+  client.getAvailableRooms(galleryName).then((rooms) => {
+    if (rooms.length === 0) {
+      axios
+        .post(`${gameHttpEndpoint}/room/new`, { name: galleryName })
+        .then((res) => {
+          JoinOrCreateGallery(galleryName, username);
+        });
+    } else {
+      JoinOrCreateGallery(galleryName, username);
+    }
+  });
+};
+
+export const GetTotalRooms = () => {};
+export const GetRoomList = () => {};

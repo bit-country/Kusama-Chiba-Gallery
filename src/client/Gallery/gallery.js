@@ -27,7 +27,7 @@ import {
 } from "../Model/state";
 import API from "../Integration/API";
 import * as LOADERS from "@babylonjs/loaders";
-import { EnterLobby } from "./Rooms/lobby";
+import { EnterRoom } from "./room";
 import { FLOOR, WING } from "../constants";
 
 // Related to Dynamic Canvas sizing
@@ -40,7 +40,7 @@ export default function SetupGallery(canvasElement, polkadotAPI) {
 
   SetupPlayer(canvasElement);
 
-  EnterLobby("Daniel");
+  EnterRoom("gallery", "Daniel");
 
   const light = new HemisphericLight("Skylight", new Vector3(0, 1, 0), scene);
   light.diffuse = new Color3(0.6, 0.5, 0.6);

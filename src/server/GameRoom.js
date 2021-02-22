@@ -2,7 +2,12 @@
 import { Room } from "colyseus";
 import StateHandler from "../common/StateHandler.js";
 import Player from "../common/Player.js";
-import { PLAYER_MOVE, PLAYER_STOP } from "../common/MessageTypes.js";
+import {
+  PLAYER_MOVE,
+  PLAYER_STOP,
+  BROADCAST_PLAYER_JOINED,
+  BROADCAST_PLAYER_POSITION,
+} from "../common/MessageTypes.js";
 
 function randomPosition(min, max) {
   return Math.random() * (max - min) + min;
@@ -16,9 +21,8 @@ export class GameRoom extends Room {
     this.onMessage(PLAYER_MOVE, (client, { position, rotation }) => {
       const player = this.state.players[client.sessionId];
       player.pressedKeys = { x: position._x, y: position._y, z: position._z };
-      //  player.rotation = { x: rotation._x, y: rotation._y, z: rotation._z };
       this.broadcast(
-        "updatePosition",
+        BROADCAST_PLAYER_POSITION,
         {
           movement: PLAYER_MOVE,
           sessionId: client.sessionId,
@@ -30,7 +34,7 @@ export class GameRoom extends Room {
     });
     this.onMessage(PLAYER_STOP, (client) => {
       this.broadcast(
-        "updatePosition",
+        BROADCAST_PLAYER_POSITION,
         {
           movement: PLAYER_STOP,
           sessionId: client.sessionId,
@@ -50,7 +54,9 @@ export class GameRoom extends Room {
       player.z = randomPosition(-1, 1);
       player.y = 0;
       this.state.players[client.sessionId] = player;
-      // check for existing event
+      this.broadcast(BROADCAST_PLAYER_JOINED, {
+        playerName: username,
+      });
     }
   }
 

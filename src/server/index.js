@@ -26,7 +26,7 @@ const gameServer = new Server({
   pingInterval: 1000,
 });
 
-gameServer.define("lobby", GameRoom);
+gameServer.define("gallery", GameRoom);
 
 app.post("/room/new", (request, response) => {
   gameServer.define(request.body.name, GameRoom);
