@@ -10,7 +10,7 @@ import {
 } from "@babylonjs/core";
 import { getGameRoom, getScene, setCamera, setPlayer } from "../Model/state";
 import "@babylonjs/loaders/glTF";
-import { PLAYER_MOVEMENT } from "../../common/MessageTypes";
+import { PLAYER_MOVE, PLAYER_STOP } from "../../common/MessageTypes";
 
 let meshSpeed = 0.1;
 let meshSpeedBackwards = 0.1;
@@ -86,12 +86,14 @@ export function SetupPlayer() {
     scene
   ).then(({ meshes, animationGroups }) => {
     let mesh = meshes[0];
+    setPlayer(mesh);
+
     mesh.scaling.scaleInPlace(0.05);
     var animating = true;
     mesh.ellipsoidOffset = new Vector3(0, 1, 0);
     camera.target = mesh;
     const walkAnim = scene.getAnimationGroupByName("Walking");
-    const walkBackAnim = scene.getAnimationGroupByName("WalkingBack");
+    //  const walkBackAnim = scene.getAnimationGroupByName("WalkingBack");
     const idleAnim = scene.getAnimationGroupByName("Idle");
     const sambaAnim = scene.getAnimationGroupByName("Samba");
     //Rendering loop (executed for everyframe)
@@ -99,17 +101,16 @@ export function SetupPlayer() {
       var keydown = false;
 
       mesh.moveWithCollisions(scene.gravity);
-      sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
 
       //Manage the movements of the character (e.g. position, direction)
       if (inputMap["w"]) {
         mesh.moveWithCollisions(mesh.forward.scaleInPlace(meshSpeed));
         keydown = true;
       }
-      if (inputMap["s"]) {
-        mesh.moveWithCollisions(mesh.forward.scaleInPlace(-meshSpeedBackwards));
-        keydown = true;
-      }
+      // if (inputMap["s"]) {
+      //   mesh.moveWithCollisions(mesh.forward.scaleInPlace(-meshSpeedBackwards));
+      //   keydown = true;
+      // }
       if (inputMap["a"]) {
         mesh.rotate(Vector3.Up(), -meshRotationSpeed);
         keydown = true;
@@ -124,29 +125,27 @@ export function SetupPlayer() {
 
       //Manage animations to be played
       if (keydown) {
-        console.log(mesh.rotation);
-        getGameRoom().send(PLAYER_MOVEMENT, {
+        getGameRoom().send(PLAYER_MOVE, {
           position: mesh.position,
           rotation: {
             left: inputMap["a"],
             right: inputMap["d"],
-            // forward: inputMap["w"],
-            // backward: inputMap["s"],
           },
         });
 
         if (!animating) {
           animating = true;
-          if (inputMap["s"]) {
-            //Walk backwards
-            walkBackAnim.start(
-              true,
-              1.0,
-              walkBackAnim.from,
-              walkBackAnim.to,
-              false
-            );
-          } else if (inputMap["t"]) {
+          // if (inputMap["s"]) {
+          //   //Walk backwards
+          //   walkBackAnim.start(
+          //     true,
+          //     1.0,
+          //     walkBackAnim.from,
+          //     walkBackAnim.to,
+          //     false
+          //   );
+          // } else
+          if (inputMap["t"]) {
             //Samba!
             sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
           } else {
@@ -155,6 +154,7 @@ export function SetupPlayer() {
           }
         }
       } else {
+        getGameRoom().send(PLAYER_STOP);
         if (animating) {
           //Default animation is idle when no key is down
           idleAnim.start(true, 1.0, idleAnim.from, idleAnim.to, false);
@@ -162,14 +162,13 @@ export function SetupPlayer() {
           //Stop all animations besides Idle Anim when no key is down
           sambaAnim.stop();
           walkAnim.stop();
-          walkBackAnim.stop();
+          // walkBackAnim.stop();
 
           //Ensure animation are played only once per rendering loop
           animating = false;
         }
       }
     });
-    setPlayer(mesh);
   });
 
   scene.onPointerObservable.add((pointerInfo) => {
