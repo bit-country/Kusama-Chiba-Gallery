@@ -127,7 +127,7 @@ export default function SetupGallery() {
       submesh.receiveShadows = true;
     }
 
-    API.getPositions().then(positions => {
+    API.getPositionsGallery().then(positions => {
       for (let slot of positions) {
   
         let floor = FLOOR.BOTTOM; 
@@ -186,7 +186,7 @@ export default function SetupGallery() {
       }
     });
   
-    API.getPieces().then(pieces => {
+    API.getPieces(10).then(pieces => {
       const positions = getPieces(scene);
   
       let index = 0;

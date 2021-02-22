@@ -1,28 +1,19 @@
 const BASE_URL = "http://cervin.everdreamsoft.com/api/v1"
 import positions from "../positions.json";
+import positionsLobby from "../positionsLobby.json"
 import pieces from "../pieces.json";
 import { setNFTCollections } from "../Model/state";
 
 export default new (class API {
-  maxPieces = 10;
-
-  async getPositions() {
-    try {
-      // const response = await fetch(`${BASE_URL}/getPositions`);
-
-      // if (!response.ok) {
-      //   throw new Error();
-      // }
-  
-      // const body = await response.json();
-
-      return positions; //body;
-    } catch (error) {
-
-    }    
+  async getPositionsGallery() {
+    return positions; 
   }
 
-  async getPieces() {
+  async getPositionsLobby() {
+    return positionsLobby; 
+  }
+
+  async getPieces(maxPieces) {
     try {
       const response = await fetch(`${BASE_URL}/events`);
       
@@ -35,7 +26,7 @@ export default new (class API {
       const validTransactions = transactions.data.filter(transaction => transaction.validity == "valid");
       
       let current = 0, index = 0, pieces = [];
-      while (current < this.maxPieces) {
+      while (current < maxPieces) {
         const collection = await fetch(`${BASE_URL}/collections/${validTransactions[index++].orbs[0].collection.id}`);
         
         if (!collection.ok) {
@@ -46,7 +37,7 @@ export default new (class API {
         const collectionAssets = Object.entries(collectionData.data.assets).map(item => item[1]);
 
         for (let piece of collectionAssets) {
-          if (++current > this.maxPieces) {
+          if (++current > maxPieces) {
             break;
           }
 
