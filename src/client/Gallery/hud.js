@@ -1,6 +1,7 @@
 import { Texture, VideoTexture } from "@babylonjs/core";
 import API from "../Integration/API";
-import { getActivePiece, getScene } from "../Model/state";
+import { getActivePiece, getGalleryScene, getLobbyScene, getScene, setScene } from "../Model/state";
+import { ChangeScene } from "../Utility/sceneChanger";
 
 export function SetShowNFTDetails(visible) {
   const NFTDetailsIcon = document.querySelector("#root .hud .nft-details-item");
@@ -191,8 +192,12 @@ export function SetupHUD() {
           }
 
           for (let collection of collections) {
+            const itemContainer = document.createElement("div");
+            itemContainer.className = "item p-1 col-xl-3 col-lg-4 col-md-6 col-12";
+
             const item = document.createElement("div");
-            item.className = "card item col-xl-3 col-lg-4 col-md-6 col-12";
+            item.className = "card h-100";
+            itemContainer.appendChild(item);
 
             const itemImage = document.createElement("img");
             itemImage.className = "card-img-top";
@@ -214,14 +219,19 @@ export function SetupHUD() {
             itemBody.appendChild(itemText);
 
             const itemButton = document.createElement("button");
-            itemButton.className = "btn btn-primary";
-            itemButton.textContent = "View";
+            itemButton.className = "btn btn-outline-primary";
+            itemButton.textContent = "View ";
             itemButton.onclick = () => {
               // TODO navigate to gallery
             }
-            itemBody.appendChild(itemButton);
 
-            galleriesContainer.appendChild(item);
+            const itemButtonIcon = document.createElement("i");
+            itemButtonIcon.className = "bi bi-arrow-right-circle";
+            itemButton.appendChild(itemButtonIcon)
+
+            item.appendChild(itemButton);
+
+            galleriesContainer.appendChild(itemContainer);
           }
         });  
       } else if (piece && piece.art && detailsOverlay.classList.contains("hidden")) {
@@ -229,6 +239,14 @@ export function SetupHUD() {
       } else if (piece && mintOverlay.classList.contains("hidden")) {
         mintOverlay.classList.remove("hidden");
       }
+    }
+
+    if (event.key == "l") {
+      ChangeScene(getLobbyScene());
+    }
+
+    if (event.key == "k") {
+      ChangeScene(getGalleryScene());
     }
   }
 

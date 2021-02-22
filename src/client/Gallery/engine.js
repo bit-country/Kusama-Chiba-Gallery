@@ -1,78 +1,11 @@
-import { Engine, GlowLayer, Scene } from "@babylonjs/core";
-import { SetShowNavigator, SetShowNFTDetails } from "./hud";
+import { Engine } from "@babylonjs/core";
 import {
-  getPieces,
-  getCamera,
+  getScene,
   setEngine,
-  setScene,
-  setActivePiece,
-  getActivePiece,
-  getPlayer,
 } from "../Model/state";
 
 export default function SetupEngine(canvasElement) {
   const engine = new Engine(canvasElement);
-
-  const scene = new Scene(engine);
-  scene.gravity.y = -0.15;
-
-  const glowLayer = new GlowLayer("GlowLayer", scene, { blurKernelSize: 64 });
-  glowLayer.intensity = 1;
-
-  function gameTick() {
-    const pieces = getPieces();
-    const camera = getCamera();
-
-    const activePiece = getActivePiece();
-
-    if (camera.target.x > 8 &&
-      camera.target.y < 3 &&
-      camera.target.z > -2 && 
-      camera.target.z < 2) {
-      SetShowNavigator(true);
-    } else {
-      SetShowNavigator(false);
-    }
-
-    if (activePiece) {
-      const {
-        position: slotPos,
-        dimensions: slotDimensions,
-        bounds: slotBounds,
-      } = activePiece;
-
-      if (
-        camera.target.x < slotPos.x - slotDimensions.width / 2 - slotBounds ||
-        camera.target.x > slotPos.x + slotDimensions.width / 2 + slotBounds ||
-        camera.target.z < slotPos.z - slotDimensions.depth / 2 - slotBounds ||
-        camera.target.z > slotPos.z + slotDimensions.depth / 2 + slotBounds
-      ) {
-        SetShowNFTDetails(false);
-        setActivePiece(null);
-      }
-    }
-
-    for (let piece of pieces) {
-      const {
-        position: slotPos,
-        dimensions: slotDimensions,
-        bounds: slotBounds,
-      } = piece;
-
-      // TODO update to use player, or consider using picking instead.
-      if (
-        camera.target.x > slotPos.x - slotDimensions.width / 2 - slotBounds &&
-        camera.target.x < slotPos.x + slotDimensions.width / 2 + slotBounds &&
-        camera.target.z > slotPos.z - slotDimensions.depth / 2 - slotBounds &&
-        camera.target.z < slotPos.z + slotDimensions.depth / 2 + slotBounds
-      ) {
-        SetShowNFTDetails(true);
-        setActivePiece(piece);
-      }
-    }
-  }
-
-  scene.beforeRender = gameTick;
 
   const resizeHandler = () => {
     const {
@@ -90,10 +23,10 @@ export default function SetupEngine(canvasElement) {
   resizeHandler();
 
   setEngine(engine);
-  setScene(scene);
 
-  return {
-    engine,
-    scene,
-  };
+  engine.runRenderLoop(() => {
+    getScene()?.render();
+  });
+
+  return engine;
 }

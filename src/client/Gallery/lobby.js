@@ -20,7 +20,7 @@ import { SetShowNavigator, SetShowNFTDetails, SetupHUD } from "./hud";
 import Light from "../Model/Light";
 import Slot from "../Model/Slot";
 import { CreateSlot } from "../Utility/slotCreator";
-import { getPieces, getScene, setBuildingMeshes, getBuildingMeshes, getSections, getEngine, getActivePiece, getCamera, setActivePiece, setScene, setGalleryScene, addPiecePosition } from "../Model/state";
+import { getPieces, getScene, setBuildingMeshes, getBuildingMeshes, getSections, getEngine, getActivePiece, getCamera, setActivePiece, setScene, setLobbyScene, addPiecePosition } from "../Model/state";
 import API from "../Integration/API";
 import * as LOADERS from "@babylonjs/loaders";
 import { JoinOrCreateRoom } from "./gameRoom";
@@ -30,7 +30,7 @@ import { FLOOR, WING } from "../constants";
 // Max/min dimension scales
 const maxDimensionRatio = 1.25, minDimensionRatio = 0.8;
 
-export default function SetupGallery() {
+export default function SetupLobby() {
   const engine = getEngine();
 
   const scene = new Scene(engine);
@@ -93,7 +93,7 @@ export default function SetupGallery() {
   }
 
   scene.beforeRender = gameTick;
-  setGalleryScene(scene);
+  setLobbyScene(scene);
   
   const light = new HemisphericLight("Skylight", new Vector3(0, 1, 0), scene);
   light.diffuse = new Color3(0.6, 0.5, 0.6);
@@ -244,6 +244,6 @@ export default function SetupGallery() {
           position.art = piece.image;
         };     
       }
-    })
-  })
+    });
+  });
 }
