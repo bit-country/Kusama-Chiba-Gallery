@@ -14,7 +14,8 @@ let state = {
   activeNavigator: null,
   building: null,
   lobbyMesh: null,
-  container: null,
+  galleryContainer: null,
+  lobbyContainer: null,
   sections: {
     bottomRightWing: [],
     bottomLeftWing: [],
@@ -195,9 +196,13 @@ export function setActiveNavigator(status) {
 }
 
 export function getContainer() {
-  return state.container;
+  return state.scene == state.gallery ? state.galleryContainer : state.lobbyContainer;
 }
 
 export function setContainer(container) {
-  state.container = container;
+  if (state.scene == state.gallery) {
+    state.galleryContainer = container;
+  } else {
+    state.lobbyContainer = container;
+  }
 }
