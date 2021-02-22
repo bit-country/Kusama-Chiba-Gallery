@@ -3,8 +3,8 @@ import { SceneLoader, Vector3, AssetContainer } from "@babylonjs/core";
 
 export default class Player {
   constructor(player) {
-    const { username, x, y, z, sessionId } = player;
-    this.username = username;
+    const { name, x, y, z, sessionId } = player;
+    this.name = name;
     this.isSelfPlayer = false;
     this.id = sessionId;
     const scene = getScene();

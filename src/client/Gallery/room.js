@@ -14,11 +14,19 @@ const gameWS = "ws://localhost:2657";
 
 const client = new Colyseus.Client(gameWS);
 
-const JoinOrCreateGallery = (gallery, username) => {
-  client.joinOrCreate(gallery, { username }).then((room) => {
+const JoinOrCreateGallery = (gallery, playerName) => {
+  client.joinOrCreate(gallery, { name: playerName }).then((room) => {
     setGameRoom(room);
     room.state.players.onAdd = (player, currentSession) => {
       console.log(`entered a gallery - ${gallery}`);
+      const chat = document.querySelector("#root .hud .chat");
+      let nameText = document.createElement("p");
+      nameText.style.color = "#ffffffad";
+      nameText.style.margin = "0";
+      nameText.append(
+        `[${player.joinedTime}] ${player.name} has joined the room.`
+      );
+      chat.append(nameText);
       const { sessionId } = room;
       if (currentSession !== sessionId) {
         new Player(player);
@@ -63,17 +71,17 @@ const JoinOrCreateGallery = (gallery, username) => {
   });
 };
 // multiplayer
-export const EnterRoom = (galleryName, username) => {
+export const EnterRoom = (galleryName, playerName) => {
   // check whether the room is defined in the server or not.
   client.getAvailableRooms(galleryName).then((rooms) => {
     if (rooms.length === 0) {
       axios
         .post(`${gameHttpEndpoint}/room/new`, { name: galleryName })
         .then((res) => {
-          JoinOrCreateGallery(galleryName, username);
+          JoinOrCreateGallery(galleryName, playerName);
         });
     } else {
-      JoinOrCreateGallery(galleryName, username);
+      JoinOrCreateGallery(galleryName, playerName);
     }
   });
 };

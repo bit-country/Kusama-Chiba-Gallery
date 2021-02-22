@@ -44,18 +44,21 @@ export class GameRoom extends Room {
     });
   }
 
-  onJoin(client, { username }) {
+  onJoin(client, { name }) {
+    debugger;
     console.log(`${client.sessionId} joined`);
     if (typeof this.state.players[client.sessionId] === "undefined") {
       let player = new Player();
-      player.name = username;
+      player.name = name;
+      debugger;
+      player.joinedTime = new Date().toLocaleTimeString();
       player.sessionId = client.sessionId;
       player.x = randomPosition(-1, 1);
       player.z = randomPosition(-1, 1);
       player.y = 0;
       this.state.players[client.sessionId] = player;
       this.broadcast(BROADCAST_PLAYER_JOINED, {
-        playerName: username,
+        playerName: name,
       });
     }
   }
