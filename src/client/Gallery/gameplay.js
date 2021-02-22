@@ -84,25 +84,22 @@ export function SetupPlayer() {
     `./graphics/character/HVGirl.glb`,
     null,
     scene
-  ).then(({ meshes }) => {
+  ).then(({ meshes, animationGroups }) => {
     let mesh = meshes[0];
     mesh.scaling.scaleInPlace(0.05);
     var animating = true;
     mesh.ellipsoidOffset = new Vector3(0, 1, 0);
-
-    setPlayer(mesh);
-
     camera.target = mesh;
     const walkAnim = scene.getAnimationGroupByName("Walking");
     const walkBackAnim = scene.getAnimationGroupByName("WalkingBack");
     const idleAnim = scene.getAnimationGroupByName("Idle");
     const sambaAnim = scene.getAnimationGroupByName("Samba");
-
     //Rendering loop (executed for everyframe)
     scene.onBeforeRenderObservable.add(() => {
       var keydown = false;
 
       mesh.moveWithCollisions(scene.gravity);
+      sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
 
       //Manage the movements of the character (e.g. position, direction)
       if (inputMap["w"]) {
@@ -172,6 +169,7 @@ export function SetupPlayer() {
         }
       }
     });
+    setPlayer(mesh);
   });
 
   scene.onPointerObservable.add((pointerInfo) => {
@@ -181,7 +179,7 @@ export function SetupPlayer() {
       console.log(result.pickedPoint);
       console.log(result.getNormal(true));
     }
-  })
+  });
 
   setCamera(camera);
 }

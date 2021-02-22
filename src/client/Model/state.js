@@ -1,11 +1,12 @@
 let state = {
   pieces: [],
   camera: null,
-  player: null,
+  players: [],
   engine: null,
   scene: null,
   activePiece: null,
   building: null,
+  container: null,
   sections: {
     bottomRightWing: [],
     bottomLeftWing: [],
@@ -15,7 +16,7 @@ let state = {
     topBackWing: [],
     bottomFloor: [],
     roof: [],
-  },  
+  },
   gameRoom: null,
   collections: [],
   assets: null,
@@ -57,12 +58,12 @@ export function setCamera(camera) {
   state.camera = camera;
 }
 
-export function getPlayer() {
-  return state.player;
+export function getPlayer(sessionId) {
+  return state.players.find((x) => x.id === sessionId);
 }
 
 export function setPlayer(player) {
-  state.player = player;
+  state.players.push(player);
 }
 
 export function getEngine() {
@@ -105,4 +106,12 @@ export function setNFTAssets(assets) {
 
 export function getNFTAssets(assets) {
   return state.assets;
+}
+
+export function getContainer() {
+  return state.container;
+}
+
+export function setContainer(container) {
+  state.container = container;
 }

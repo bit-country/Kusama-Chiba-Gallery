@@ -5,7 +5,7 @@ import * as Colyseus from "colyseus.js";
 // import * as HUD from "./HUD/HUDPlayerList";
 import Axios from "axios";
 import Player from "../../common/entities/Player";
-import { getScene, getCamera, setGameRoom } from "../Model/state";
+import { getScene, getCamera, setGameRoom, getPlayer } from "../Model/state";
 import { SetupPlayer } from "./gameplay";
 // import SetupPlayerHUD from "../gameClient/HUD/HUDPlayerList";
 const gameHttpEndpoint = "http://localhost:2657";
@@ -21,7 +21,7 @@ export const JoinOrCreateRoom = () => {
     room.state.players.onAdd = (player, currentSession) => {
       const { sessionId } = room;
       if (currentSession !== sessionId) {
-        const p = new Player(player);
+        new Player(player);
       }
       // TODO: create the current player obj here to get the position from server
     };
@@ -31,13 +31,17 @@ export const JoinOrCreateRoom = () => {
     room.onMessage("updatePosition", ({ sessionId, position, rotation }) => {
       // Update the postion for other player
       const player = getScene().getMeshByName(sessionId);
+      const thePlayer = getPlayer(sessionId);
+      debugger;
       player.position = new Vector3(position.x, position.y, position.z);
       if (rotation.left || rotation.right) {
         player.rotate(Vector3.Up(), rotation.left ? -0.1 : 0.1);
       }
-      const walkAnim = player.getAnimationGroupByName("Walking");
+      const w = thePlayer.animationGroups[2];
+      // const walkAnim = player.getAnimationGroupByName("Walking");
       ///  getScene().getAnimationGroupByName("Walking");
-      walkAnim.start(true, 1.0, walkAnim.from, walkAnim.to, false);
+      w.start(true, 1.0, w.from, w.to, false);
+    
     });
     room.onMessage("removePlayer", ({ sessionId, players }) => {
       const player = getScene().getMeshByName(sessionId);

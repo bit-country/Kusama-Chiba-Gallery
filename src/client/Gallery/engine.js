@@ -1,4 +1,4 @@
-import { Engine, GlowLayer, Scene } from "@babylonjs/core";
+import { Engine, GlowLayer, Scene, AssetContainer } from "@babylonjs/core";
 import { SetShowNavigator, SetShowNFTDetails } from "./hud";
 import {
   getPieces,
@@ -8,6 +8,7 @@ import {
   setActivePiece,
   getActivePiece,
   getPlayer,
+  setContainer,
 } from "../Model/state";
 
 export default function SetupEngine(canvasElement) {
@@ -15,7 +16,8 @@ export default function SetupEngine(canvasElement) {
 
   const scene = new Scene(engine);
   scene.gravity.y = -0.15;
-
+  const container = new AssetContainer(scene);
+  setContainer(container);
   const glowLayer = new GlowLayer("GlowLayer", scene, { blurKernelSize: 64 });
   glowLayer.intensity = 1;
 
@@ -25,10 +27,12 @@ export default function SetupEngine(canvasElement) {
 
     const activePiece = getActivePiece();
 
-    if (camera.target.x > 8 &&
+    if (
+      camera.target.x > 8 &&
       camera.target.y < 3 &&
-      camera.target.z > -2 && 
-      camera.target.z < 2) {
+      camera.target.z > -2 &&
+      camera.target.z < 2
+    ) {
       SetShowNavigator(true);
     } else {
       SetShowNavigator(false);
