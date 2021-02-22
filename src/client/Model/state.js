@@ -1,3 +1,5 @@
+// Refactor to categorise below state.
+// Consider using class if it simplifies the idea.
 let state = {
   piecesGallery: [],
   piecesLobby: [],

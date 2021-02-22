@@ -7,6 +7,9 @@ import {
   ActionManager,
   ExecuteCodeAction,
   PointerEventTypes,
+  FollowCamera,
+  UniversalCamera,
+  FreeCameraKeyboardMoveInput,
 } from "@babylonjs/core";
 import { getCamera, getGameRoom, getLocalPlayer, getScene, setCamera, setLocalPlayer, setPlayer } from "../Model/state";
 import "@babylonjs/loaders/glTF";
@@ -22,22 +25,14 @@ export function SetupPlayer() {
   let camera = getCamera();
 
   if (!camera) {
-    camera = new ArcRotateCamera(
+    camera = new UniversalCamera(
       "playerCamera",
-      Math.PI / -2,
-      Math.PI / 2,
-      5,
-      new Vector3(0, 1, 0),
+      new Vector3(5, 24, -10),
       scene
     );
   
-    camera.lowerRadiusLimit = 5;
-    camera.upperRadiusLimit = 10;
-    camera.wheelDeltaPercentage = 0.01;
     camera.ellipsoid = new Vector3(0.25, 0.5, 0.25);
-    camera.applyGravity = true;
     camera.checkCollisions = true;
-    camera.speed = 0.3;
 
     setCamera(camera);
   }
@@ -95,8 +90,8 @@ export function SetupPlayer() {
   
       setLocalPlayer(mesh);
       setPlayer(mesh);
+      camera.parent = mesh;
   
-      camera.target = mesh;
       const walkAnim = scene.getAnimationGroupByName("Walking");
       const walkBackAnim = scene.getAnimationGroupByName("WalkingBack");
       const idleAnim = scene.getAnimationGroupByName("Idle");
@@ -179,7 +174,7 @@ export function SetupPlayer() {
   }
 
   scene.activeCamera = camera;
-  scene.activeCamera.attachControl(document.getElementById("canvas"), true);
+  scene.activeCamera.detachControl(document.getElementById("canvas"));
 
   setCamera(camera);
 }
