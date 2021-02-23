@@ -24,7 +24,6 @@ import { CreateSlot } from "../Utility/slotCreator";
 import { getPieces, getScene, setBuildingMeshes, getBuildingMeshes, getSections, getEngine, getActivePiece, getCamera, setActivePiece, setScene, setGalleryScene, addPiecePosition, setActiveNavigator, setContainer } from "../Model/state";
 import API from "../Integration/API";
 import * as LOADERS from "@babylonjs/loaders";
-import { JoinOrCreateRoom } from "./gameRoom";
 import { FLOOR, WING } from "../constants";
 import dynamicCanvas from "../Utility/dynamicCanvas";
 

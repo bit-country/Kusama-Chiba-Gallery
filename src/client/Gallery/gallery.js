@@ -13,7 +13,7 @@ import {
   StandardMaterial,
   Texture,
   Vector3,
-  Vector4
+  Vector4,
 } from "@babylonjs/core";
 import SetupEngine from "./engine";
 import { SetupPlayer } from "./gameplay";
@@ -24,7 +24,7 @@ import { CreateSlot } from "../Utility/slotCreator";
 import { getPieces, getScene, setBuildingMeshes, getBuildingMeshes, getSections, getEngine, getActivePiece, getCamera, setActivePiece, setScene, setLobbyScene, addPiecePosition, setActiveNavigator, setLobbyMesh, setContainer } from "../Model/state";
 import API from "../Integration/API";
 import * as LOADERS from "@babylonjs/loaders";
-import { JoinOrCreateRoom } from "./gameRoom";
+import { EnterRoom } from "./room";
 import { FLOOR, WING } from "../constants";
 
 export default function SetupGallery() {

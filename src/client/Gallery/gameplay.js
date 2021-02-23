@@ -137,7 +137,7 @@ export function SetupPlayer() {
   
         //Manage animations to be played
         if (keydown) {
-          getGameRoom().send(PLAYER_MOVE, {
+          getGameRoom()?.send(PLAYER_MOVE, {
             position: mesh.position,
             rotation: {
               left: inputMap["a"],
@@ -166,7 +166,7 @@ export function SetupPlayer() {
             }
           }
         } else {
-          getGameRoom().send(PLAYER_STOP);
+          getGameRoom()?.send(PLAYER_STOP);
           if (animating) {
             //Default animation is idle when no key is down
             idleAnim.start(true, 1.0, idleAnim.from, idleAnim.to, false);

@@ -1,5 +1,6 @@
 import { Color3, Texture, Vector3 } from "@babylonjs/core";
 import { SetupPlayer } from "../Gallery/gameplay";
+import { EnterRoom } from "../Gallery/room";
 import API from "../Integration/API";
 import Light from "../Model/Light";
 import Slot from "../Model/Slot";
@@ -8,10 +9,14 @@ import dynamicCanvas from "./dynamicCanvas";
 import { CreateSlot } from "./slotCreator";
 
 export function GoToLobby() {
+  EnterRoom("lobby", "Daniel");
+  
   ChangeScene(getGalleryScene());
 }
 
 export function GoToGallery(id) {
+  EnterRoom("gallery", "Daniel");
+  
   const scene = getLobbyScene();
   ChangeScene(scene);
 

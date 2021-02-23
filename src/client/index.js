@@ -2,11 +2,11 @@ import "@babel/polyfill";
 import SetupEngine from "./Gallery/engine";
 import SetupLobby from "./Gallery/lobby";
 import { SetupPlayer } from "./Gallery/gameplay";
-import { JoinOrCreateRoom } from "./Gallery/gameRoom";
 import { SetupHUD } from "./Gallery/hud";
 import SetupGallery from "./Gallery/gallery";
 import { getGalleryScene, getLobbyScene, setScene } from "./Model/state";
 import { ChangeScene } from "./Utility/sceneChanger";
+import { EnterRoom } from "./Gallery/room";
 
 // Basic form validation check, stop default behaviour.
 const forms = document.getElementsByTagName("form");
@@ -32,4 +32,4 @@ SetupGallery();
 SetupHUD();
 
 ChangeScene(getGalleryScene());
-JoinOrCreateRoom();
+EnterRoom("lobby", "Daniel");
