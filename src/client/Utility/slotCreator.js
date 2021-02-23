@@ -8,7 +8,10 @@ import {
   Vector3
 } from "@babylonjs/core";
 import { CreateLight } from "./lightCreator";
-import { addPiecePosition, getActivePiece, getBuildingMeshes, getLocalPlayer } from "../Model/state";
+import { 
+  getActivePiece, 
+  getLocalPlayer 
+} from "../Model/state";
 import {
   SetDetailsOverVisibility
 } from "../Gallery/hud";
@@ -34,7 +37,7 @@ export function CreateSlot(slot, light, containingMeshes, scene, shadowGenerator
     .registerAction(
       new ExecuteCodeAction(
         ActionManager.OnPickTrigger,
-        event => {
+        () => {
           SetDetailsOverVisibility(true);
         },
         new PredicateCondition(

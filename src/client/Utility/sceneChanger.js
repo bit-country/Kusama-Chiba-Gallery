@@ -4,11 +4,21 @@ import { EnterRoom } from "../Gallery/room";
 import API from "../Integration/API";
 import Light from "../Model/Light";
 import Slot from "../Model/Slot";
-import { addPiecePosition, clearPieces, getGalleryScene, getLobbyMesh, getLobbyScene, getLocalPlayer, getPieces, setScene } from "../Model/state";
+import { 
+  addPiecePosition, 
+  clearPieces, 
+  getGalleryScene, 
+  getLobbyMesh, 
+  getLobbyScene, 
+  getLocalPlayer, 
+  getPieces, 
+  setScene 
+} from "../Model/state";
 import dynamicCanvas from "./dynamicCanvas";
 import { CreateSlot } from "./slotCreator";
 
 export function GoToLobby() {
+  // TODO, update to use name from selected username and character
   EnterRoom("lobby", "Daniel");
   
   ChangeScene(getGalleryScene());
@@ -18,6 +28,7 @@ export function GoToLobby() {
 }
 
 export function GoToGallery(id) {
+  // TODO, update to use name from selected username and character
   EnterRoom("gallery", "Daniel");
   
   const scene = getLobbyScene();

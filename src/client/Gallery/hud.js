@@ -27,9 +27,10 @@ export function SetShowNavigator(visible) {
 
 export let SetDetailsOverVisibility;
 
-const initialSetuoHUD = () => {
+const initialSetupHUD = () => {
   const genderSelection = document.querySelectorAll(".genderSelection");
   const btnEnterGallery = document.querySelector("#btnEnterGallery");
+
   btnEnterGallery.addEventListener("click", function (event) {
     event.preventDefault();
     const iptUsername = document.querySelector("#iptUsername").value;
@@ -40,6 +41,7 @@ const initialSetuoHUD = () => {
     toHide.style.visibility = "hidden";
     InitialSetup(iptUsername, selectedCharacter);
   });
+
   for (const btn of genderSelection) {
     btn.addEventListener("click", function (event) {
       let selectedCharacter = document.querySelector("#selectedCharacter");
@@ -53,6 +55,7 @@ const initialSetuoHUD = () => {
       } else {
         event.target.className += " genderSelected";
       }
+
       if (event.target.innerText === "Female") {
         const male = document.querySelector(".genderSelection-male");
         male.className = male.className.replace("genderSelected", "");
@@ -65,10 +68,11 @@ const initialSetuoHUD = () => {
 };
 
 export function SetupHUD() {
+  initialSetupHUD();
+  
   // Menu section
   const menu = document.querySelector("#root .hud .menu");
   const menuOverlay = document.querySelector("#root .hud .menu-overlay");
-  initialSetuoHUD();
 
   menu.onclick = () => {
     menuOverlay.classList.toggle("hidden");

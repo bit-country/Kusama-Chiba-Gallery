@@ -1,30 +1,29 @@
 import {
-  AssetContainer,
-  Color3, 
-  DirectionalLight,
+  Color3,
   GlowLayer,
   HemisphericLight,
-  Mesh,
-  MeshBuilder, 
-  PointerEventTypes, 
-  PointLight, 
+  PointerEventTypes,
   Scene, 
-  SceneLoader, 
-  ShadowGenerator,
-  StandardMaterial,
-  Texture,
+  SceneLoader,
   Vector3,
-  Vector4
 } from "@babylonjs/core";
-import SetupEngine from "./engine";
-import { SetupPlayer } from "./gameplay";
-import { SetShowNavigator, SetShowNFTDetails, SetupHUD } from "./hud";
+import { SetShowNavigator, SetShowNFTDetails } from "./hud";
 import Light from "../Model/Light";
 import Slot from "../Model/Slot";
 import { CreateSlot } from "../Utility/slotCreator";
-import { getPieces, getScene, setBuildingMeshes, getBuildingMeshes, getSections, getEngine, getActivePiece, getCamera, setActivePiece, setScene, setGalleryScene, addPiecePosition, setActiveNavigator, setContainer, getLocalPlayer } from "../Model/state";
+import { 
+  getPieces, 
+  setBuildingMeshes, 
+  getSections, 
+  getEngine, 
+  getActivePiece, 
+  setActivePiece, 
+  setGalleryScene, 
+  addPiecePosition, 
+  setActiveNavigator, 
+  getLocalPlayer 
+} from "../Model/state";
 import API from "../Integration/API";
-import * as LOADERS from "@babylonjs/loaders";
 import { FLOOR, WING } from "../constants";
 import dynamicCanvas from "../Utility/dynamicCanvas";
 
@@ -49,9 +48,6 @@ export default function SetupLobby() {
       detailsIcon.style = "";
     }
   }, PointerEventTypes.POINTERMOVE);
-
-  const container = new AssetContainer(scene);
-  setContainer(scene, container);
 
   const glowLayer = new GlowLayer("GlowLayer", scene, { blurKernelSize: 64 });
   glowLayer.intensity = 1;

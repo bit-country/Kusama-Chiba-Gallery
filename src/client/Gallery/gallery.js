@@ -1,32 +1,23 @@
 import {
-  AssetContainer,
   Color3, 
-  DirectionalLight,
   GlowLayer,
   HemisphericLight,
-  Mesh,
-  MeshBuilder, 
   PointerEventTypes, 
-  PointLight, 
   Scene, 
   SceneLoader, 
-  ShadowGenerator,
-  StandardMaterial,
-  Texture,
   Vector3,
-  Vector4,
 } from "@babylonjs/core";
-import SetupEngine from "./engine";
-import { SetupPlayer, importCharacter } from "./gameplay";
-import { SetShowNavigator, SetShowNFTDetails, SetupHUD } from "./hud";
-import Light from "../Model/Light";
-import Slot from "../Model/Slot";
-import { CreateSlot } from "../Utility/slotCreator";
-import { getPieces, getScene, setBuildingMeshes, getBuildingMeshes, getSections, getEngine, getActivePiece, getCamera, setActivePiece, setScene, setLobbyScene, addPiecePosition, setActiveNavigator, setLobbyMesh, setContainer, getLocalPlayer } from "../Model/state";
-import API from "../Integration/API";
-import * as LOADERS from "@babylonjs/loaders";
-import { EnterRoom } from "./room";
-import { FLOOR, WING } from "../constants";
+import { SetShowNavigator, SetShowNFTDetails } from "./hud";
+import { 
+  getPieces, 
+  getEngine, 
+  getActivePiece, 
+  setActivePiece, 
+  setLobbyScene, 
+  setActiveNavigator, 
+  setLobbyMesh, 
+  getLocalPlayer 
+} from "../Model/state";
 
 const detailsIcon = document.querySelector("#root .hud .nft-details-item");
 
@@ -49,9 +40,6 @@ export default function SetupGallery() {
       detailsIcon.style = "";
     }
   }, PointerEventTypes.POINTERMOVE);
-
-  const container = new AssetContainer(scene);
-  setContainer(scene, container);
 
   const glowLayer = new GlowLayer("GlowLayer", scene, { blurKernelSize: 64 });
   glowLayer.intensity = 1;

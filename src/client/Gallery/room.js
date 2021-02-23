@@ -18,6 +18,7 @@ export const InitialSetup = (username, character) => {
 };
 
 const client = new Colyseus.Client(gameWS);
+
 const ToChat = (text) => {
   const chat = document.querySelector("#root .hud .chat");
   let nameText = document.createElement("p");
@@ -26,6 +27,7 @@ const ToChat = (text) => {
   nameText.append(text);
   chat.append(nameText);
 };
+
 const JoinOrCreateGallery = (gallery, playerName, character) => {
   client.joinOrCreate(gallery, { name: playerName }).then((room) => {
     setGameRoom(room);
@@ -56,9 +58,13 @@ const JoinOrCreateGallery = (gallery, playerName, character) => {
               position.y,
               position.z
             );
-            if (rotation.left || rotation.right) {
-              player.mesh.rotate(Vector3.Up(), rotation.left ? -0.1 : 0.1);
-            }
+
+            player.mesh.rotation = new Vector3(
+              rotation._x,
+              rotation._y,
+              rotation._z
+            );
+
             walking.start(true, 1.0, walking.from, walking.to, false);
           } else {
             // player stop
@@ -69,15 +75,18 @@ const JoinOrCreateGallery = (gallery, playerName, character) => {
         }
       }
     );
+
     room.onMessage("removePlayer", ({ player, sessionId }) => {
       const playerUI = getPlayer(sessionId);
       playerUI.mesh.dispose();
+
       ToChat(`[${player.leaveTime}] ${player.name} left the room.`);
     });
 
     room.onLeave(() => {});
   });
 };
+
 // multiplayer
 export const EnterRoom = (galleryName, playerName, character) => {
   // check whether the room is defined in the server or not.
