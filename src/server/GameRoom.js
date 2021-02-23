@@ -45,12 +45,11 @@ export class GameRoom extends Room {
   }
 
   onJoin(client, { name }) {
-    debugger;
     console.log(`${client.sessionId} joined`);
     if (typeof this.state.players[client.sessionId] === "undefined") {
       let player = new Player();
       player.name = name;
-      debugger;
+
       player.joinedTime = new Date().toLocaleTimeString();
       player.sessionId = client.sessionId;
       player.x = randomPosition(-1, 1);
@@ -75,11 +74,14 @@ export class GameRoom extends Room {
   }
 
   onLeave(client) {
-    delete this.state.players[client.sessionId];
+    this.state.players[
+      client.sessionId
+    ].leaveTime = new Date().toLocaleTimeString();
     this.broadcast("removePlayer", {
       sessionId: client.sessionId,
-      players: this.state.players,
+      player: this.state.players[client.sessionId],
     });
+    delete this.state.players[client.sessionId];
   }
 
   onDispose() {

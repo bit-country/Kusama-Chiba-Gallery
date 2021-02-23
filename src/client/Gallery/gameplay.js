@@ -8,7 +8,13 @@ import {
   ExecuteCodeAction,
   PointerEventTypes,
 } from "@babylonjs/core";
-import { getGameRoom, getScene, setCamera, setPlayer } from "../Model/state";
+import {
+  getCamera,
+  getGameRoom,
+  getScene,
+  setCamera,
+  setPlayer,
+} from "../Model/state";
 import "@babylonjs/loaders/glTF";
 import { PLAYER_MOVE, PLAYER_STOP } from "../../common/MessageTypes";
 
@@ -16,47 +22,12 @@ let meshSpeed = 0.1;
 let meshSpeedBackwards = 0.1;
 let meshRotationSpeed = 0.1;
 
-export function SetupPlayer() {
-  const scene = getScene();
-
-  var camera = new ArcRotateCamera(
-    "playerCamera",
-    Math.PI / -2,
-    Math.PI / 2,
-    5,
-    new Vector3(0, 1, 0),
-    scene
-  );
-
-  scene.activeCamera = camera;
-  scene.activeCamera.attachControl(document.getElementById("canvas"), true);
-  camera.lowerRadiusLimit = 5;
-  camera.upperRadiusLimit = 10;
-  camera.wheelDeltaPercentage = 0.01;
-  camera.ellipsoid = new Vector3(0.25, 0.5, 0.25);
-  camera.applyGravity = true;
-  camera.checkCollisions = true;
-  camera.speed = 0.3;
-
-  // Speed at which we move.
-
-  // Input constants
-  const UP_ARROW = 38,
-    W_KEY = 87;
-  const RIGHT_ARROW = 39,
-    D_KEY = 68;
-  const LEFT_ARROW = 37,
-    A_KEY = 65;
-  const DOWN_ARROW = 40,
-    S_KEY = 83;
-  const SPACE_KEY = 32,
-    CONTROL_KEY = 17;
-  const SHIFT_KEY = 16,
-    ALT_KEY = 18;
-
+export const importCharacter = (character) => {
   // Keyboard events
   var inputMap = {};
-
+  debugger;
+  const scene = getScene();
+  const camera = getCamera();
   scene.actionManager = new ActionManager(scene);
 
   scene.actionManager.registerAction(
@@ -70,14 +41,6 @@ export function SetupPlayer() {
       inputMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
     })
   );
-
-  // Binding for movement.
-  // camera.inputs.attached.keyboard.keysUp = [UP_ARROW, W_KEY];
-  // camera.inputs.attached.keyboard.keysDown = [DOWN_ARROW, S_KEY];
-  // camera.inputs.attached.keyboard.keysLeft = [LEFT_ARROW, A_KEY];
-  // camera.inputs.attached.keyboard.keysRight = [RIGHT_ARROW, D_KEY];
-  // camera.inputs.attached.keyboard.keysUpward = [];
-  // camera.inputs.attached.keyboard.keysDownward = [];
 
   SceneLoader.ImportMeshAsync(
     null,
@@ -154,6 +117,8 @@ export function SetupPlayer() {
           }
         }
       } else {
+        debugger;
+
         getGameRoom().send(PLAYER_STOP);
         if (animating) {
           //Default animation is idle when no key is down
@@ -169,7 +134,53 @@ export function SetupPlayer() {
         }
       }
     });
+  //  scene.render();
   });
+};
+export function SetupPlayer() {
+  const scene = getScene();
+  var camera = new ArcRotateCamera(
+    "playerCamera",
+    Math.PI / -2,
+    Math.PI / 2,
+    5,
+    new Vector3(0, 1, 0),
+    scene
+  );
+
+  scene.activeCamera = camera;
+  scene.activeCamera.attachControl(document.getElementById("canvas"), true);
+  camera.lowerRadiusLimit = 5;
+  camera.upperRadiusLimit = 10;
+  camera.wheelDeltaPercentage = 0.01;
+  camera.ellipsoid = new Vector3(0.25, 0.5, 0.25);
+  camera.applyGravity = true;
+  camera.checkCollisions = true;
+  camera.speed = 0.3;
+
+  // Speed at which we move.
+
+  // Input constants
+  const UP_ARROW = 38,
+    W_KEY = 87;
+  const RIGHT_ARROW = 39,
+    D_KEY = 68;
+  const LEFT_ARROW = 37,
+    A_KEY = 65;
+  const DOWN_ARROW = 40,
+    S_KEY = 83;
+  const SPACE_KEY = 32,
+    CONTROL_KEY = 17;
+  const SHIFT_KEY = 16,
+    ALT_KEY = 18;
+
+  // Binding for movement.
+  // camera.inputs.attached.keyboard.keysUp = [UP_ARROW, W_KEY];
+  // camera.inputs.attached.keyboard.keysDown = [DOWN_ARROW, S_KEY];
+  // camera.inputs.attached.keyboard.keysLeft = [LEFT_ARROW, A_KEY];
+  // camera.inputs.attached.keyboard.keysRight = [RIGHT_ARROW, D_KEY];
+  // camera.inputs.attached.keyboard.keysUpward = [];
+  // camera.inputs.attached.keyboard.keysDownward = [];
 
   scene.onPointerObservable.add((pointerInfo) => {
     if (pointerInfo.type == PointerEventTypes.POINTERDOWN) {

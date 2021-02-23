@@ -13,7 +13,7 @@ import {
   Vector4,
 } from "@babylonjs/core";
 import SetupEngine from "./engine";
-import { SetupPlayer } from "./gameplay";
+import { SetupPlayer, importCharacter } from "./gameplay";
 import { SetupHUD } from "./hud";
 import Light from "../Model/Light";
 import Slot from "../Model/Slot";
@@ -35,12 +35,15 @@ import { FLOOR, WING } from "../constants";
 const maxDimensionRatio = 1.25,
   minDimensionRatio = 0.8;
 
+export const InitialSetup = (username, character) => {
+  EnterRoom("gallery", username || "Guest", character);
+};
 export default function SetupGallery(canvasElement, polkadotAPI) {
   const { engine, scene } = SetupEngine(canvasElement);
 
   SetupPlayer(canvasElement);
 
-  EnterRoom("gallery", "Daniel");
+  // EnterRoom("gallery", "Daniel");
 
   const light = new HemisphericLight("Skylight", new Vector3(0, 1, 0), scene);
   light.diffuse = new Color3(0.6, 0.5, 0.6);

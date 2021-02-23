@@ -1,5 +1,7 @@
 import { Texture, VideoTexture } from "@babylonjs/core";
 import { getActivePiece, getScene } from "../Model/state";
+import * as GUI from "babylonjs-gui";
+import { InitialSetup } from "./gallery";
 
 export function SetShowNFTDetails(visible) {
   const NFTDetailsIcon = document.querySelector("#root .hud .nft-details-item");
@@ -21,37 +23,104 @@ export function SetShowNavigator(visible) {
   }
 }
 
+const initialSetuoHUD = () => {
+  const genderSelection = document.querySelectorAll(".genderSelection");
+  const btnEnterGallery = document.querySelector("#btnEnterGallery");
+  btnEnterGallery.addEventListener("click", function (event) {
+    event.preventDefault();
+    const iptUsername = document.querySelector("#iptUsername").value;
+    let selectedCharacter = document.querySelector("#selectedCharacter")
+      .innerHTML;
+    
+    const toHide = document.querySelector("#characterSelection");
+    toHide.style.visibility = "hidden";
+    InitialSetup(iptUsername, selectedCharacter);
+  });
+  for (const btn of genderSelection) {
+    btn.addEventListener("click", function (event) {
+      let selectedCharacter = document.querySelector("#selectedCharacter");
+      selectedCharacter.innerHTML = event.target.value;
+
+      if (event.target.className.includes("genderSelected")) {
+        event.target.className = event.target.className.replace(
+          "genderSelected",
+          ""
+        );
+      } else {
+        event.target.className += " genderSelected";
+      }
+      if (event.target.innerText === "Female") {
+        const male = document.querySelector(".genderSelection-male");
+        male.className = male.className.replace("genderSelected", "");
+      } else {
+        const female = document.querySelector(".genderSelection-female");
+        female.className = female.className.replace("genderSelected", "");
+      }
+    });
+  }
+};
 export function SetupHUD() {
   const menu = document.querySelector("#root .hud .menu");
   const menuOverlay = document.querySelector("#root .hud .menu-overlay");
+  initialSetuoHUD();
 
   menu.onclick = () => {
     menuOverlay.classList.toggle("hidden");
-  }
+  };
 
-  const loginMenuItem = document.querySelector("#root .hud .menu-overlay #login-menu-item");
+  const loginMenuItem = document.querySelector(
+    "#root .hud .menu-overlay #login-menu-item"
+  );
   const loginTopItem = document.querySelector("#root .hud .login-item");
   const loginOverlay = document.querySelector("#root .hud .login-overlay");
-  const loginButton = document.querySelector("#root .hud .login-overlay button[name='login']");
-  const loginCancelButton = document.querySelector("#root .hud .login-overlay button[name='cancel']");
+  const loginButton = document.querySelector(
+    "#root .hud .login-overlay button[name='login']"
+  );
+  const loginCancelButton = document.querySelector(
+    "#root .hud .login-overlay button[name='cancel']"
+  );
 
-  const registerMenuItem = document.querySelector("#root .hud .menu-overlay #register-menu-item");
-  const registerOverlay = document.querySelector("#root .hud .register-overlay");
-  const registerButton = document.querySelector("#root .hud .register-overlay button[name='register']");
-  const registerCancelButton = document.querySelector("#root .hud .register-overlay button[name='cancel']");
+  const registerMenuItem = document.querySelector(
+    "#root .hud .menu-overlay #register-menu-item"
+  );
+  const registerOverlay = document.querySelector(
+    "#root .hud .register-overlay"
+  );
+  const registerButton = document.querySelector(
+    "#root .hud .register-overlay button[name='register']"
+  );
+  const registerCancelButton = document.querySelector(
+    "#root .hud .register-overlay button[name='cancel']"
+  );
 
-  const mintMenuItem = document.querySelector("#root .hud .menu-overlay #mint-menu-item");
+  const mintMenuItem = document.querySelector(
+    "#root .hud .menu-overlay #mint-menu-item"
+  );
   const mintOverlay = document.querySelector("#root .hud .mint-overlay");
-  const mintButton = document.querySelector("#root .hud .mint-overlay button[name='mint']");
-  const mintCancelButton = document.querySelector("#root .hud .mint-overlay button[name='cancel']");
+  const mintButton = document.querySelector(
+    "#root .hud .mint-overlay button[name='mint']"
+  );
+  const mintCancelButton = document.querySelector(
+    "#root .hud .mint-overlay button[name='cancel']"
+  );
 
   const detailsOverlay = document.querySelector("#root .hud .details-overlay");
-  const detailsImg = document.querySelector("#root .hud .details-overlay img.nft-image");
-  const detailsOwner = document.querySelector("#root .hud .details-overlay .ui.list .item[name='owner'] span.value");
-  const detailsArtist = document.querySelector("#root .hud .details-overlay .ui.list .item[name='artist'] span.value");
-  const detailsName = document.querySelector("#root .hud .details-overlay .ui.list .item[name='name'] span.value");
-  const detailsCloseButton = document.querySelector("#root .hud .details-overlay button[name='close']");
-  const setDetailsOverVisibility = visible => {
+  const detailsImg = document.querySelector(
+    "#root .hud .details-overlay img.nft-image"
+  );
+  const detailsOwner = document.querySelector(
+    "#root .hud .details-overlay .ui.list .item[name='owner'] span.value"
+  );
+  const detailsArtist = document.querySelector(
+    "#root .hud .details-overlay .ui.list .item[name='artist'] span.value"
+  );
+  const detailsName = document.querySelector(
+    "#root .hud .details-overlay .ui.list .item[name='name'] span.value"
+  );
+  const detailsCloseButton = document.querySelector(
+    "#root .hud .details-overlay button[name='close']"
+  );
+  const setDetailsOverVisibility = (visible) => {
     if (visible) {
       detailsOverlay.classList.remove("hidden");
 
@@ -65,36 +134,34 @@ export function SetupHUD() {
     } else {
       detailsOverlay.classList.add("hidden");
     }
-  }
+  };
 
   loginMenuItem.onclick = () => {
     loginOverlay.classList.toggle("hidden");
     menuOverlay.classList.toggle("hidden");
-  }
+  };
   loginTopItem.onclick = () => {
     loginOverlay.classList.toggle("hidden");
     menuOverlay.classList.add("hidden");
-  }
+  };
 
   loginCancelButton.onclick = () => {
     loginOverlay.classList.toggle("hidden");
-  }
-
+  };
 
   registerMenuItem.onclick = () => {
     registerOverlay.classList.toggle("hidden");
     menuOverlay.classList.toggle("hidden");
-  }
+  };
 
   registerCancelButton.onclick = () => {
     registerOverlay.classList.toggle("hidden");
-  }
-
+  };
 
   mintMenuItem.onclick = () => {
     mintOverlay.classList.toggle("hidden");
     menuOverlay.classList.toggle("hidden");
-  }
+  };
 
   mintButton.onclick = () => {
     const piece = getActivePiece();
@@ -107,10 +174,14 @@ export function SetupHUD() {
       return;
     }
 
-    const imageInput = document.querySelector("#root .hud > .mint-overlay input[name='image']");
+    const imageInput = document.querySelector(
+      "#root .hud > .mint-overlay input[name='image']"
+    );
     const ownerName = "Example";
     const artistName = "Yourself";
-    const pieceNameInput = document.querySelector("#root .hud > .mint-overlay input[name='name']");
+    const pieceNameInput = document.querySelector(
+      "#root .hud > .mint-overlay input[name='name']"
+    );
 
     if (!pieceNameInput || pieceNameInput.value.length < 1) {
       return;
@@ -122,17 +193,31 @@ export function SetupHUD() {
 
     const uploadedMedia = URL.createObjectURL(imageInput.files[0]);
     if (imageInput.files[0].type.includes("image")) {
-      piece.slotMaterial.diffuseTexture = new Texture(uploadedMedia, getScene());
-      
+      piece.slotMaterial.diffuseTexture = new Texture(
+        uploadedMedia,
+        getScene()
+      );
+
       if (piece.emissive) {
-        piece.slotMaterial.emissiveTexture = new Texture(uploadedMedia, getScene());
+        piece.slotMaterial.emissiveTexture = new Texture(
+          uploadedMedia,
+          getScene()
+        );
         piece.slotMaterial.emissiveColor = new Color3(1, 1, 1);
       }
     } else if (imageInput.files[0].type.includes("video")) {
-      piece.slotMaterial.diffuseTexture = new VideoTexture("VideoPiece", uploadedMedia, getScene());
+      piece.slotMaterial.diffuseTexture = new VideoTexture(
+        "VideoPiece",
+        uploadedMedia,
+        getScene()
+      );
 
       if (piece.emissive) {
-        piece.slotMaterial.emissiveTexture = new VideoTexture("VideoPiece", uploadedMedia, getScene());
+        piece.slotMaterial.emissiveTexture = new VideoTexture(
+          "VideoPiece",
+          uploadedMedia,
+          getScene()
+        );
         piece.slotMaterial.emissiveColor = new Color3(1, 1, 1);
       }
     }
@@ -143,16 +228,15 @@ export function SetupHUD() {
     piece.owner = ownerName;
 
     mintOverlay.classList.toggle("hidden");
-  }
+  };
 
   mintCancelButton.onclick = () => {
     mintOverlay.classList.toggle("hidden");
-  }
-
+  };
 
   function keylistener(event) {
     const piece = getActivePiece();
-    
+
     if (event.key == "e" && piece) {
       if (piece.art && detailsOverlay.classList.contains("hidden")) {
         setDetailsOverVisibility(true);
@@ -166,5 +250,5 @@ export function SetupHUD() {
 
   detailsCloseButton.onclick = () => {
     detailsOverlay.classList.toggle("hidden");
-  }
+  };
 }
