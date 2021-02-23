@@ -23,6 +23,8 @@ export function SetShowNavigator(visible) {
   }
 }
 
+export let SetDetailsOverVisibility;
+
 export function SetupHUD() {
   // Menu section
   const menu = document.querySelector("#root .hud .menu");
@@ -143,7 +145,7 @@ export function SetupHUD() {
   const detailsName = document.querySelector("#root .hud .details-overlay .ui.list .item[name='name'] span.value");
   const detailsCloseButton = document.querySelector("#root .hud .details-overlay button[name='close']");
 
-  const setDetailsOverVisibility = visible => {
+  const setDetailsOverVisibility = SetDetailsOverVisibility = visible => {
     if (visible) {
       detailsOverlay.classList.remove("hidden");
 

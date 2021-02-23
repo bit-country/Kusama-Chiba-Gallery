@@ -115,9 +115,13 @@
         width: 80em;
       }
 
-      #root .hud > .details-overlay > .details > .row.content > .col.image-col,
-      #root .hud .navigator-overlay > .navigator > #galleries-container {
+      #root .hud > .details-overlay > .details > .row.content {
+        height: 100%;
         max-height: calc(100% - 8em);
+      }
+
+      #root .hud > .details-overlay > .details > .row.content > .col.image-col {
+        max-height: 100%;
         overflow: auto;
       }
 
@@ -132,6 +136,11 @@
 
       #root .hud .navigator-overlay > .navigator {
         width: 80em;
+      }
+
+      #root .hud .navigator-overlay > .navigator > #galleries-container {
+        max-height: calc(100% - 8em);
+        overflow: auto;
       }
 
       #root .hud .navigator-overlay > .navigator > #galleries-container > div.item  img  {
