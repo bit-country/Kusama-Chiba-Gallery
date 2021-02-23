@@ -1,6 +1,6 @@
 const BASE_URL = "http://cervin.everdreamsoft.com/api/v1"
-import positions from "../positions.json";
-import positionsLobby from "../positionsLobby.json"
+import positions from "../positions";
+import positionsLobby from "../positionsLobby"
 import pieces from "../pieces.json";
 import { setNFTCollections } from "../Model/state";
 

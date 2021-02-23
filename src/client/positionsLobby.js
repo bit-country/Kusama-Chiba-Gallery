@@ -1,4 +1,4 @@
-[
+export default [
   {
     "position": {
       "x":-9.98,
