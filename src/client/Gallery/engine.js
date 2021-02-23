@@ -4,6 +4,7 @@ import {
   setEngine,
 } from "../Model/state";
 
+// Set up engine, resizing and render loop.
 export default function SetupEngine(canvasElement) {
   const engine = new Engine(canvasElement);
 

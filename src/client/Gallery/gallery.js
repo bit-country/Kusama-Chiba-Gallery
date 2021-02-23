@@ -21,12 +21,13 @@ import { SetShowNavigator, SetShowNFTDetails, SetupHUD } from "./hud";
 import Light from "../Model/Light";
 import Slot from "../Model/Slot";
 import { CreateSlot } from "../Utility/slotCreator";
-import { getPieces, getScene, setBuildingMeshes, getBuildingMeshes, getSections, getEngine, getActivePiece, getCamera, setActivePiece, setScene, setLobbyScene, addPiecePosition, setActiveNavigator, setLobbyMesh, setContainer } from "../Model/state";
+import { getPieces, getScene, setBuildingMeshes, getBuildingMeshes, getSections, getEngine, getActivePiece, getCamera, setActivePiece, setScene, setLobbyScene, addPiecePosition, setActiveNavigator, setLobbyMesh, setContainer, getLocalPlayer } from "../Model/state";
 import API from "../Integration/API";
 import * as LOADERS from "@babylonjs/loaders";
 import { EnterRoom } from "./room";
 import { FLOOR, WING } from "../constants";
 
+// Set up the gallery scenes and their associated word logic.
 export default function SetupGallery() {
   const engine = getEngine();
 
@@ -41,14 +42,18 @@ export default function SetupGallery() {
 
   function gameTick() {
     const pieces = getPieces();
-    const camera = getCamera();
+    const player = getLocalPlayer();
+
+    if (!player) {
+      return;
+    }
 
     const activePiece = getActivePiece();
 
-    if (camera.target.x > 8 &&
-      camera.target.y < 3 &&
-      camera.target.z > -2 && 
-      camera.target.z < 2) {
+    if (player.position.x > 8 &&
+      player.position.y < 3 &&
+      player.position.z > -2 && 
+      player.position.z < 2) {
       SetShowNavigator(true);
       setActiveNavigator(true);
     } else {
@@ -64,10 +69,10 @@ export default function SetupGallery() {
       } = activePiece;
 
       if (
-        camera.target.x < slotPos.x - slotDimensions.width / 2 - slotBounds ||
-        camera.target.x > slotPos.x + slotDimensions.width / 2 + slotBounds ||
-        camera.target.z < slotPos.z - slotDimensions.depth / 2 - slotBounds ||
-        camera.target.z > slotPos.z + slotDimensions.depth / 2 + slotBounds
+        player.position.x < slotPos.x - slotDimensions.width / 2 - slotBounds ||
+        player.position.x > slotPos.x + slotDimensions.width / 2 + slotBounds ||
+        player.position.z < slotPos.z - slotDimensions.depth / 2 - slotBounds ||
+        player.position.z > slotPos.z + slotDimensions.depth / 2 + slotBounds
       ) {
         SetShowNFTDetails(false);
         setActivePiece(null);
@@ -83,10 +88,10 @@ export default function SetupGallery() {
 
       // TODO update to use player, or consider using picking instead.
       if (
-        camera.target.x > slotPos.x - slotDimensions.width / 2 - slotBounds &&
-        camera.target.x < slotPos.x + slotDimensions.width / 2 + slotBounds &&
-        camera.target.z > slotPos.z - slotDimensions.depth / 2 - slotBounds &&
-        camera.target.z < slotPos.z + slotDimensions.depth / 2 + slotBounds
+        player.position.x > slotPos.x - slotDimensions.width / 2 - slotBounds &&
+        player.position.x < slotPos.x + slotDimensions.width / 2 + slotBounds &&
+        player.position.z > slotPos.z - slotDimensions.depth / 2 - slotBounds &&
+        player.position.z < slotPos.z + slotDimensions.depth / 2 + slotBounds
       ) {
         SetShowNFTDetails(true);
         setActivePiece(piece);

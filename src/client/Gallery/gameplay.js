@@ -23,6 +23,8 @@ let meshRotationSpeed = 0.1;
 
 const cameraOffset = new Vector3(5, 24, -30);
 
+// Set up the player, and input.
+// Follow singleton method for camera and local player.
 export function SetupPlayer() {
   const engine = getEngine();
   const scene = getScene();
@@ -97,10 +99,12 @@ export function SetupPlayer() {
       setLocalPlayer(mesh);
       setPlayer(mesh);
 
+      // Set up camera arm to make it easier to reasonable rotations for mouse movement.
       const cameraMesh = new Mesh("cameraArm", scene, mesh);
       cameraMesh.position.y = cameraOffset.y;
       camera.parent = cameraMesh;
 
+      // Bind in our pointer input, handles camera and player rotation.
       scene.onPointerObservable.add(pointerInput.bind(null, engine, camera), PointerEventTypes.POINTERDOWN | PointerEventTypes.POINTERUP | PointerEventTypes.POINTERMOVE);
   
       const walkAnim = scene.getAnimationGroupByName("Walking");
@@ -119,18 +123,23 @@ export function SetupPlayer() {
           mesh.moveWithCollisions(mesh.forward.scaleInPlace(meshSpeed));
           keydown = true;
         }
+
         if (inputMap["s"]) {
           mesh.moveWithCollisions(mesh.forward.scaleInPlace(-meshSpeedBackwards));
           keydown = true;
         }
+
         if (inputMap["a"]) {
           mesh.moveWithCollisions(mesh.right.scaleInPlace(-meshSpeed));
           keydown = true;
         }
+
         if (inputMap["d"]) {
           mesh.moveWithCollisions(mesh.right.scaleInPlace(meshSpeed));
           keydown = true;
         }
+
+        // Dance
         if (inputMap["t"]) {
           keydown = true;
         }
