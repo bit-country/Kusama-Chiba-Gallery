@@ -12,7 +12,7 @@ import {
   FreeCameraKeyboardMoveInput,
   Mesh,
 } from "@babylonjs/core";
-import { getCamera, getEngine, getGameRoom, getLocalPlayer, getScene, setCamera, setLocalPlayer, setPlayer } from "../Model/state";
+import { getCamera, getEngine, getGalleryScene, getGameRoom, getLobbyScene, getLocalPlayer, getScene, setCamera, setLocalPlayer, setPlayer } from "../Model/state";
 import "@babylonjs/loaders/glTF";
 import { PLAYER_MOVE, PLAYER_STOP } from "../../common/MessageTypes";
 import { pointerInput } from "./inputManager";
@@ -100,7 +100,7 @@ export function SetupPlayer() {
       const cameraMesh = new Mesh("cameraArm", scene, mesh);
       cameraMesh.position.y = cameraOffset.y;
       camera.parent = cameraMesh;
-      
+
       scene.onPointerObservable.add(pointerInput.bind(null, engine, camera), PointerEventTypes.POINTERDOWN | PointerEventTypes.POINTERUP | PointerEventTypes.POINTERMOVE);
   
       const walkAnim = scene.getAnimationGroupByName("Walking");
@@ -185,7 +185,7 @@ export function SetupPlayer() {
   }
 
   scene.activeCamera = camera;
-  scene.activeCamera.detachControl(document.getElementById("canvas"), true);
+  scene.activeCamera.detachControl(document.getElementById("canvas"));
 
   setCamera(camera);
 }

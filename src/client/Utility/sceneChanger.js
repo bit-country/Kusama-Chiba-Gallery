@@ -69,5 +69,21 @@ export function GoToGallery(id) {
 
 export function ChangeScene(scene) {
   setScene(scene);
+
+  // Disable input on alternative scene.
+  if (scene == getGalleryScene()) {
+    getLobbyScene().detachControl();
+  } else {
+    getGalleryScene().detachControl();
+  }
+
   SetupPlayer();
+  
+  // Ensure removal of bindings to allow for proper reconnect.
+  scene.detachControl();
+  // Manually unset keyboard as will still be true from the beginning.
+  scene._inputManager._keyboardIsAttached = false;
+
+  // Attach again for input.
+  scene.attachControl();
 }
