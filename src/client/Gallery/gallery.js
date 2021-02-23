@@ -17,7 +17,7 @@ import {
   Vector4,
 } from "@babylonjs/core";
 import SetupEngine from "./engine";
-import { SetupPlayer } from "./gameplay";
+import { SetupPlayer, importCharacter } from "./gameplay";
 import { SetShowNavigator, SetShowNFTDetails, SetupHUD } from "./hud";
 import Light from "../Model/Light";
 import Slot from "../Model/Slot";

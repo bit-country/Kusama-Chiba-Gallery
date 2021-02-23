@@ -23,6 +23,122 @@ let meshRotationSpeed = 0.1;
 
 const cameraOffset = new Vector3(5, 24, -30);
 
+export const importCharacter = (character) => {
+  // Keyboard events
+  var inputMap = {};
+  debugger;
+  const scene = getScene();
+  const camera = getCamera();
+  scene.actionManager = new ActionManager(scene);
+
+  scene.actionManager.registerAction(
+    new ExecuteCodeAction(ActionManager.OnKeyDownTrigger, function (evt) {
+      inputMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
+    })
+  );
+
+  scene.actionManager.registerAction(
+    new ExecuteCodeAction(ActionManager.OnKeyUpTrigger, function (evt) {
+      inputMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
+    })
+  );
+
+  SceneLoader.ImportMeshAsync(
+    null,
+    `./graphics/character/HVGirl.glb`,
+    null,
+    scene
+  ).then(({ meshes, animationGroups }) => {
+    let mesh = meshes[0];
+    setPlayer(mesh);
+
+    mesh.scaling.scaleInPlace(0.05);
+    var animating = true;
+    mesh.ellipsoidOffset = new Vector3(0, 1, 0);
+    camera.target = mesh;
+    const walkAnim = scene.getAnimationGroupByName("Walking");
+    //  const walkBackAnim = scene.getAnimationGroupByName("WalkingBack");
+    const idleAnim = scene.getAnimationGroupByName("Idle");
+    const sambaAnim = scene.getAnimationGroupByName("Samba");
+    //Rendering loop (executed for everyframe)
+    scene.onBeforeRenderObservable.add(() => {
+      var keydown = false;
+
+      mesh.moveWithCollisions(scene.gravity);
+
+      //Manage the movements of the character (e.g. position, direction)
+      if (inputMap["w"]) {
+        mesh.moveWithCollisions(mesh.forward.scaleInPlace(meshSpeed));
+        keydown = true;
+      }
+      // if (inputMap["s"]) {
+      //   mesh.moveWithCollisions(mesh.forward.scaleInPlace(-meshSpeedBackwards));
+      //   keydown = true;
+      // }
+      if (inputMap["a"]) {
+        mesh.rotate(Vector3.Up(), -meshRotationSpeed);
+        keydown = true;
+      }
+      if (inputMap["d"]) {
+        mesh.rotate(Vector3.Up(), meshRotationSpeed);
+        keydown = true;
+      }
+      if (inputMap["t"]) {
+        keydown = true;
+      }
+
+      //Manage animations to be played
+      if (keydown) {
+        getGameRoom().send(PLAYER_MOVE, {
+          position: mesh.position,
+          rotation: {
+            left: inputMap["a"],
+            right: inputMap["d"],
+          },
+        });
+
+        if (!animating) {
+          animating = true;
+          // if (inputMap["s"]) {
+          //   //Walk backwards
+          //   walkBackAnim.start(
+          //     true,
+          //     1.0,
+          //     walkBackAnim.from,
+          //     walkBackAnim.to,
+          //     false
+          //   );
+          // } else
+          if (inputMap["t"]) {
+            //Samba!
+            sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
+          } else {
+            //Walk
+            walkAnim.start(true, 1.0, walkAnim.from, walkAnim.to, false);
+          }
+        }
+      } else {
+        debugger;
+
+        getGameRoom().send(PLAYER_STOP);
+        if (animating) {
+          //Default animation is idle when no key is down
+          idleAnim.start(true, 1.0, idleAnim.from, idleAnim.to, false);
+
+          //Stop all animations besides Idle Anim when no key is down
+          sambaAnim.stop();
+          walkAnim.stop();
+          // walkBackAnim.stop();
+
+          //Ensure animation are played only once per rendering loop
+          animating = false;
+        }
+      }
+    });
+  //  scene.render();
+  });
+};
+
 // Set up the player, and input.
 // Follow singleton method for camera and local player.
 export function SetupPlayer() {

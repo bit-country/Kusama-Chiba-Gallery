@@ -1,4 +1,4 @@
-const BASE_URL = "https://localhost:44336"
+const BASE_URL = "https://localhost:44336";
 
 export default class API {
   async display() {
@@ -8,29 +8,23 @@ export default class API {
       if (!response.ok) {
         throw new Error();
       }
-  
+
       const body = await response.json();
-
-      debugger;
-    } catch (error) {
-
-    }    
+    } catch (error) {}
   }
 
   async nft(collectionId, tokenId) {
     try {
-      const response = await fetch(`${BASE_URL}/nft/${collectionId}/${tokenId}`);
+      const response = await fetch(
+        `${BASE_URL}/nft/${collectionId}/${tokenId}`
+      );
 
       if (!response.ok) {
         throw new Error();
       }
-  
+
       const body = await response.json();
-
-      debugger;
-    } catch (error) {
-
-    }
+    } catch (error) {}
   }
 
   async walletCollections(address) {
@@ -40,13 +34,9 @@ export default class API {
       if (!response.ok) {
         throw new Error();
       }
-  
+
       const body = await response.json();
-
-      debugger;
-    } catch (error) {
-
-    }
+    } catch (error) {}
   }
 
   async walletOwnedNFTs(address) {
@@ -56,45 +46,37 @@ export default class API {
       if (!response.ok) {
         throw new Error();
       }
-  
+
       const body = await response.json();
-
-      debugger;
-    } catch (error) {
-
-    }
+    } catch (error) {}
   }
 
   async walletCreatedNFTs(address) {
     try {
-      const response = await fetch(`${BASE_URL}/wallet/created_nfts/${address}`);
+      const response = await fetch(
+        `${BASE_URL}/wallet/created_nfts/${address}`
+      );
 
       if (!response.ok) {
         throw new Error();
       }
-  
+
       const body = await response.json();
-
-      debugger;
-    } catch (error) {
-
-    }
+    } catch (error) {}
   }
 
   async walletAppreciation(address) {
     try {
-      const response = await fetch(`${BASE_URL}/wallet/appreciation/${address}`);
+      const response = await fetch(
+        `${BASE_URL}/wallet/appreciation/${address}`
+      );
 
       if (!response.ok) {
         throw new Error();
       }
-  
+
       const body = await response.json();
-
-      debugger;
-    } catch (error) {
-
-    }
+    } catch (error) {}
   }
 
   async offers(address) {
@@ -104,13 +86,9 @@ export default class API {
       if (!response.ok) {
         throw new Error();
       }
-  
+
       const body = await response.json();
-
-      debugger;
-    } catch (error) {
-
-    }
+    } catch (error) {}
   }
 
   async report(status) {
@@ -120,12 +98,8 @@ export default class API {
       if (!response.ok) {
         throw new Error();
       }
-  
+
       const body = await response.json();
-
-      debugger;
-    } catch (error) {
-
-    }
+    } catch (error) {}
   }
 }
