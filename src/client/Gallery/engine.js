@@ -4,9 +4,19 @@ import {
   setEngine,
 } from "../Model/state";
 
+let pointerDownHandler;
+
 // Set up engine, resizing and render loop.
 export default function SetupEngine(canvasElement) {
   const engine = new Engine(canvasElement);
+
+  pointerDownHandler = () => {
+    if (!engine.isFullscreen) {
+      engine.enterFullscreen(true);
+    }
+  }
+  
+  canvasElement.addEventListener("pointerdown", pointerDownHandler);
 
   const resizeHandler = () => {
     const {
