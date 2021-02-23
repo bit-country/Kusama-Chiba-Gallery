@@ -6,6 +6,7 @@ import {
   HemisphericLight,
   Mesh,
   MeshBuilder, 
+  PointerEventTypes, 
   PointLight, 
   Scene, 
   SceneLoader, 
@@ -27,12 +28,27 @@ import * as LOADERS from "@babylonjs/loaders";
 import { FLOOR, WING } from "../constants";
 import dynamicCanvas from "../Utility/dynamicCanvas";
 
+const detailsIcon = document.querySelector("#root .hud .nft-details-item");
+
 // Set up the lobby scene and the associated word logic.
 export default function SetupLobby() {
   const engine = getEngine();
 
   const scene = new Scene(engine);
   scene.gravity.y = -0.15;
+  scene.hoverCursor = "none";
+
+  scene.onPointerObservable.add(pointerInfo => {
+    const { pickInfo } = pointerInfo;
+
+    if (pickInfo.pickedMesh && 
+      pickInfo.pickedMesh.actionManager && 
+      pickInfo.pickedMesh.actionManager.hasPointerTriggers) {
+      detailsIcon.style = `top: ${scene.pointerY}; left: ${scene.pointerX}`;
+    } else {
+      detailsIcon.style = "";
+    }
+  }, PointerEventTypes.POINTERMOVE);
 
   const container = new AssetContainer(scene);
   setContainer(scene, container);

@@ -6,6 +6,7 @@ import {
   HemisphericLight,
   Mesh,
   MeshBuilder, 
+  PointerEventTypes, 
   PointLight, 
   Scene, 
   SceneLoader, 
@@ -27,12 +28,27 @@ import * as LOADERS from "@babylonjs/loaders";
 import { EnterRoom } from "./room";
 import { FLOOR, WING } from "../constants";
 
+const detailsIcon = document.querySelector("#root .hud .nft-details-item");
+
 // Set up the gallery scenes and their associated word logic.
 export default function SetupGallery() {
   const engine = getEngine();
 
   const scene = new Scene(engine);
   scene.gravity.y = -0.15;
+  scene.hoverCursor = "none";
+
+  scene.onPointerObservable.add(pointerInfo => {
+    const { pickInfo } = pointerInfo;
+
+    if (pickInfo.pickedMesh && 
+      pickInfo.pickedMesh.actionManager && 
+      pickInfo.pickedMesh.actionManager.hasPointerTriggers) {
+      detailsIcon.style = `top: ${scene.pointerY}; left: ${scene.pointerX}`;
+    } else {
+      detailsIcon.style = "";
+    }
+  }, PointerEventTypes.POINTERMOVE);
 
   const container = new AssetContainer(scene);
   setContainer(scene, container);

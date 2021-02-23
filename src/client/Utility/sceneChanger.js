@@ -4,7 +4,7 @@ import { EnterRoom } from "../Gallery/room";
 import API from "../Integration/API";
 import Light from "../Model/Light";
 import Slot from "../Model/Slot";
-import { addPiecePosition, clearPieces, getGalleryScene, getLobbyMesh, getLobbyScene, getPieces, setScene } from "../Model/state";
+import { addPiecePosition, clearPieces, getGalleryScene, getLobbyMesh, getLobbyScene, getLocalPlayer, getPieces, setScene } from "../Model/state";
 import dynamicCanvas from "./dynamicCanvas";
 import { CreateSlot } from "./slotCreator";
 
@@ -12,6 +12,9 @@ export function GoToLobby() {
   EnterRoom("lobby", "Daniel");
   
   ChangeScene(getGalleryScene());
+
+  getLocalPlayer().position = new Vector3(8, 0, 0);
+  getLocalPlayer().rotation = new Vector3(0, 1.57079, 0);
 }
 
 export function GoToGallery(id) {
@@ -19,6 +22,9 @@ export function GoToGallery(id) {
   
   const scene = getLobbyScene();
   ChangeScene(scene);
+
+  getLocalPlayer().position = new Vector3(8, 0, 0);
+  getLocalPlayer().rotation = new Vector3(0, 1.57079, 0);
 
   // Clean up
   const pieces = getPieces(scene);

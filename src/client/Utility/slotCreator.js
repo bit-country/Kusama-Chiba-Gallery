@@ -29,6 +29,7 @@ export function CreateSlot(slot, light, containingMeshes, scene, shadowGenerator
   artSlot.material.specularColor = new Color3(0.1, 0.1, 0.1);
 
   const newManager = new ActionManager(scene);
+  newManager.hoverCursor = "none";
   newManager
     .registerAction(
       new ExecuteCodeAction(
