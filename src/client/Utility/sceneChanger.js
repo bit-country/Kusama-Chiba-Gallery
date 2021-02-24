@@ -8,34 +8,28 @@ import {
   addPiecePosition, 
   clearPieces, 
   getGalleryScene, 
+  getGameRoom, 
   getLobbyMesh, 
   getLobbyScene, 
   getLocalPlayer, 
   getPieces, 
+  getSelectedCharacter, 
+  getUsername, 
   setScene 
 } from "../Model/state";
 import dynamicCanvas from "./dynamicCanvas";
 import { CreateSlot } from "./slotCreator";
 
 export function GoToLobby() {
-  // TODO, update to use name from selected username and character
-  EnterRoom("lobby", "Daniel");
+  ChangeScene(getGalleryScene());  
   
-  ChangeScene(getGalleryScene());
-
-  getLocalPlayer().position = new Vector3(8, 0, 0);
-  getLocalPlayer().rotation = new Vector3(0, 1.57079, 0);
+  EnterRoom("lobby", getUsername(), getSelectedCharacter(), new Vector3(8, 0, 0), new Vector3(0, 1.57079, 0));
 }
 
 export function GoToGallery(id) {
-  // TODO, update to use name from selected username and character
-  EnterRoom("gallery", "Daniel");
+  ChangeScene(getLobbyScene());
   
-  const scene = getLobbyScene();
-  ChangeScene(scene);
-
-  getLocalPlayer().position = new Vector3(8, 0, 0);
-  getLocalPlayer().rotation = new Vector3(0, 1.57079, 0);
+  EnterRoom(`gallery-${id}`, getUsername(), getSelectedCharacter(), new Vector3(8, 0, 0), new Vector3(0, 1.57079, 0));
 
   // Clean up
   const pieces = getPieces(scene);
@@ -96,6 +90,8 @@ export function GoToGallery(id) {
 
 export function ChangeScene(scene) {
   setScene(scene);
+
+  getGameRoom()?.leave();
 
   // Disable input on alternative scene.
   if (scene == getGalleryScene()) {

@@ -26,7 +26,7 @@ let meshRotationSpeed = 0.1;
 
 const cameraOffset = new Vector3(5, 24, -30);
 
-export const importCharacter = () => {
+export const importCharacter = (character, spawnPosition, spawnRotation) => {
   // Keyboard events
   var inputMap = {};
   
@@ -59,10 +59,10 @@ export const importCharacter = () => {
     setLocalPlayer(mesh);
     setPlayer(mesh);
 
-    mesh.position = new Vector3(-14, 3.1, 0);
+    mesh.position = spawnPosition;
     mesh.scaling.scaleInPlace(0.05);
     mesh.scaling.x *= -1;
-    mesh.rotation = new Vector3(0, -1.57079, 0);
+    mesh.rotation = spawnRotation;
     mesh.ellipsoidOffset = new Vector3(0, 1, 0);
     
     var animating = true;

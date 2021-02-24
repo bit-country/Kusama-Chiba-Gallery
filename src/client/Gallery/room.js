@@ -1,7 +1,7 @@
 import { Vector3 } from "@babylonjs/core";
 import * as Colyseus from "colyseus.js";
 import Player from "../../common/entities/Player";
-import { setGameRoom, getPlayer } from "../Model/state";
+import { setGameRoom, getPlayer, getLocalPlayer } from "../Model/state";
 import {
   PLAYER_MOVE,
   BROADCAST_PLAYER_POSITION,
@@ -14,7 +14,7 @@ const gameHttpEndpoint = "http://localhost:2657";
 const gameWS = "ws://localhost:2657";
 
 export const InitialSetup = (username, character) => {
-  EnterRoom("gallery", username || "Guest", character);
+  EnterRoom("lobby", username || "Guest", character, new Vector3(-14, 3.1, 0), new Vector3(0, -1.57079, 0));
 };
 
 const client = new Colyseus.Client(gameWS);
@@ -28,10 +28,10 @@ const ToChat = (text) => {
   chat.append(nameText);
 };
 
-const JoinOrCreateGallery = (gallery, playerName, character) => {
+const JoinOrCreateGallery = (gallery, playerName, character, spawnPosition, spawnRotation) => {
   client.joinOrCreate(gallery, { name: playerName }).then((room) => {
     setGameRoom(room);
-    importCharacter(character);
+    importCharacter(character, spawnPosition, spawnRotation);
 
     room.state.players.onAdd = (player, currentSession) => {
       console.log(`entered a gallery - ${gallery}`);
@@ -88,17 +88,17 @@ const JoinOrCreateGallery = (gallery, playerName, character) => {
 };
 
 // multiplayer
-export const EnterRoom = (galleryName, playerName, character) => {
+export const EnterRoom = (galleryName, playerName, character, spawnPosition, spawnRotation) => {
   // check whether the room is defined in the server or not.
   client.getAvailableRooms(galleryName).then((rooms) => {
     if (rooms.length === 0) {
       axios
         .post(`${gameHttpEndpoint}/room/new`, { name: galleryName })
         .then((res) => {
-          return JoinOrCreateGallery(galleryName, playerName, character);
+          return JoinOrCreateGallery(galleryName, playerName, character, spawnPosition, spawnRotation);
         });
     } else {
-      JoinOrCreateGallery(galleryName, playerName, character);
+      JoinOrCreateGallery(galleryName, playerName, character, spawnPosition, spawnRotation);
     }
   });
 };
