@@ -5,6 +5,7 @@ import {
   PointerEventTypes, 
   Scene, 
   SceneLoader, 
+  Texture, 
   Vector3,
 } from "@babylonjs/core";
 import { SetShowNavigator, SetShowNFTDetails, showActivePiece, ShowNavigator } from "./hud";
@@ -75,8 +76,15 @@ export default function SetupGallery() {
   const light = new HemisphericLight("Skylight", new Vector3(0, 1, 0), scene);
   light.diffuse = new Color3(0.6, 0.5, 0.6);
   
-  SceneLoader.ImportMesh("", "/assets/Gallery.obj", "", scene, mesh => {
+  SceneLoader.ImportMesh("", "/assets/Gallery2.obj", "", scene, mesh => {
     for (let submesh of mesh) {
+      if (submesh.name.includes("Door") && !submesh.name.includes("Frame")) {
+        submesh.material.emissiveTexture = new Texture("/assets/Seam-Emissive.png");
+        submesh.material.emissiveColor = new Color3(0.2, 0.2, 0.2);   
+        
+        submesh.isDoor = true;
+      }
+
       // Be careful not to exceed max GL vertex buffers
       submesh.material.maxSimultaneousLights = 10;
       submesh.checkCollisions = true;
