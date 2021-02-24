@@ -153,6 +153,7 @@ const detailsName = document.querySelector("#root .hud .details-overlay .content
 const detailsStandard = document.querySelector("#root .hud .details-overlay .content .list-group .item[name='standard'] span.value");
 const detailsCollection = document.querySelector("#root .hud .details-overlay .content .list-group .item[name='collection'] span.value");
 const detailsDescription = document.querySelector("#root .hud .details-overlay .content .list-group .item[name='description'] span.value");
+const detailsSponsorButton = document.querySelector("#root .hud .details-overlay button[name='sponsor']");
 const detailsCloseButton = document.querySelector("#root .hud .details-overlay button[name='close']");
 
 // Shows the "eye" icon to indicate that you can view a piece
@@ -182,6 +183,10 @@ export function SetDetailsOverVisibility(visible) {
   } else {
     detailsOverlay.classList.add("hidden");
   }
+}
+
+detailsSponsorButton.onclick = () => {
+  // If we have an API or something to use, we can sponsor here.
 }
 
 detailsCloseButton.onclick = () => {
