@@ -127,6 +127,10 @@ export function setLocalPlayer(player) {
   }
 }
 
+export function getPlayers() {
+  return state.players;
+}
+
 export function getPlayer(sessionId) {
   return state.players.find((x) => x.id === sessionId);
 }

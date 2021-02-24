@@ -14,6 +14,7 @@ import {
   getLocalPlayer, 
   getPieces, 
   getPlayer, 
+  getPlayers, 
   getScene, 
   getSelectedCharacter, 
   getUsername, 
@@ -104,8 +105,24 @@ export function ChangeScene(scene) {
   
   if (gameRoom) {
     gameRoom.leave();
-    
+
+    // Clean up player character and animations
     characterCleanup();
+
+    // Clean up other players
+    const sceneToLeave = getScene();
+
+    const players = getPlayers();
+
+    for (let player of players) {
+      if (player.mesh) {
+        sceneToLeave.removeMesh(player.mesh);
+        player.mesh.dispose();
+      } else {
+        sceneToLeave.removeMesh(player);
+        player.dispose();
+      }
+    }
   }
   
   setScene(scene);

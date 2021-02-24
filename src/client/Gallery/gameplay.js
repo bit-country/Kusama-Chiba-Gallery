@@ -40,7 +40,7 @@ export function characterCleanup() {
   for (let animationGroup of scene.animationGroups) {
     scene.removeAnimationGroup(animationGroup);
   }
-  
+
   player.dispose();
 
   setLocalPlayer(null);
