@@ -36,7 +36,6 @@ export function pointerInput(engine, camera, p) {
   }
 
   if (p.type === PointerEventTypes.POINTERMOVE) {
-    debugger;
     onMouseMove(engine, camera, p.event);
   }
 

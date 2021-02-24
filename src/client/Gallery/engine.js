@@ -15,6 +15,8 @@ export default function SetupEngine(canvasElement) {
       document.documentElement.requestFullscreen();
       canvasElement.requestPointerLock();
       engine.isFullscreen = true;
+    } else if (!document.pointerLockElement) {
+      canvasElement.requestPointerLock();
     }
   }
 

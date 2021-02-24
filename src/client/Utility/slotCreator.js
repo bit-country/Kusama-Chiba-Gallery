@@ -1,20 +1,8 @@
 import {
-  ActionManager,
   Color3,
-  ExecuteCodeAction,
   MeshBuilder, 
-  PredicateCondition, 
-  StandardMaterial, 
-  Vector3
-} from "@babylonjs/core";
+  StandardMaterial} from "@babylonjs/core";
 import { CreateLight } from "./lightCreator";
-import { 
-  getActivePiece, 
-  getLocalPlayer 
-} from "../Model/state";
-import {
-  SetDetailsOverVisibility
-} from "../Gallery/hud";
 
 export function CreateSlot(slot, light, containingMeshes, scene, shadowGenerator) {
   const {
@@ -31,26 +19,7 @@ export function CreateSlot(slot, light, containingMeshes, scene, shadowGenerator
   artSlot.material = new StandardMaterial("ArtPieceMat", scene);
   artSlot.material.specularColor = new Color3(0.1, 0.1, 0.1);
 
-  const newManager = new ActionManager(scene);
-  newManager.hoverCursor = "none";
-  newManager
-    .registerAction(
-      new ExecuteCodeAction(
-        ActionManager.OnPickTrigger,
-        () => {
-          SetDetailsOverVisibility(true);
-        },
-        new PredicateCondition(
-          newManager,
-          () => 
-            Vector3.Distance(getLocalPlayer().position, artSlot.position) < 4
-            && getActivePiece()
-        )
-      )
-    );
-
-  artSlot.actionManager = newManager;
-
+  artSlot.isArt = true;
 
   if (shadowGenerator) {
     shadowGenerator.addShadowCaster(artSlot);
@@ -63,7 +32,7 @@ export function CreateSlot(slot, light, containingMeshes, scene, shadowGenerator
     artLight.includedOnlyMeshes.push(...containingMeshes);
   }
 
-  return {
+  artSlot.ArtDetails = {
     id,
     position: slotPos,
     dimensions: slotDimensions,
@@ -77,4 +46,6 @@ export function CreateSlot(slot, light, containingMeshes, scene, shadowGenerator
     name: "",
     emissive: slot.emissive,
   };
+
+  return artSlot.ArtDetails;
 }

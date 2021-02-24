@@ -7,7 +7,7 @@ import {
   SceneLoader,
   Vector3,
 } from "@babylonjs/core";
-import { SetShowNavigator, SetShowNFTDetails } from "./hud";
+import { SetShowNavigator, SetShowNFTDetails, showActivePiece } from "./hud";
 import Light from "../Model/Light";
 import Slot from "../Model/Slot";
 import { CreateSlot } from "../Utility/slotCreator";
@@ -27,8 +27,6 @@ import API from "../Integration/API";
 import { FLOOR, WING } from "../constants";
 import dynamicCanvas from "../Utility/dynamicCanvas";
 
-const detailsIcon = document.querySelector("#root .hud .nft-details-item");
-
 // Set up the lobby scene and the associated word logic.
 export default function SetupLobby() {
   const engine = getEngine();
@@ -37,30 +35,40 @@ export default function SetupLobby() {
   scene.gravity.y = -0.15;
   scene.hoverCursor = "none";
 
-  scene.onPointerObservable.add(pointerInfo => {
-    const { pickInfo } = pointerInfo;
+  scene.onPointerObservable.add(() => {
+    const pickInfo = scene.pick(
+      engine.getInputElement().width / 2, 
+      engine.getInputElement().height / 2);
 
-    if (pickInfo.pickedMesh && 
-      pickInfo.pickedMesh.actionManager && 
-      pickInfo.pickedMesh.actionManager.hasPointerTriggers) {
-      detailsIcon.style = `top: ${scene.pointerY}; left: ${scene.pointerX}`;
+    const player = getLocalPlayer();
+
+    if (pickInfo.pickedMesh && pickInfo.pickedMesh.isArt && 
+      Vector3.Distance(player.position, pickInfo.pickedMesh.position) < 10) {
+      SetShowNFTDetails(true);
+      setActivePiece(pickInfo.pickedMesh.ArtDetails);
     } else {
-      detailsIcon.style = "";
+      SetShowNFTDetails(false);
+      setActivePiece(null);
     }
   }, PointerEventTypes.POINTERMOVE);
+
+  scene.onPointerObservable.add(() => {
+    const piece = getActivePiece();
+
+    if (piece) {
+      showActivePiece();
+    }
+  }, PointerEventTypes.POINTERUP);
 
   const glowLayer = new GlowLayer("GlowLayer", scene, { blurKernelSize: 64 });
   glowLayer.intensity = 1;
 
   function gameTick() {
-    const pieces = getPieces();
     const player = getLocalPlayer();
 
     if (!player) {
       return;
     }
-
-    const activePiece = getActivePiece();
 
     if (player.position.x > 8 &&
       player.position.y < 3 &&
@@ -71,43 +79,6 @@ export default function SetupLobby() {
     } else {
       SetShowNavigator(false);
       setActiveNavigator(false);
-    }
-
-    if (activePiece) {
-      const {
-        position: slotPos,
-        dimensions: slotDimensions,
-        bounds: slotBounds,
-      } = activePiece;
-
-      if (
-        player.position.x < slotPos.x - slotDimensions.width / 2 - slotBounds ||
-        player.position.x > slotPos.x + slotDimensions.width / 2 + slotBounds ||
-        player.position.z < slotPos.z - slotDimensions.depth / 2 - slotBounds ||
-        player.position.z > slotPos.z + slotDimensions.depth / 2 + slotBounds
-      ) {
-        SetShowNFTDetails(false);
-        setActivePiece(null);
-      }
-    }
-
-    for (let piece of pieces) {
-      const {
-        position: slotPos,
-        dimensions: slotDimensions,
-        bounds: slotBounds,
-      } = piece;
-
-      // TODO update to use player, or consider using picking instead.
-      if (
-        player.position.x > slotPos.x - slotDimensions.width / 2 - slotBounds &&
-        player.position.x < slotPos.x + slotDimensions.width / 2 + slotBounds &&
-        player.position.z > slotPos.z - slotDimensions.depth / 2 - slotBounds &&
-        player.position.z < slotPos.z + slotDimensions.depth / 2 + slotBounds
-      ) {
-        SetShowNFTDetails(true);
-        setActivePiece(piece);
-      }
     }
   }
 
