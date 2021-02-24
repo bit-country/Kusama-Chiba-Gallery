@@ -19,9 +19,9 @@ export default class Player {
       scene
     ).then(({ meshes, animationGroups }) => {
       let player = meshes[0];
-      player.forEach((mesh, i) => {
-        meshes[i + 1] = mesh;
-      });
+      // player.forEach((mesh, i) => {
+      //   meshes[i + 1] = mesh;
+      // });
       // meshes[1].parent = meshes[0];
       // meshes[2].parent = meshes[1];
       // meshes[3].parent = meshes[2];
@@ -32,6 +32,7 @@ export default class Player {
       player.position = new Vector3(x, y, z);
       player.ellipsoidOffset = new Vector3(0, 1, 0);
       player.checkCollisions = true;
+      player.rotation = new Vector3(0, -1.57079, 0);
 
       player.moveWithCollisions(scene.gravity);
 

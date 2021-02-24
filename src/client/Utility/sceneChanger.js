@@ -29,7 +29,7 @@ export function GoToLobby() {
 
 export function GoToGallery(id) {
   // TODO, update to use name from selected username and character
-  EnterRoom("gallery", "Daniel");
+  EnterRoom("lobby", "Daniel");
   
   const scene = getLobbyScene();
   ChangeScene(scene);

@@ -6,6 +6,7 @@ import {
   PLAYER_MOVE,
   BROADCAST_PLAYER_POSITION,
   BROADCAST_CHAT,
+  BROADCAST_CHAT_INIT,
 } from "../../common/MessageTypes";
 import axios from "axios";
 import { importCharacter } from "./gameplay";
@@ -16,7 +17,7 @@ const gameHttpEndpoint = "http://localhost:2657";
 const gameWS = "ws://localhost:2657";
 
 export const InitialSetup = (username, character) => {
-  EnterRoom("gallery", username || "Guest", character);
+  EnterRoom("lobby", username || "Guest", character);
 };
 
 const client = new Colyseus.Client(gameWS);
@@ -28,7 +29,6 @@ const ToChat = (text) => {
   nameText.style.margin = "0";
   nameText.append(text);
   chat.append(nameText);
- // var element = document.getElementById("yourDivID");
   chat.scrollTop = chat.scrollHeight;
 };
 
@@ -38,8 +38,9 @@ const JoinOrCreateGallery = (gallery, playerName, character) => {
     importCharacter(character);
     ChatSetup();
     room.state.players.onAdd = (player, currentSession) => {
-      console.log(`entered a gallery - ${gallery}`);
-      ToChat(`[${player.joinedTime}] ${player.name} has joined the room.`);
+      ToChat(
+        `[${player.joinedTime}] ${player.name} has joined the ${room.name}.`
+      );
       const { sessionId } = room;
       if (currentSession !== sessionId) {
         new Player(player);
@@ -87,9 +88,16 @@ const JoinOrCreateGallery = (gallery, playerName, character) => {
       ToChat(`[${player.leaveTime}] ${player.name} left the room.`);
     });
 
-    room.onMessage(BROADCAST_CHAT, ({ sender, time, content }) => {
-      ToChat(`${sender}: ${content}`);
-      
+    room.onMessage(BROADCAST_CHAT, ({ sender, senderId, content }) => {
+      ToChat(
+        `${sender}${room.sessionId === senderId ? " (you)" : ""}: ${content}`
+      );
+    });
+    room.onMessage(BROADCAST_CHAT_INIT, (chat) => {
+      debugger;
+      chat.forEach(({ sender, content }) => {
+        ToChat(`${sender}: ${content}`);
+      });
     });
 
     room.onLeave(() => {});
