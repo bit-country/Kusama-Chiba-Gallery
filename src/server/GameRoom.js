@@ -24,6 +24,7 @@ export class GameRoom extends Room {
 
   onCreate(options) {
     this.setState(new StateHandler());
+
     // event check
     this.onMessage(PLAYER_MOVE, (client, { position, rotation }) => {
       const player = this.state.players[client.sessionId];
@@ -39,6 +40,7 @@ export class GameRoom extends Room {
         { except: client }
       );
     });
+
     this.onMessage(PLAYER_STOP, (client) => {
       this.broadcast(
         BROADCAST_PLAYER_POSITION,
@@ -78,10 +80,9 @@ export class GameRoom extends Room {
 
       player.joinedTime = getCurrentTime();
       player.sessionId = client.sessionId;
-      player.x = randomPosition(-15, -18);
-      player.z = randomPosition(-2.5, 2.5);
-      player.y = 3.1;
+
       this.state.players[client.sessionId] = player;
+      
       this.broadcast(BROADCAST_PLAYER_JOINED, {
         playerName: name,
       });

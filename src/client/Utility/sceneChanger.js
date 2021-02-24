@@ -1,5 +1,5 @@
 import { Color3, Texture, Vector3 } from "@babylonjs/core";
-import { SetupPlayer } from "../Gallery/gameplay";
+import { characterCleanup, SetupPlayer } from "../Gallery/gameplay";
 import { EnterRoom } from "../Gallery/room";
 import API from "../Integration/API";
 import Light from "../Model/Light";
@@ -105,10 +105,7 @@ export function ChangeScene(scene) {
   if (gameRoom) {
     gameRoom.leave();
     
-    const player = getLocalPlayer();
-    player.dispose();
-
-    setLocalPlayer(null);
+    characterCleanup();
   }
   
   setScene(scene);
