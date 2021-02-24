@@ -9,7 +9,9 @@ import {
   BROADCAST_PLAYER_POSITION,
   PLAYER_CHAT,
   BROADCAST_CHAT,
+  BROADCAST_CHAT_INIT,
 } from "../common/MessageTypes.js";
+import * as chatService from "./ChatService.js";
 
 function randomPosition(min, max) {
   return Math.random() * (max - min) + min;
@@ -48,25 +50,37 @@ export class GameRoom extends Room {
       );
     });
 
-    this.onMessage(PLAYER_CHAT, (client, { content }) => {
-      this.broadcast(BROADCAST_CHAT, {
+    this.onMessage(PLAYER_CHAT, (client, { content, room }) => {
+      console.log(client);
+      const data = {
+        room: this.roomName,
         content,
         sender: this.state.players[client.id].name,
-        time: getCurrentTime(),
-      });
+        senderId: client.id,
+        time: new Date().toLocaleString(),
+      };
+      chatService.Write(data, "Chat");
+      this.broadcast(BROADCAST_CHAT, data);
     });
   }
 
   onJoin(client, { name }) {
+    //  this.clients[0].send()
     if (typeof this.state.players[client.sessionId] === "undefined") {
+      chatService.Read("Chat", { room: this.roomName }).then((chat) => {
+        if (chat) {
+          client.send(BROADCAST_CHAT_INIT, chat);
+        }
+      });
+
       let player = new Player();
       player.name = name;
 
       player.joinedTime = getCurrentTime();
       player.sessionId = client.sessionId;
-      player.x = randomPosition(-1, 1);
-      player.z = randomPosition(-1, 1);
-      player.y = 0;
+      player.x = randomPosition(-15, -18);
+      player.z = randomPosition(-2.5, 2.5);
+      player.y = 3.1;
       this.state.players[client.sessionId] = player;
       this.broadcast(BROADCAST_PLAYER_JOINED, {
         playerName: name,
