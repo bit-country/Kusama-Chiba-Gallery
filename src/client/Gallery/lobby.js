@@ -132,7 +132,6 @@ export default function SetupLobby() {
 
     API.getPositionsGallery().then(positions => {
       for (let slot of positions) {
-  
         let floor = FLOOR.BOTTOM; 
         if (slot.position.y >= 3) {
           floor = FLOOR.TOP; 
@@ -189,7 +188,8 @@ export default function SetupLobby() {
       }
     });
   
-    API.getPieces(10).then(pieces => {
+
+    API.getPieces(34).then(pieces => {
       const positions = getPieces(scene);
   
       let index = 0;

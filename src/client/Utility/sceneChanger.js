@@ -17,6 +17,7 @@ import {
   getScene, 
   getSelectedCharacter, 
   getUsername, 
+  setLocalPlayer, 
   setScene 
 } from "../Model/state";
 import dynamicCanvas from "./dynamicCanvas";
@@ -35,7 +36,9 @@ export function GoToLobby() {
 }
 
 export function GoToGallery(id) {
-  ChangeScene(getLobbyScene());
+  const scene = getLobbyScene();
+
+  ChangeScene(scene);
   
   EnterRoom(`gallery-${id}`, getUsername(), getSelectedCharacter(), new Vector3(8, 0, 0), new Vector3(0, 1.57079, 0));
 
@@ -104,6 +107,8 @@ export function ChangeScene(scene) {
     
     const player = getLocalPlayer();
     player.dispose();
+
+    setLocalPlayer(null);
   }
   
   setScene(scene);
