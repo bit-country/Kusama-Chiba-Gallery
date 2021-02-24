@@ -59,7 +59,7 @@ export class GameRoom extends Room {
         senderId: client.id,
         time: new Date().toLocaleString(),
       };
-      chatService.Write(data, "Chat");
+      //chatService.Write(data, "Chat");
       this.broadcast(BROADCAST_CHAT, data);
     });
   }
@@ -67,11 +67,11 @@ export class GameRoom extends Room {
   onJoin(client, { name }) {
     //  this.clients[0].send()
     if (typeof this.state.players[client.sessionId] === "undefined") {
-      chatService.Read("Chat", { room: this.roomName }).then((chat) => {
-        if (chat) {
-          client.send(BROADCAST_CHAT_INIT, chat);
-        }
-      });
+      // chatService.Read("Chat", { room: this.roomName }).then((chat) => {
+      //   if (chat) {
+      //     client.send(BROADCAST_CHAT_INIT, chat);
+      //   }
+      // });
 
       let player = new Player();
       player.name = name;
@@ -103,7 +103,7 @@ export class GameRoom extends Room {
     console.log(`${client.sessionId} left`);
 
     this.state.players[client.sessionId].leaveTime = getCurrentTime();
-    
+
     this.broadcast("removePlayer", {
       sessionId: client.sessionId,
       player: this.state.players[client.sessionId],
