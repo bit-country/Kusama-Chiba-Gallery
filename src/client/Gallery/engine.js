@@ -12,10 +12,12 @@ export default function SetupEngine(canvasElement) {
 
   pointerDownHandler = () => {
     if (!engine.isFullscreen) {
-      engine.enterFullscreen(true);
+      document.documentElement.requestFullscreen();
+      canvasElement.requestPointerLock();
+      engine.isFullscreen = true;
     }
   }
-  
+
   canvasElement.addEventListener("pointerdown", pointerDownHandler);
 
   const resizeHandler = () => {
