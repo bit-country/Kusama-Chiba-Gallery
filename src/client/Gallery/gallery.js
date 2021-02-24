@@ -74,7 +74,7 @@ export default function SetupGallery() {
   setLobbyScene(scene);
   
   const light = new HemisphericLight("Skylight", new Vector3(0, 1, 0), scene);
-  light.diffuse = new Color3(0.6, 0.5, 0.6);
+  light.diffuse = new Color3(0.2, 0.2, 0.4);
   
   SceneLoader.ImportMesh("", "/assets/Gallery2.obj", "", scene, mesh => {
     for (let submesh of mesh) {
