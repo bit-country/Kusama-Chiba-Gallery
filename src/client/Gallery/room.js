@@ -5,9 +5,11 @@ import { setGameRoom, getPlayer } from "../Model/state";
 import {
   PLAYER_MOVE,
   BROADCAST_PLAYER_POSITION,
+  BROADCAST_CHAT,
 } from "../../common/MessageTypes";
 import axios from "axios";
 import { importCharacter } from "./gameplay";
+import { ChatSetup } from "./chat";
 
 // import SetupPlayerHUD from "../gameClient/HUD/HUDPlayerList";
 const gameHttpEndpoint = "http://localhost:2657";
@@ -26,13 +28,15 @@ const ToChat = (text) => {
   nameText.style.margin = "0";
   nameText.append(text);
   chat.append(nameText);
+ // var element = document.getElementById("yourDivID");
+  chat.scrollTop = chat.scrollHeight;
 };
 
 const JoinOrCreateGallery = (gallery, playerName, character) => {
   client.joinOrCreate(gallery, { name: playerName }).then((room) => {
     setGameRoom(room);
     importCharacter(character);
-
+    ChatSetup();
     room.state.players.onAdd = (player, currentSession) => {
       console.log(`entered a gallery - ${gallery}`);
       ToChat(`[${player.joinedTime}] ${player.name} has joined the room.`);
@@ -81,6 +85,11 @@ const JoinOrCreateGallery = (gallery, playerName, character) => {
       playerUI.mesh.dispose();
 
       ToChat(`[${player.leaveTime}] ${player.name} left the room.`);
+    });
+
+    room.onMessage(BROADCAST_CHAT, ({ sender, time, content }) => {
+      ToChat(`${sender}: ${content}`);
+      
     });
 
     room.onLeave(() => {});

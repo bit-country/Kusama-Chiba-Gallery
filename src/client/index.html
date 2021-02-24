@@ -1,6 +1,20 @@
 <html>
   <head>
     <style>
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+      /* Track */
+      ::-webkit-scrollbar-track {
+        border-radius: 10px;
+      }
+
+      /* Handle */
+      ::-webkit-scrollbar-thumb {
+        box-shadow: inset -10px 0px 0px #ff7082;
+        border-radius: 10px;
+      }
+
       #btnEnterGallery {
         padding: 5px 12px;
         border: 1px pink solid;
@@ -15,19 +29,45 @@
         color: white !important;
         width: 30% !important;
       }
+      .chatContainer {
+        height: 30vh;
+        position: absolute;
+        bottom: 0;
+      }
       .chat {
         overflow-y: auto;
         background: #00000066;
-        position: absolute;
-        bottom: 0;
+        /* position: absolute; */
+        /* bottom: 0; */
         width: 30vw;
-        height: 20vh;
+        height: 80%;
+      }
+      .chatInput {
+        /* position: absolute; */
+        /* bottom: 0; */
+        width: 30vw;
+        /* height: 10%; */
+        border: none;
+        outline: none;
+        background: #ffffff9c;
+      }
+      .chatInput:focus {
+        background: white;
+      }
+      .chatInput::placeholder {
+        text-align: end;
+        padding: 5px;
       }
       .genderSelection:hover {
         background: #4444449e;
         color: white !important;
       }
-
+      #iptUsername {
+        border: none;
+        padding: 5px;
+        width: 250px;
+        outline: none;
+      }
       .genderSelection-female {
         margin: 15px;
         font-size: 1.4em;
@@ -195,7 +235,13 @@
         overflow: auto;
       }
 
-      #root .hud .navigator-overlay > .navigator > #galleries-container > div.item  img  {
+      #root
+        .hud
+        .navigator-overlay
+        > .navigator
+        > #galleries-container
+        > div.item
+        img {
         height: 10em;
         object-fit: contain;
       }
@@ -430,7 +476,6 @@
               <div style="padding-top: 10px">
                 <input
                   id="iptUsername"
-                  style="border: none; padding: 5px; width: 250px"
                   placeholder="Username"
                   autofocus
                 />&nbsp;
@@ -442,15 +487,11 @@
         <!-- NFT Details Overlay -->
         <div class="details-overlay hidden">
           <div class="details">
-            <h2 class="mb-4">
-              Details
-            </h2>
-            
+            <h2 class="mb-4">Details</h2>
+
             <div class="content row row-cols-2">
               <div class="col image-col">
-                <img 
-                  class="nft-image"
-                />
+                <img class="nft-image" />
               </div>
               <div class="col">
                 <div class="list-group">
@@ -480,9 +521,7 @@
           <div class="navigator">
             <div class="row row-cols-2">
               <div class="col">
-                <h2 class="mb-4">
-                  Gallery Directory
-                </h2>
+                <h2 class="mb-4">Gallery Directory</h2>
               </div>
               <div class="col">
                 <button id="go-to-lobby" class="btn btn-secondary float-right">
@@ -490,18 +529,20 @@
                 </button>
               </div>
             </div>
-            
-            <div id="galleries-container" class="row p-4 mx-n1">
-            </div>
+
+            <div id="galleries-container" class="row p-4 mx-n1"></div>
             <div class="text-right mt-4">
-              <button class="btn btn-secondary" name="close">
-                Close
-              </button>
+              <button class="btn btn-secondary" name="close">Close</button>
             </div>
           </div>
         </div>
 
-        <div class="chat"></div>
+        <div class="chatContainer">
+          <div class="chat"></div>
+          <div>
+            <input class="chatInput" id="chatInput" placeholder="[Enter]" />
+          </div>
+        </div>
       </div>
       <!-- HUD View Details Icon - Centre -->
 

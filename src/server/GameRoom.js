@@ -7,10 +7,15 @@ import {
   PLAYER_STOP,
   BROADCAST_PLAYER_JOINED,
   BROADCAST_PLAYER_POSITION,
+  PLAYER_CHAT,
+  BROADCAST_CHAT,
 } from "../common/MessageTypes.js";
 
 function randomPosition(min, max) {
   return Math.random() * (max - min) + min;
+}
+function getCurrentTime() {
+  return new Date().toLocaleTimeString([], { timeStyle: "short" });
 }
 export class GameRoom extends Room {
   maxClients = 50;
@@ -42,15 +47,22 @@ export class GameRoom extends Room {
         { except: client }
       );
     });
+
+    this.onMessage(PLAYER_CHAT, (client, { content }) => {
+      this.broadcast(BROADCAST_CHAT, {
+        content,
+        sender: this.state.players[client.id].name,
+        time: getCurrentTime(),
+      });
+    });
   }
 
   onJoin(client, { name }) {
-    console.log(`${client.sessionId} joined`);
     if (typeof this.state.players[client.sessionId] === "undefined") {
       let player = new Player();
       player.name = name;
 
-      player.joinedTime = new Date().toLocaleTimeString();
+      player.joinedTime = getCurrentTime();
       player.sessionId = client.sessionId;
       player.x = randomPosition(-1, 1);
       player.z = randomPosition(-1, 1);
@@ -74,9 +86,7 @@ export class GameRoom extends Room {
   }
 
   onLeave(client) {
-    this.state.players[
-      client.sessionId
-    ].leaveTime = new Date().toLocaleTimeString();
+    this.state.players[client.sessionId].leaveTime = getCurrentTime();
     this.broadcast("removePlayer", {
       sessionId: client.sessionId,
       player: this.state.players[client.sessionId],
