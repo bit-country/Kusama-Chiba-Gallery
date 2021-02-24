@@ -190,6 +190,11 @@ export default function SetupLobby() {
         // Dynamic Canvas
         // Allow for different aspect ratio textures.
         dynamicCanvas(scene, position, piece.image); 
+
+        position.address = piece.address;
+        position.name = piece.name;
+        position.collectionName = piece.collection.name;
+        position.description = piece.collection.description;
       }
     })
   })

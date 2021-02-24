@@ -145,9 +145,10 @@ registerCancelButton.onclick = () => {
 // Details section
 const detailsOverlay = document.querySelector("#root .hud .details-overlay");
 const detailsImg = document.querySelector("#root .hud .details-overlay img.nft-image");
-const detailsOwner = document.querySelector("#root .hud .details-overlay .ui.list .item[name='owner'] span.value");
-const detailsArtist = document.querySelector("#root .hud .details-overlay .ui.list .item[name='artist'] span.value");
-const detailsName = document.querySelector("#root .hud .details-overlay .ui.list .item[name='name'] span.value");
+const detailsAddress = document.querySelector("#root .hud .details-overlay .content .list-group .item[name='address'] span.value");
+const detailsName = document.querySelector("#root .hud .details-overlay .content .list-group .item[name='name'] span.value");
+const detailsCollection = document.querySelector("#root .hud .details-overlay .content .list-group .item[name='collection'] span.value");
+const detailsDescription = document.querySelector("#root .hud .details-overlay .content .list-group .item[name='description'] span.value");
 const detailsCloseButton = document.querySelector("#root .hud .details-overlay button[name='close']");
 
 // Shows the "eye" icon to indicate that you can view a piece
@@ -169,9 +170,10 @@ export function SetDetailsOverVisibility(visible) {
 
     // TODO Allow for videos?
     detailsImg.src = piece.art;
-    detailsArtist.textContent = piece.artist;
-    detailsOwner.textContent = piece.owner;
+    detailsAddress.textContent = piece.address;
     detailsName.textContent = piece.name;
+    detailsCollection.textContent = piece.collectionName;
+    detailsDescription.textContent = piece.description;
   } else {
     detailsOverlay.classList.add("hidden");
   }

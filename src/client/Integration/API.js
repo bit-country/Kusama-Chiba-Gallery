@@ -41,7 +41,16 @@ export default new (class API {
             break;
           }
 
-          pieces.push({ name: piece.name, image: piece.imgUrl });
+          pieces.push({ 
+            name: piece.name, 
+            image: piece.imgUrl, 
+            address: piece.assetId, 
+            collection: {
+              name: collectionData.data.collection.name,
+              description: collectionData.data.collection.description,
+              id: collectionData.data.collection.id
+            }
+          });
         }
       }
 

@@ -83,6 +83,11 @@ export function GoToGallery(id) {
         // Dynamic Canvas
         // Allow for different aspect ratio textures.
         dynamicCanvas(scene, slotInfo, piece.image);
+
+        position.address = piece.address;
+        position.name = piece.name;
+        position.collectionName = piece.collection.name;
+        position.description = piece.collection.description;
       }
     });
   });
