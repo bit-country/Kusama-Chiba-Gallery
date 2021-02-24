@@ -5,6 +5,7 @@ import {
   PointerEventTypes,
   Scene, 
   SceneLoader,
+  Texture,
   Vector3,
 } from "@babylonjs/core";
 import { SetShowNavigator, SetShowNFTDetails, showActivePiece } from "./hud";
@@ -88,7 +89,7 @@ export default function SetupLobby() {
   const light = new HemisphericLight("Skylight", new Vector3(0, 1, 0), scene);
   light.diffuse = new Color3(0.6, 0.5, 0.6);
   
-  SceneLoader.ImportMesh("", "/assets/Building6.obj", "", scene, mesh => {
+  SceneLoader.ImportMesh("", "/assets/Building8.obj", "", scene, mesh => {
     setBuildingMeshes(mesh);
 
     for (let submesh of mesh) {
@@ -98,10 +99,26 @@ export default function SetupLobby() {
       } else if (submesh.name.includes("BottomRightWing")) {
         getSections().bottomLeftWing.push(submesh);
       } else if (submesh.name.includes("BottomFloor")) {
+        if (submesh.name.includes("Door") && !submesh.name.includes("Frame")) {
+          submesh.material.emissiveTexture = new Texture("/assets/Seam-Emissive.png");
+          submesh.material.emissiveColor = new Color3(0.2, 0.2, 0.2);
+        }
+
         getSections().bottomFloor.push(submesh);
       } else if (submesh.name.includes("TopFloorFront")) {
+        if (submesh.name.includes("Door") && !submesh.name.includes("Frame")) {
+          submesh.material.emissiveTexture = new Texture("/assets/Seam-Emissive.png");
+          submesh.material.emissiveColor = new Color3(0.2, 0.2, 0.2);
+        }
+
         getSections().topFrontWing.push(submesh);
       } else if (submesh.name.includes("TopFloorBack")) {
+        if (submesh.name.includes("Kusama")) {
+          debugger;
+          submesh.material.emissiveTexture = new Texture("/assets/KusamaBaked-Emissive.png");
+          submesh.material.emissiveColor = new Color3(0.2, 0.2, 0.2);
+        }
+
         getSections().topBackWing.push(submesh);
       } else if (submesh.name.includes("TopRightWing")) {
         getSections().topLeftWing.push(submesh);
