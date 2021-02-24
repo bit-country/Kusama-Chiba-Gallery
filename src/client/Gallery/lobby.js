@@ -28,6 +28,7 @@ import {
 import API from "../Integration/API";
 import { FLOOR, WING } from "../constants";
 import dynamicCanvas from "../Utility/dynamicCanvas";
+import populatePieceDetails from "../Utility/populatePieceDetails";
 
 // Set up the lobby scene and the associated word logic.
 export default function SetupLobby() {
@@ -204,10 +205,7 @@ export default function SetupLobby() {
         // Allow for different aspect ratio textures.
         dynamicCanvas(scene, position, piece.image); 
 
-        position.address = piece.address;
-        position.name = piece.name;
-        position.collectionName = piece.collection.name;
-        position.description = piece.collection.description;
+        populatePieceDetails(position, piece);
       }
     })
   })

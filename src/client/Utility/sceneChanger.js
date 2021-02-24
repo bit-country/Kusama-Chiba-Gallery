@@ -22,6 +22,7 @@ import {
   setScene 
 } from "../Model/state";
 import dynamicCanvas from "./dynamicCanvas";
+import populatePieceDetails from "./populatePieceDetails";
 import { CreateSlot } from "./slotCreator";
 
 export function GoToLobby() {
@@ -90,10 +91,7 @@ export function GoToGallery(id) {
         // Allow for different aspect ratio textures.
         dynamicCanvas(scene, slotInfo, piece.image);
 
-        slotInfo.address = piece.address;
-        slotInfo.name = piece.name;
-        slotInfo.collectionName = piece.collection.name;
-        slotInfo.description = piece.collection.description;
+        populatePieceDetails(slotInfo, piece);
       }
     });
   });

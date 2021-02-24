@@ -150,6 +150,7 @@ const detailsOverlay = document.querySelector("#root .hud .details-overlay");
 const detailsImg = document.querySelector("#root .hud .details-overlay img.nft-image");
 const detailsAddress = document.querySelector("#root .hud .details-overlay .content .list-group .item[name='address'] span.value");
 const detailsName = document.querySelector("#root .hud .details-overlay .content .list-group .item[name='name'] span.value");
+const detailsStandard = document.querySelector("#root .hud .details-overlay .content .list-group .item[name='standard'] span.value");
 const detailsCollection = document.querySelector("#root .hud .details-overlay .content .list-group .item[name='collection'] span.value");
 const detailsDescription = document.querySelector("#root .hud .details-overlay .content .list-group .item[name='description'] span.value");
 const detailsCloseButton = document.querySelector("#root .hud .details-overlay button[name='close']");
@@ -175,6 +176,7 @@ export function SetDetailsOverVisibility(visible) {
     detailsImg.src = piece.art;
     detailsAddress.textContent = piece.address;
     detailsName.textContent = piece.name;
+    detailsStandard.textContent = piece.standard;
     detailsCollection.textContent = piece.collectionName;
     detailsDescription.textContent = piece.description;
   } else {
