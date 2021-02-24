@@ -74,13 +74,17 @@ export class GameRoom extends Room {
   }
 
   onLeave(client) {
+    console.log(`${client.sessionId} left`);
+
     this.state.players[
       client.sessionId
     ].leaveTime = new Date().toLocaleTimeString();
+
     this.broadcast("removePlayer", {
       sessionId: client.sessionId,
       player: this.state.players[client.sessionId],
     });
+
     delete this.state.players[client.sessionId];
   }
 

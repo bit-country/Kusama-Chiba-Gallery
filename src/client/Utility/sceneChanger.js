@@ -13,6 +13,8 @@ import {
   getLobbyScene, 
   getLocalPlayer, 
   getPieces, 
+  getPlayer, 
+  getScene, 
   getSelectedCharacter, 
   getUsername, 
   setScene 
@@ -21,6 +23,12 @@ import dynamicCanvas from "./dynamicCanvas";
 import { CreateSlot } from "./slotCreator";
 
 export function GoToLobby() {
+  const lobby = getGalleryScene();
+
+  if (getScene() == lobby) {
+    return;
+  }
+
   ChangeScene(getGalleryScene());  
   
   EnterRoom("lobby", getUsername(), getSelectedCharacter(), new Vector3(8, 0, 0), new Vector3(0, 1.57079, 0));
@@ -89,10 +97,17 @@ export function GoToGallery(id) {
 
 
 export function ChangeScene(scene) {
+  const gameRoom = getGameRoom();
+  
+  if (gameRoom) {
+    gameRoom.leave();
+    
+    const player = getLocalPlayer();
+    player.dispose();
+  }
+  
   setScene(scene);
-
-  getGameRoom()?.leave();
-
+  
   // Disable input on alternative scene.
   if (scene == getGalleryScene()) {
     getLobbyScene().detachControl();

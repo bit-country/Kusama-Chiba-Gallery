@@ -1,6 +1,6 @@
 import { Texture, VideoTexture } from "@babylonjs/core";
 import API from "../Integration/API";
-import { getActiveNavigator, getActivePiece, getGalleryScene, getLobbyScene, getScene, setScene, setSelectedCharacter, setUsername } from "../Model/state";
+import { getActiveNavigator, getActivePiece, getGalleryScene, getGameRoom, getLobbyScene, getScene, setScene, setSelectedCharacter, setUsername } from "../Model/state";
 import { ChangeScene, GoToGallery, GoToLobby } from "../Utility/sceneChanger";
 import * as GUI from "babylonjs-gui";
 import { InitialSetup } from "./room";
