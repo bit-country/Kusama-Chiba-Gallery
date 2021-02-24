@@ -36,6 +36,7 @@ loginTopItem.onclick = () => {
 loginCancelButton.onclick = () => {
   loginOverlay.classList.toggle("hidden");
   canvasElement.requestPointerLock();
+  canvasElement.focus();
 };
 
 
@@ -53,6 +54,7 @@ registerMenuItem.onclick = () => {
 registerCancelButton.onclick = () => {
   registerOverlay.classList.toggle("hidden");
   canvasElement.requestPointerLock();
+  canvasElement.focus();
 };
 
 
@@ -140,6 +142,7 @@ registerCancelButton.onclick = () => {
 // mintCancelButton.onclick = () => {
 //   mintOverlay.classList.toggle("hidden");
 //   canvasElement.requestPointerLock();
+//   canvasElement.focus();
 // };
 
 // Details section
@@ -182,6 +185,7 @@ export function SetDetailsOverVisibility(visible) {
 detailsCloseButton.onclick = () => {
   detailsOverlay.classList.toggle("hidden");
   canvasElement.requestPointerLock();
+  canvasElement.focus();
 }
 
 // Show the details modal
@@ -210,6 +214,7 @@ const navigatorCloseButton = document.querySelector("#root .hud .navigator-overl
 navigatorCloseButton.onclick = () => {
   navigatorOverlay.classList.add("hidden");
   canvasElement.requestPointerLock();
+  canvasElement.focus();
 }
 
 navigatorGoToLobbyButton.onclick = () => {
@@ -218,6 +223,7 @@ navigatorGoToLobbyButton.onclick = () => {
   GoToLobby();
 
   canvasElement.requestPointerLock();
+  canvasElement.focus();
 }
 
 // Shows the "door" icon to indicate that you can navigate to another area
@@ -240,6 +246,8 @@ export function ShowNavigator() {
   }
 
   navigatorOverlay.classList.remove("hidden");
+
+  document.exitPointerLock();
 
   API.getCollections().then(collections => {
     let child;

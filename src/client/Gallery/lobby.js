@@ -8,7 +8,7 @@ import {
   Texture,
   Vector3,
 } from "@babylonjs/core";
-import { SetShowNavigator, SetShowNFTDetails, showActivePiece } from "./hud";
+import { SetShowNavigator, SetShowNFTDetails, showActivePiece, ShowNavigator } from "./hud";
 import Light from "../Model/Light";
 import Slot from "../Model/Slot";
 import { CreateSlot } from "../Utility/slotCreator";
@@ -22,7 +22,8 @@ import {
   setGalleryScene, 
   addPiecePosition, 
   setActiveNavigator, 
-  getLocalPlayer 
+  getLocalPlayer, 
+  getActiveNavigator
 } from "../Model/state";
 import API from "../Integration/API";
 import { FLOOR, WING } from "../constants";
@@ -43,47 +44,41 @@ export default function SetupLobby() {
 
     const player = getLocalPlayer();
 
-    if (pickInfo.pickedMesh && pickInfo.pickedMesh.isArt && 
-      Vector3.Distance(player.position, pickInfo.pickedMesh.position) < 10) {
-      SetShowNFTDetails(true);
-      setActivePiece(pickInfo.pickedMesh.ArtDetails);
+    if (pickInfo.pickedMesh) {
+      if (pickInfo.pickedMesh.isArt && Vector3.Distance(player.position, pickInfo.pickedMesh.position) < 10) {
+        SetShowNFTDetails(true);
+        setActivePiece(pickInfo.pickedMesh.ArtDetails);
+      } else if (pickInfo.pickedMesh.isDoor && Vector3.Distance(player.position, pickInfo.pickedPoint) < 10) {
+        SetShowNavigator(true);
+        setActiveNavigator(true);
+      } else {
+        SetShowNFTDetails(false);
+        setActivePiece(null);
+        SetShowNavigator(false);
+        setActiveNavigator(false);
+      }   
     } else {
       SetShowNFTDetails(false);
       setActivePiece(null);
+      SetShowNavigator(false);
+      setActiveNavigator(false);
     }
   }, PointerEventTypes.POINTERMOVE);
 
   scene.onPointerObservable.add(() => {
     const piece = getActivePiece();
+    const navigator = getActiveNavigator();
 
     if (piece) {
       showActivePiece();
+    } else if (navigator) {
+      ShowNavigator();
     }
   }, PointerEventTypes.POINTERUP);
 
   const glowLayer = new GlowLayer("GlowLayer", scene, { blurKernelSize: 64 });
   glowLayer.intensity = 1;
 
-  function gameTick() {
-    const player = getLocalPlayer();
-
-    if (!player) {
-      return;
-    }
-
-    if (player.position.x > 8 &&
-      player.position.y < 3 &&
-      player.position.z > -2 && 
-      player.position.z < 2) {
-      SetShowNavigator(true);
-      setActiveNavigator(true);
-    } else {
-      SetShowNavigator(false);
-      setActiveNavigator(false);
-    }
-  }
-
-  scene.beforeRender = gameTick;
   setGalleryScene(scene);
   
   const light = new HemisphericLight("Skylight", new Vector3(0, 1, 0), scene);
@@ -101,7 +96,9 @@ export default function SetupLobby() {
       } else if (submesh.name.includes("BottomFloor")) {
         if (submesh.name.includes("Door") && !submesh.name.includes("Frame")) {
           submesh.material.emissiveTexture = new Texture("/assets/Seam-Emissive.png");
-          submesh.material.emissiveColor = new Color3(0.2, 0.2, 0.2);
+          submesh.material.emissiveColor = new Color3(0.2, 0.2, 0.2);   
+          
+          submesh.isDoor = true;
         }
 
         getSections().bottomFloor.push(submesh);
@@ -114,7 +111,6 @@ export default function SetupLobby() {
         getSections().topFrontWing.push(submesh);
       } else if (submesh.name.includes("TopFloorBack")) {
         if (submesh.name.includes("Kusama")) {
-          debugger;
           submesh.material.emissiveTexture = new Texture("/assets/KusamaBaked-Emissive.png");
           submesh.material.emissiveColor = new Color3(0.2, 0.2, 0.2);
         }

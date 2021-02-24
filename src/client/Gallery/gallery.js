@@ -7,7 +7,7 @@ import {
   SceneLoader, 
   Vector3,
 } from "@babylonjs/core";
-import { SetShowNavigator, SetShowNFTDetails, showActivePiece } from "./hud";
+import { SetShowNavigator, SetShowNFTDetails, showActivePiece, ShowNavigator } from "./hud";
 import { 
   getPieces, 
   getEngine, 
@@ -16,7 +16,8 @@ import {
   setLobbyScene, 
   setActiveNavigator, 
   setLobbyMesh, 
-  getLocalPlayer 
+  getLocalPlayer, 
+  getActiveNavigator
 } from "../Model/state";
 
 // Set up the gallery scenes and their associated word logic.
@@ -34,47 +35,41 @@ export default function SetupGallery() {
 
     const player = getLocalPlayer();
 
-    if (pickInfo.pickedMesh && pickInfo.pickedMesh.isArt && 
-      Vector3.Distance(player.position, pickInfo.pickedMesh.position) < 10) {
-      SetShowNFTDetails(true);
-      setActivePiece(pickInfo.pickedMesh.ArtDetails);
+    if (pickInfo.pickedMesh) {
+      if (pickInfo.pickedMesh.isArt && Vector3.Distance(player.position, pickInfo.pickedMesh.position) < 10) {
+        SetShowNFTDetails(true);
+        setActivePiece(pickInfo.pickedMesh.ArtDetails);
+      } else if (pickInfo.pickedMesh.isDoor && Vector3.Distance(player.position, pickInfo.pickedPoint) < 10) {
+        SetShowNavigator(true);
+        setActiveNavigator(true);
+      } else {
+        SetShowNFTDetails(false);
+        setActivePiece(null);
+        SetShowNavigator(false);
+        setActiveNavigator(false);
+      }   
     } else {
       SetShowNFTDetails(false);
       setActivePiece(null);
+      SetShowNavigator(false);
+      setActiveNavigator(false);
     }
   }, PointerEventTypes.POINTERMOVE);
 
   scene.onPointerObservable.add(() => {
     const piece = getActivePiece();
+    const navigator = getActiveNavigator();
 
     if (piece) {
       showActivePiece();
+    } else if (navigator) {
+      ShowNavigator();
     }
   }, PointerEventTypes.POINTERUP);
 
   const glowLayer = new GlowLayer("GlowLayer", scene, { blurKernelSize: 64 });
   glowLayer.intensity = 1;
 
-  function gameTick() {
-    const player = getLocalPlayer();
-
-    if (!player) {
-      return;
-    }
-
-    if (player.position.x > 8 &&
-      player.position.y < 3 &&
-      player.position.z > -2 && 
-      player.position.z < 2) {
-      SetShowNavigator(true);
-      setActiveNavigator(true);
-    } else {
-      SetShowNavigator(false);
-      setActiveNavigator(false);
-    }
-  }
-
-  scene.beforeRender = gameTick;
   setLobbyScene(scene);
   
   const light = new HemisphericLight("Skylight", new Vector3(0, 1, 0), scene);
