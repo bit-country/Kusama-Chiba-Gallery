@@ -1,0 +1,234 @@
+/* HUD */
+#root .hud {
+  width: 0;
+  height: 0;
+  --background-color: #8a8087c2;
+}
+
+/* Menu and Title */
+#root .hud > .menu {
+  position: fixed;
+  top: 1em;
+  left: 1em;
+  transition: color 100ms ease-out;
+  cursor: pointer;
+}
+
+#root .hud > .menu:hover {
+  color: white;
+}
+
+#root .hud > .menu-overlay {
+  position: fixed;
+  top: 3em;
+  left: 1em;
+}
+
+#root .hud > .menu-overlay.hidden {
+  display: none;
+}
+
+#root .hud > .title {
+  position: fixed;
+  top: 0.9em;
+  left: 3em;
+  color: white;
+}
+
+#root .hud > .title h2 {
+  font-size: 1.3em;
+}
+
+/* Login Shortcut */
+#root .hud > .login-item {
+  position: fixed;
+  top: 1em;
+  right: 1em;
+  color: white;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+#root .hud > .login-item:hover {
+  color: teal;
+}
+
+/* Indicator elements */
+#root .hud > .nft-details-item,
+#root .hud > .navigator-item {
+  position: fixed;
+  top: calc(50% - 1em);
+  left: calc(50% - 1em);
+  cursor: none;
+  pointer-events: none;
+}
+
+#root .hud > .nft-details-item.hidden,
+#root .hud > .navigator-item.hidden {
+  display: none;
+}
+
+/* Character Selector */
+#root .hud #btnEnterGallery {
+  padding: 5px 12px;
+  border: 1px pink solid;
+  background: transparent;
+  color: white;
+  font-weight: 200;
+  border-radius: 4px;
+}
+
+#root .hud .genderSelected {
+  background: #272424;
+  color: white !important;
+  width: 30% !important;
+}
+
+#root .hud .chat {
+  overflow-y: auto;
+  background: #00000066;
+  position: absolute;
+  bottom: 0;
+  width: 30vw;
+  height: 20vh;
+}
+
+#root .hud .genderSelection:hover {
+  background: #4444449e;
+  color: white !important;
+}
+
+#root .hud .genderSelection-female {
+  margin: 15px;
+  font-size: 1.4em;
+  border: none;
+  border-radius: 2px;
+  letter-spacing: 1px;
+  width: 18%;
+  height: 120px;
+  color: tomato;
+  font-weight: 600;
+}
+
+#root .hud .genderSelection-male {
+  margin: 15px;
+  font-size: 1.4em;
+  border-radius: 2px;
+  border: none;
+  letter-spacing: 1px;
+  width: 18%;
+  height: 120px;
+  color: #003b6f;
+  font-weight: 600;
+}
+
+/* Tutorial */
+#root .hud .tutorial {
+  position: fixed;
+  bottom: 1em;
+  right: 1em;
+  width: 35em;
+  height: 15em;
+  background-color: #100d1052;
+  transition: all 200ms ease-in-out;
+}
+
+#root .hud .tutorial.fading {
+  height: 0px;
+  opacity: 0;
+}
+
+#root .hud .tutorial img.keys {
+  height: 4em;
+}
+
+#root .hud .tutorial img.mouse {
+  height: 6em;
+}
+
+/* Overlays */
+#root .hud > .register-overlay,
+#root .hud > .login-overlay,
+#root .hud > .mint-overlay,
+#root .hud > .details-overlay,
+#root .hud > .navigator-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#root .hud > .register-overlay > form,
+#root .hud > .login-overlay > form,
+#root .hud > .mint-overlay > form,
+#root .hud > .details-overlay > .details,
+#root .hud > .navigator-overlay > .navigator {
+  background-color: var(--background-color);
+  width: 30em;
+  max-height: 90vh;
+  height: 100%;
+  padding: 1em;
+  border-radius: 1em;
+  box-shadow: rgba(0, 0, 0, 0.25) 0 0 1em 0;
+  opacity: 0.8;
+  transition-property: all 100ms ease-in-out;
+}
+
+#root .hud > .register-overlay > form:hover,
+#root .hud > .login-overlay > form:hover,
+#root .hud > .mint-overlay > form:hover,
+#root .hud > .details-overlay > .details:hover,
+#root .hud > .navigator-overlay > .navigator:hover {
+  opacity: 1;
+}
+
+#root .hud > .register-overlay.hidden,
+#root .hud > .login-overlay.hidden,
+#root .hud > .mint-overlay.hidden,
+#root .hud > .details-overlay.hidden,
+#root .hud > .navigator-overlay.hidden {
+  display: none;
+}
+
+/* NFT Details Specific */
+#root .hud > .details-overlay > .details {
+  width: 80em;
+}
+
+#root .hud > .details-overlay > .details > .row.content {
+  height: 100%;
+  max-height: calc(100% - 8em);
+}
+
+#root .hud > .details-overlay > .details > .row.content > .col.image-col {
+  max-height: 100%;
+  overflow: auto;
+}
+
+#root .hud > .details-overlay .nft-image {
+  width: 100%;
+  object-fit: contain;
+}
+
+#root .hud > .details-overlay .item .title {
+  font-weight: bold;
+}
+
+/* Navigator specific */
+#root .hud .navigator-overlay > .navigator {
+  width: 80em;
+}
+
+#root .hud .navigator-overlay > .navigator > #galleries-container {
+  max-height: calc(100% - 8em);
+  overflow: auto;
+}
+
+#root .hud .navigator-overlay > .navigator > #galleries-container > div.item  img  {
+  height: 10em;
+  object-fit: contain;
+}

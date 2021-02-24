@@ -7,6 +7,150 @@ import { InitialSetup } from "./room";
 
 const canvasElement = document.getElementById("canvas");
 
+
+// Menu section
+const menu = document.querySelector("#root .hud .menu");
+const menuOverlay = document.querySelector("#root .hud .menu-overlay");
+
+menu.onclick = () => {
+  menuOverlay.classList.toggle("hidden");
+};
+
+
+// Login section
+const loginMenuItem = document.querySelector("#root .hud .menu-overlay #login-menu-item");
+const loginTopItem = document.querySelector("#root .hud .login-item");
+const loginOverlay = document.querySelector("#root .hud .login-overlay");
+const loginButton = document.querySelector("#root .hud .login-overlay button[name='login']");
+const loginCancelButton = document.querySelector("#root .hud .login-overlay button[name='cancel']");
+
+loginMenuItem.onclick = () => {
+  loginOverlay.classList.toggle("hidden");
+  menuOverlay.classList.toggle("hidden");
+};
+loginTopItem.onclick = () => {
+  loginOverlay.classList.toggle("hidden");
+  menuOverlay.classList.add("hidden");
+};
+
+loginCancelButton.onclick = () => {
+  loginOverlay.classList.toggle("hidden");
+  canvasElement.requestPointerLock();
+};
+
+
+// Register section
+const registerMenuItem = document.querySelector("#root .hud .menu-overlay #register-menu-item");
+const registerOverlay = document.querySelector("#root .hud .register-overlay");
+const registerButton = document.querySelector("#root .hud .register-overlay button[name='register']");
+const registerCancelButton = document.querySelector("#root .hud .register-overlay button[name='cancel']");
+
+registerMenuItem.onclick = () => {
+  registerOverlay.classList.toggle("hidden");
+  menuOverlay.classList.toggle("hidden");
+};
+
+registerCancelButton.onclick = () => {
+  registerOverlay.classList.toggle("hidden");
+  canvasElement.requestPointerLock();
+};
+
+
+// Currently we have no API to use.
+// // Mint section
+// const mintMenuItem = document.querySelector("#root .hud .menu-overlay #mint-menu-item");
+// const mintOverlay = document.querySelector("#root .hud .mint-overlay");
+// const mintButton = document.querySelector("#root .hud .mint-overlay button[name='mint']");
+// const mintCancelButton = document.querySelector("#root .hud .mint-overlay button[name='cancel']");
+
+// mintMenuItem.onclick = () => {
+//   mintOverlay.classList.toggle("hidden");
+//   menuOverlay.classList.toggle("hidden");
+// };
+
+// mintButton.onclick = () => {
+//   const piece = getActivePiece();
+  
+//   // Check that we are next to a piece.
+//   if (!piece) {
+//     return;
+//   }
+
+//   // If it already has an art piece, this isn't right
+//   if (piece.art) {
+//     return;
+//   }
+
+//   const imageInput = document.querySelector(
+//     "#root .hud > .mint-overlay input[name='image']"
+//   );
+//   const ownerName = "Example";
+//   const artistName = "Yourself";
+//   const pieceNameInput = document.querySelector(
+//     "#root .hud > .mint-overlay input[name='name']"
+//   );
+
+//   if (!pieceNameInput || pieceNameInput.value.length < 1) {
+//     return;
+//   }
+
+//   if (imageInput.files.length < 1) {
+//     return;
+//   }
+
+//   const uploadedMedia = URL.createObjectURL(imageInput.files[0]);
+//   if (imageInput.files[0].type.includes("image")) {
+//     piece.slotMaterial.diffuseTexture = new Texture(
+//       uploadedMedia,
+//       getScene()
+//     );
+
+//     if (piece.emissive) {
+//       piece.slotMaterial.emissiveTexture = new Texture(
+//         uploadedMedia,
+//         getScene()
+//       );
+//       piece.slotMaterial.emissiveColor = new Color3(1, 1, 1);
+//     }
+//   } else if (imageInput.files[0].type.includes("video")) {
+//     piece.slotMaterial.diffuseTexture = new VideoTexture(
+//       "VideoPiece",
+//       uploadedMedia,
+//       getScene()
+//     );
+
+//     if (piece.emissive) {
+//       piece.slotMaterial.emissiveTexture = new VideoTexture(
+//         "VideoPiece",
+//         uploadedMedia,
+//         getScene()
+//       );
+//       piece.slotMaterial.emissiveColor = new Color3(1, 1, 1);
+//     }
+//   }
+
+//   piece.art = uploadedMedia;
+//   piece.name = pieceNameInput.value;
+//   piece.artist = artistName;
+//   piece.owner = ownerName;
+
+//   mintOverlay.classList.toggle("hidden");
+// };
+
+// mintCancelButton.onclick = () => {
+//   mintOverlay.classList.toggle("hidden");
+//   canvasElement.requestPointerLock();
+// };
+
+// Details section
+const detailsOverlay = document.querySelector("#root .hud .details-overlay");
+const detailsImg = document.querySelector("#root .hud .details-overlay img.nft-image");
+const detailsOwner = document.querySelector("#root .hud .details-overlay .ui.list .item[name='owner'] span.value");
+const detailsArtist = document.querySelector("#root .hud .details-overlay .ui.list .item[name='artist'] span.value");
+const detailsName = document.querySelector("#root .hud .details-overlay .ui.list .item[name='name'] span.value");
+const detailsCloseButton = document.querySelector("#root .hud .details-overlay button[name='close']");
+
+// Shows the "eye" icon to indicate that you can view a piece
 export function SetShowNFTDetails(visible) {
   const NFTDetailsIcon = document.querySelector("#root .hud .nft-details-item");
 
@@ -17,148 +161,7 @@ export function SetShowNFTDetails(visible) {
   }
 }
 
-export function SetShowNavigator(visible) {
-  const navigatorIcon = document.querySelector("#root .hud .navigator-item");
-
-  if (visible) {
-    navigatorIcon.classList.remove("hidden");  
-  } else {
-    navigatorIcon.classList.add("hidden");
-  }
-}
-
-const initialSetupHUD = () => {
-  const genderSelection = document.querySelectorAll(".genderSelection");
-  const btnEnterGallery = document.querySelector("#btnEnterGallery");
-
-  btnEnterGallery.addEventListener("click", function (event) {
-    event.preventDefault();
-    const iptUsername = document.querySelector("#iptUsername").value;
-    let selectedCharacter = document.querySelector("#selectedCharacter")
-      .innerHTML;
-    
-    const toHide = document.querySelector("#characterSelection");
-    toHide.style.visibility = "hidden";
-    InitialSetup(iptUsername, selectedCharacter);
-  });
-
-  for (const btn of genderSelection) {
-    btn.addEventListener("click", function (event) {
-      let selectedCharacter = document.querySelector("#selectedCharacter");
-      selectedCharacter.innerHTML = event.target.value;
-
-      if (event.target.className.includes("genderSelected")) {
-        event.target.className = event.target.className.replace(
-          "genderSelected",
-          ""
-        );
-      } else {
-        event.target.className += " genderSelected";
-      }
-
-      if (event.target.innerText === "Female") {
-        const male = document.querySelector(".genderSelection-male");
-        male.className = male.className.replace("genderSelected", "");
-      } else {
-        const female = document.querySelector(".genderSelection-female");
-        female.className = female.className.replace("genderSelected", "");
-      }
-    });
-  }
-};
-
-// Mint section
-const mintMenuItem = document.querySelector("#root .hud .menu-overlay #mint-menu-item");
-const mintOverlay = document.querySelector("#root .hud .mint-overlay");
-const mintButton = document.querySelector("#root .hud .mint-overlay button[name='mint']");
-const mintCancelButton = document.querySelector("#root .hud .mint-overlay button[name='cancel']");
-
-mintMenuItem.onclick = () => {
-  mintOverlay.classList.toggle("hidden");
-  menuOverlay.classList.toggle("hidden");
-};
-
-mintButton.onclick = () => {
-  const piece = getActivePiece();
-
-  if (!piece) {
-    return;
-  }
-
-  if (piece.art) {
-    return;
-  }
-
-  const imageInput = document.querySelector(
-    "#root .hud > .mint-overlay input[name='image']"
-  );
-  const ownerName = "Example";
-  const artistName = "Yourself";
-  const pieceNameInput = document.querySelector(
-    "#root .hud > .mint-overlay input[name='name']"
-  );
-
-  if (!pieceNameInput || pieceNameInput.value.length < 1) {
-    return;
-  }
-
-  if (imageInput.files.length < 1) {
-    return;
-  }
-
-  const uploadedMedia = URL.createObjectURL(imageInput.files[0]);
-  if (imageInput.files[0].type.includes("image")) {
-    piece.slotMaterial.diffuseTexture = new Texture(
-      uploadedMedia,
-      getScene()
-    );
-
-    if (piece.emissive) {
-      piece.slotMaterial.emissiveTexture = new Texture(
-        uploadedMedia,
-        getScene()
-      );
-      piece.slotMaterial.emissiveColor = new Color3(1, 1, 1);
-    }
-  } else if (imageInput.files[0].type.includes("video")) {
-    piece.slotMaterial.diffuseTexture = new VideoTexture(
-      "VideoPiece",
-      uploadedMedia,
-      getScene()
-    );
-
-    if (piece.emissive) {
-      piece.slotMaterial.emissiveTexture = new VideoTexture(
-        "VideoPiece",
-        uploadedMedia,
-        getScene()
-      );
-      piece.slotMaterial.emissiveColor = new Color3(1, 1, 1);
-    }
-  }
-
-  piece.art = uploadedMedia;
-  piece.name = pieceNameInput.value;
-  piece.artist = artistName;
-  piece.owner = ownerName;
-
-  mintOverlay.classList.toggle("hidden");
-};
-
-mintCancelButton.onclick = () => {
-  mintOverlay.classList.toggle("hidden");
-  canvasElement.requestPointerLock();
-};
-
-// Details section
-const detailsOverlay = document.querySelector("#root .hud .details-overlay");
-const detailsImg = document.querySelector("#root .hud .details-overlay img.nft-image");
-const detailsOwner = document.querySelector("#root .hud .details-overlay .ui.list .item[name='owner'] span.value");
-const detailsArtist = document.querySelector("#root .hud .details-overlay .ui.list .item[name='artist'] span.value");
-const detailsName = document.querySelector("#root .hud .details-overlay .ui.list .item[name='name'] span.value");
-const detailsCloseButton = document.querySelector("#root .hud .details-overlay button[name='close']");
-
-const SetDetailsOverVisibility = visible => {
+export function SetDetailsOverVisibility(visible) {
   if (visible) {
     detailsOverlay.classList.remove("hidden");
 
@@ -179,7 +182,7 @@ detailsCloseButton.onclick = () => {
   canvasElement.requestPointerLock();
 }
 
-
+// Show the details modal
 export function showActivePiece() {
   const piece = getActivePiece();
 
@@ -196,7 +199,7 @@ export function showActivePiece() {
   }
 }
 
-
+// Navigator section
 const navigatorOverlay = document.querySelector("#root .hud .navigator-overlay");
 const galleriesContainer = document.querySelector("#root .hud #galleries-container");
 const navigatorGoToLobbyButton = document.querySelector("#root .hud .navigator-overlay button#go-to-lobby")
@@ -215,6 +218,18 @@ navigatorGoToLobbyButton.onclick = () => {
   canvasElement.requestPointerLock();
 }
 
+// Shows the "door" icon to indicate that you can navigate to another area
+export function SetShowNavigator(visible) {
+  const navigatorIcon = document.querySelector("#root .hud .navigator-item");
+
+  if (visible) {
+    navigatorIcon.classList.remove("hidden");  
+  } else {
+    navigatorIcon.classList.add("hidden");
+  }
+}
+
+// Show the navigator modal and setup content
 export function ShowNavigator() {
   const navigator = getActiveNavigator();
 
@@ -281,52 +296,68 @@ export function ShowNavigator() {
   });  
 }
 
+export function ShowTutorial() {
+  const tutorial = document.querySelector("#root .hud .tutorial");
+
+  tutorial.classList.remove("invisible", "fading");
+
+  window.setTimeout(() => {
+    tutorial.classList.add("fading");
+
+    window.setTimeout(() => {
+      tutorial.classList.add("invisible");
+    }, 1000);
+  }, 5000);
+}
+
+// Shows the initial entry setup HUD (username and character selection)
+const initialSetupHUD = () => {
+  const genderSelection = document.querySelectorAll(".genderSelection");
+  const btnEnterGallery = document.querySelector("#btnEnterGallery");
+
+  btnEnterGallery.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    const iptUsername = document.querySelector("#iptUsername").value;
+
+    let selectedCharacter = document.querySelector("#selectedCharacter")
+      .innerHTML;
+    
+    const toHide = document.querySelector("#characterSelection");
+    toHide.style.visibility = "hidden";
+
+    InitialSetup(iptUsername, selectedCharacter);
+
+    ShowTutorial();
+  });
+
+  for (const btn of genderSelection) {
+    btn.addEventListener("click", function (event) {
+      let selectedCharacter = document.querySelector("#selectedCharacter");
+      selectedCharacter.innerHTML = event.target.value;
+
+      if (event.target.className.includes("genderSelected")) {
+        event.target.className = event.target.className.replace(
+          "genderSelected",
+          ""
+        );
+      } else {
+        event.target.className += " genderSelected";
+      }
+
+      if (event.target.innerText === "Female") {
+        const male = document.querySelector(".genderSelection-male");
+        male.className = male.className.replace("genderSelected", "");
+      } else {
+        const female = document.querySelector(".genderSelection-female");
+        female.className = female.className.replace("genderSelected", "");
+      }
+    });
+  }
+};
+
+
+// Initialise HUD
 export function SetupHUD() {
   initialSetupHUD();
-  
-  // Menu section
-  const menu = document.querySelector("#root .hud .menu");
-  const menuOverlay = document.querySelector("#root .hud .menu-overlay");
-
-  menu.onclick = () => {
-    menuOverlay.classList.toggle("hidden");
-  };
-
-
-  // Login section
-  const loginMenuItem = document.querySelector("#root .hud .menu-overlay #login-menu-item");
-  const loginTopItem = document.querySelector("#root .hud .login-item");
-  const loginOverlay = document.querySelector("#root .hud .login-overlay");
-  const loginButton = document.querySelector("#root .hud .login-overlay button[name='login']");
-  const loginCancelButton = document.querySelector("#root .hud .login-overlay button[name='cancel']");
-
-  loginMenuItem.onclick = () => {
-    loginOverlay.classList.toggle("hidden");
-    menuOverlay.classList.toggle("hidden");
-  };
-  loginTopItem.onclick = () => {
-    loginOverlay.classList.toggle("hidden");
-    menuOverlay.classList.add("hidden");
-  };
-
-  loginCancelButton.onclick = () => {
-    loginOverlay.classList.toggle("hidden");
-    canvasElement.requestPointerLock();
-  };
-
-  // Register section
-  const registerMenuItem = document.querySelector("#root .hud .menu-overlay #register-menu-item");
-  const registerOverlay = document.querySelector("#root .hud .register-overlay");
-  const registerButton = document.querySelector("#root .hud .register-overlay button[name='register']");
-  const registerCancelButton = document.querySelector("#root .hud .register-overlay button[name='cancel']");
-
-  registerMenuItem.onclick = () => {
-    registerOverlay.classList.toggle("hidden");
-    menuOverlay.classList.toggle("hidden");
-  };
-
-  registerCancelButton.onclick = () => {
-    registerOverlay.classList.toggle("hidden");
-    canvasElement.requestPointerLock();
-  };
 }
