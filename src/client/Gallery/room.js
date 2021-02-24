@@ -5,9 +5,12 @@ import { setGameRoom, getPlayer, getLocalPlayer } from "../Model/state";
 import {
   PLAYER_MOVE,
   BROADCAST_PLAYER_POSITION,
+  BROADCAST_CHAT,
+  BROADCAST_CHAT_INIT,
 } from "../../common/MessageTypes";
 import axios from "axios";
 import { importCharacter } from "./gameplay";
+import { ChatSetup } from "./chat";
 
 // import SetupPlayerHUD from "../gameClient/HUD/HUDPlayerList";
 const gameHttpEndpoint = "http://localhost:2657";
@@ -26,16 +29,21 @@ const ToChat = (text) => {
   nameText.style.margin = "0";
   nameText.append(text);
   chat.append(nameText);
+  chat.scrollTop = chat.scrollHeight;
 };
 
 const JoinOrCreateGallery = (gallery, playerName, character, spawnPosition, spawnRotation) => {
   client.joinOrCreate(gallery, { name: playerName }).then((room) => {
     setGameRoom(room);
+    
     importCharacter(character, spawnPosition, spawnRotation);
 
+    ChatSetup();
+
     room.state.players.onAdd = (player, currentSession) => {
-      console.log(`entered a gallery - ${gallery}`);
-      ToChat(`[${player.joinedTime}] ${player.name} has joined the room.`);
+      ToChat(
+        `[${player.joinedTime}] ${player.name} has joined the ${room.name}.`
+      );
       const { sessionId } = room;
       if (currentSession !== sessionId) {
         new Player(player);
@@ -81,6 +89,18 @@ const JoinOrCreateGallery = (gallery, playerName, character, spawnPosition, spaw
       playerUI.mesh.dispose();
 
       ToChat(`[${player.leaveTime}] ${player.name} left the room.`);
+    });
+
+    room.onMessage(BROADCAST_CHAT, ({ sender, senderId, content }) => {
+      ToChat(
+        `${sender}${room.sessionId === senderId ? " (you)" : ""}: ${content}`
+      );
+    });
+    room.onMessage(BROADCAST_CHAT_INIT, (chat) => {
+      debugger;
+      chat.forEach(({ sender, content }) => {
+        ToChat(`${sender}: ${content}`);
+      });
     });
 
     room.onLeave(() => {});

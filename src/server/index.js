@@ -3,13 +3,9 @@ import express from "express";
 import cors from "cors";
 import { Server } from "colyseus";
 import { GameRoom } from "./GameRoom.js";
-// const http = require("http");
-// const express = require("express");
-// const cors = require("cors");
-// const Server = require("colyseus");
-// const GameRoom = require("./GameRoom.js");
+import { ConnectToDb } from "./DBConnection.js";
+require("dotenv").config();
 
-// const schema = require("@colyseus/schema");
 export const port = process.env.SOCKET_DEV_URL || 2657;
 
 const app = express();
@@ -26,7 +22,7 @@ const gameServer = new Server({
   pingInterval: 1000,
 });
 
-gameServer.define("gallery", GameRoom);
+gameServer.define("lobby", GameRoom);
 
 app.post("/room/new", (request, response) => {
   gameServer.define(request.body.name, GameRoom);
@@ -35,4 +31,5 @@ app.post("/room/new", (request, response) => {
 });
 
 server.listen(port);
+ConnectToDb();
 console.log(`Listening on ${port}`);

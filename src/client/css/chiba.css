@@ -68,6 +68,39 @@
   display: none;
 }
 
+/* Chat */
+#root .hud .chatContainer {
+  height: 30vh;
+  position: absolute;
+  bottom: 0;
+}
+
+#root .hud .chat {
+  overflow-y: auto;
+  background: #00000066;
+  position: absolute;
+  bottom: 0;
+  width: 30vw;
+  height: 20vh;
+  height: 80%;
+}
+
+#root .hud .chatInput {
+  width: 30vw;
+  border: none;
+  outline: none;
+  background: #ffffff9c;
+}
+
+#root .hud .chatInput:focus {
+  background: white;
+}
+
+#root .hud .chatInput::placeholder {
+  text-align: end;
+  padding: 5px;
+}
+
 /* Character Selector */
 #root .hud #btnEnterGallery {
   padding: 5px 12px;
@@ -82,15 +115,6 @@
   background: #272424;
   color: white !important;
   width: 30% !important;
-}
-
-#root .hud .chat {
-  overflow-y: auto;
-  background: #00000066;
-  position: absolute;
-  bottom: 0;
-  width: 30vw;
-  height: 20vh;
 }
 
 #root .hud .genderSelection:hover {

@@ -1,0 +1,48 @@
+# Blender MTL File: 'low_poly_characters_1_02.blend'
+# Material Count: 4
+
+newmtl characters_f1_01
+Ns 60.415285
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd textures\\characters_f1_01_BaseColor.png
+map_Ns textures\\characters_f1_01_Roughness.png
+
+newmtl cloth_1_03
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd textures\\cloth_1_03_BaseColor.png
+map_Ns textures\\cloth_1_03_cloth_1_03_Roughness.png
+
+newmtl eye_01
+Ns 660.022791
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.670909 0.670909 0.670909
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd textures\\eye_01_BaseColor.png
+
+newmtl hair_1_02
+Ns 323.999994
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.176364 0.176364 0.176364
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd textures\\hair_1_02_BaseColor.png
