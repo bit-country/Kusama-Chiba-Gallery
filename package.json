@@ -8,6 +8,9 @@
     "server-build": "webpack watch --config webpack.server.config.js",
     "server-run": "nodemon ./dist/server.js --ignore public",
     "client": "webpack serve --config webpack.config.js",
+    "build": "npm-run-all --parallel build:server build:client",
+    "build:client": "webpack build --config webpack.config.js --mode production",
+    "build:server": "webpack build --config webpack.server.config.js --mode production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -22,13 +25,14 @@
     "@babylonjs/gui": "^4.2.0",
     "@babylonjs/loaders": "^4.2.0",
     "babel-loader": "^8.2.2",
+    "dotenv-webpack": "^6.0.2",
+    "webpack-bundle-analyzer": "^4.4.0",
     "webpack-node-externals": "^2.5.2"
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
     "@colyseus/schema": "^1.0.12",
     "axios": "^0.21.1",
-    "babylonjs-gui": "^4.2.0",
     "colyseus": "^0.14.7",
     "colyseus.js": "^0.14.1",
     "cors": "^2.8.5",
