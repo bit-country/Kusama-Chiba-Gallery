@@ -6,7 +6,7 @@ import { GameRoom } from "./GameRoom.js";
 import { ConnectToDb } from "./DBConnection.js";
 require("dotenv").config();
 
-export const port = process.env.SOCKET_DEV_URL || 2657;
+export const port = process.env.PORT || 2657;
 
 const app = express();
 
