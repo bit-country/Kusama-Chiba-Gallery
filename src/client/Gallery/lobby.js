@@ -85,48 +85,38 @@ export default function SetupLobby() {
   const light = new HemisphericLight("Skylight", new Vector3(0, 1, 0), scene);
   light.diffuse = new Color3(0.2, 0.2, 0.4);
   
-  SceneLoader.ImportMesh("", "/assets/Building9.obj", "", scene, mesh => {
+  SceneLoader.ImportMesh("", "/assets/Building10.gltf", "", scene, mesh => {
     setBuildingMeshes(mesh);
 
     for (let submesh of mesh) {
       // Names are flipped.
-      if (submesh.name.includes("BottomLeftWing")) {
+      if (submesh.name.includes("BottomRightWing")) {
         getSections().bottomRightWing.push(submesh);
-      } else if (submesh.name.includes("BottomRightWing")) {
+      } else if (submesh.name.includes("BottomLeftWing")) {
         getSections().bottomLeftWing.push(submesh);
       } else if (submesh.name.includes("BottomFloor")) {
-        if (submesh.name.includes("Door") && !submesh.name.includes("Frame")) {
-          submesh.material.emissiveTexture = new Texture("/assets/Seam-Emissive.png");
-          submesh.material.emissiveColor = new Color3(0.2, 0.2, 0.2);   
-          
+        if (submesh.name.includes("primitive9")) { // 9 is door as of building10
           submesh.isDoor = true;
         }
 
         getSections().bottomFloor.push(submesh);
       } else if (submesh.name.includes("TopFloorFront")) {
-        if (submesh.name.includes("Door") && !submesh.name.includes("Frame")) {
-          submesh.material.emissiveTexture = new Texture("/assets/Seam-Emissive.png");
-          submesh.material.emissiveColor = new Color3(0.2, 0.2, 0.2);
-        }
-
         getSections().topFrontWing.push(submesh);
       } else if (submesh.name.includes("TopFloorBack")) {
-        if (submesh.name.includes("Kusama")) {
-          submesh.material.emissiveTexture = new Texture("/assets/KusamaBaked-Emissive.png");
-          submesh.material.emissiveColor = new Color3(0.2, 0.2, 0.2);
-        }
-
         getSections().topBackWing.push(submesh);
-      } else if (submesh.name.includes("TopRightWing")) {
-        getSections().topLeftWing.push(submesh);
       } else if (submesh.name.includes("TopLeftWing")) {
+        getSections().topLeftWing.push(submesh);
+      } else if (submesh.name.includes("TopRightWing")) {
         getSections().topRightWing.push(submesh);
       } else if (submesh.name.includes("Roof")) {
         getSections().roof.push(submesh);
       }
 
       // Be careful not to exceed max GL vertex buffers
-      submesh.material.maxSimultaneousLights = 10;
+      if (submesh.material) {
+        submesh.material.maxSimultaneousLights = 10;
+      }
+
       submesh.checkCollisions = true;
       submesh.receiveShadows = true;
     }
@@ -140,9 +130,9 @@ export default function SetupLobby() {
   
         let wing = WING.CENTRE;
         if (slot.position.z > 12) {
-          wing = WING.RIGHT;
-        } else if (slot.position.z < -12) {
           wing = WING.LEFT;
+        } else if (slot.position.z < -12) {
+          wing = WING.RIGHT;
         } else if (slot.position.x > 10) {
           wing = WING.BACK;
         } else if (slot.position.x < -10) {

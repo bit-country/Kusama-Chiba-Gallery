@@ -96,8 +96,8 @@ const JoinOrCreateGallery = (gallery, playerName, character, spawnPosition, spaw
         `${sender}${room.sessionId === senderId ? " (you)" : ""}: ${content}`
       );
     });
+
     room.onMessage(BROADCAST_CHAT_INIT, (chat) => {
-      debugger;
       chat.forEach(({ sender, content }) => {
         ToChat(`${sender}: ${content}`);
       });

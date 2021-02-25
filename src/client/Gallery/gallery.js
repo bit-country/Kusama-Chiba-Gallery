@@ -76,17 +76,17 @@ export default function SetupGallery() {
   const light = new HemisphericLight("Skylight", new Vector3(0, 1, 0), scene);
   light.diffuse = new Color3(0.2, 0.2, 0.4);
   
-  SceneLoader.ImportMesh("", "/assets/Gallery2.obj", "", scene, mesh => {
+  SceneLoader.ImportMesh("", "/assets/Gallery3.gltf", "", scene, mesh => {
     for (let submesh of mesh) {
-      if (submesh.name.includes("Door") && !submesh.name.includes("Frame")) {
-        submesh.material.emissiveTexture = new Texture("/assets/Seam-Emissive.png");
-        submesh.material.emissiveColor = new Color3(0.2, 0.2, 0.2);   
-        
+      if (submesh.name.includes("primitive5")) { // 5 is door as of gallery3
         submesh.isDoor = true;
       }
 
       // Be careful not to exceed max GL vertex buffers
-      submesh.material.maxSimultaneousLights = 10;
+      if (submesh.material) {
+        submesh.material.maxSimultaneousLights = 10;
+      }
+
       submesh.checkCollisions = true;
       submesh.receiveShadows = true;
     }
