@@ -13,8 +13,8 @@ import { importCharacter } from "./gameplay";
 import { ChatSetup } from "./chat";
 
 // import SetupPlayerHUD from "../gameClient/HUD/HUDPlayerList";
-const gameHttpEndpoint = "http://localhost:2657";
-const gameWS = "ws://localhost:2657";
+const gameHttpEndpoint = process.env.NODE_ENV == "production" ? process.env.SERVER_URL : process.env.SERVER_URL_DEV;
+const gameWS = process.env.NODE_ENV == "production" ? process.env.SERVER_WEBSOCKET_URL : process.env.SERVER_WEBSOCKET_URL_DEV;
 
 export const InitialSetup = (username, character) => {
   EnterRoom("lobby", username || "Guest", character, new Vector3(-14, 3.1, 0), new Vector3(0, -1.57079, 0));
