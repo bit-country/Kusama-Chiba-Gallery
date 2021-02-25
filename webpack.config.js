@@ -1,4 +1,7 @@
 const path = require("path");
+const dotenv = require("dotenv-webpack");
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+
 module.exports = {
   mode: "development",
   entry: "./src/client/index",
@@ -11,6 +14,10 @@ module.exports = {
     //contentBase: path.join(__dirname, "dist"),
     contentBase: "./src/client",
   },
+  plugins: [
+    new dotenv(),
+    new BundleAnalyzerPlugin()
+  ],
   module: {
     rules: [
       {

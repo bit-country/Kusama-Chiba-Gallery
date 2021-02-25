@@ -1,8 +1,6 @@
-import { Texture, VideoTexture } from "@babylonjs/core";
 import API from "../Integration/API";
-import { getActiveNavigator, getActivePiece, getGalleryScene, getGameRoom, getLobbyScene, getScene, setScene, setSelectedCharacter, setUsername } from "../Model/state";
-import { ChangeScene, GoToGallery, GoToLobby } from "../Utility/sceneChanger";
-import * as GUI from "babylonjs-gui";
+import { getActiveNavigator, getActivePiece, getScene, setSelectedCharacter, setUsername } from "../Model/state";
+import { GoToGallery, GoToLobby } from "../Utility/sceneChanger";
 import { InitialSetup } from "./room";
 
 const canvasElement = document.getElementById("canvas");
@@ -21,7 +19,6 @@ menu.onclick = () => {
 const loginMenuItem = document.querySelector("#root .hud .menu-overlay #login-menu-item");
 const loginTopItem = document.querySelector("#root .hud .login-item");
 const loginOverlay = document.querySelector("#root .hud .login-overlay");
-const loginButton = document.querySelector("#root .hud .login-overlay button[name='login']");
 const loginCancelButton = document.querySelector("#root .hud .login-overlay button[name='cancel']");
 
 loginMenuItem.onclick = () => {
@@ -29,8 +26,11 @@ loginMenuItem.onclick = () => {
   menuOverlay.classList.toggle("hidden");
 };
 loginTopItem.onclick = () => {
-  loginOverlay.classList.toggle("hidden");
-  menuOverlay.classList.add("hidden");
+  // loginOverlay.classList.toggle("hidden");
+  // menuOverlay.classList.add("hidden");
+  const result = getScene().pick(canvasElement.clientWidth / 2, canvasElement.clientHeight / 2);
+
+  console.log(result);
 };
 
 loginCancelButton.onclick = () => {
@@ -43,7 +43,6 @@ loginCancelButton.onclick = () => {
 // Register section
 const registerMenuItem = document.querySelector("#root .hud .menu-overlay #register-menu-item");
 const registerOverlay = document.querySelector("#root .hud .register-overlay");
-const registerButton = document.querySelector("#root .hud .register-overlay button[name='register']");
 const registerCancelButton = document.querySelector("#root .hud .register-overlay button[name='cancel']");
 
 registerMenuItem.onclick = () => {

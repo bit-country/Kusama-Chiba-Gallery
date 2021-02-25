@@ -1,4 +1,4 @@
-import { Color3, Texture, Vector3 } from "@babylonjs/core";
+import { Color3, Vector3 } from "@babylonjs/core";
 import { characterCleanup, SetupPlayer } from "../Gallery/gameplay";
 import { EnterRoom } from "../Gallery/room";
 import API from "../Integration/API";
@@ -11,14 +11,11 @@ import {
   getGameRoom, 
   getLobbyMesh, 
   getLobbyScene, 
-  getLocalPlayer, 
   getPieces, 
-  getPlayer, 
   getPlayers, 
   getScene, 
   getSelectedCharacter, 
   getUsername, 
-  setLocalPlayer, 
   setScene 
 } from "../Model/state";
 import dynamicCanvas from "./dynamicCanvas";

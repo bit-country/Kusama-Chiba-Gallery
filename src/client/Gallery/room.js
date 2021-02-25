@@ -1,7 +1,7 @@
 import { Vector3 } from "@babylonjs/core";
 import * as Colyseus from "colyseus.js";
 import Player from "../../common/entities/Player";
-import { setGameRoom, getPlayer, getLocalPlayer } from "../Model/state";
+import { setGameRoom, getPlayer } from "../Model/state";
 import {
   PLAYER_MOVE,
   BROADCAST_PLAYER_POSITION,
@@ -114,7 +114,7 @@ export const EnterRoom = (galleryName, playerName, character, spawnPosition, spa
     if (rooms.length === 0) {
       axios
         .post(`${gameHttpEndpoint}/room/new`, { name: galleryName })
-        .then((res) => {
+        .then(() => {
           return JoinOrCreateGallery(galleryName, playerName, character, spawnPosition, spawnRotation);
         });
     } else {

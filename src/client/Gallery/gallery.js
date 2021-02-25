@@ -5,12 +5,10 @@ import {
   PointerEventTypes, 
   Scene, 
   SceneLoader, 
-  Texture, 
   Vector3,
 } from "@babylonjs/core";
 import { SetShowNavigator, SetShowNFTDetails, showActivePiece, ShowNavigator } from "./hud";
 import { 
-  getPieces, 
   getEngine, 
   getActivePiece, 
   setActivePiece, 

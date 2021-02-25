@@ -1,5 +1,5 @@
-import { getScene, getContainer, setPlayer } from "../../client/Model/state.js";
-import { SceneLoader, Vector3, AssetContainer } from "@babylonjs/core";
+import { getScene, setPlayer } from "../../client/Model/state.js";
+import { SceneLoader, Vector3 } from "@babylonjs/core";
 
 export default class Player {
   constructor(player) {
