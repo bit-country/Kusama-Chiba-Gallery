@@ -76,9 +76,9 @@ export default function SetupGallery() {
   const light = new HemisphericLight("Skylight", new Vector3(0, 1, 0), scene);
   light.diffuse = new Color3(0.2, 0.2, 0.4);
   
-  SceneLoader.ImportMesh("", "/assets/Gallery3.gltf", "", scene, mesh => {
+  SceneLoader.ImportMesh("", "/assets/Gallery4.gltf", "", scene, mesh => {
     for (let submesh of mesh) {
-      if (submesh.name.includes("primitive5")) { // 5 is door as of gallery3
+      if (submesh.name.includes("primitive6")) { // 6 is door as of gallery4
         submesh.isDoor = true;
       }
 
