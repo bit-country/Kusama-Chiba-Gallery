@@ -26,28 +26,46 @@ let meshRotationSpeed = 0.1;
 
 const cameraOffset = new Vector3(5, 24, -30);
 
-export const importCharacter = () => {
-  // Keyboard events
-  var inputMap = {};
-  
+// Keyboard events
+let inputMap = {};
+let pointerInputBinding = null, beforeRenderObservable = null;
 
+export function characterCleanup() {
+  const scene = getScene();
+  const player = getLocalPlayer();
+
+  scene.onPointerObservable.remove(pointerInputBinding);
+  scene.onBeforeRenderObservable.remove(beforeRenderObservable);
+  scene.removeMesh(player, true);
+  for (let animationGroup of scene.animationGroups) {
+    scene.removeAnimationGroup(animationGroup);
+  }
+
+  player.dispose();
+
+  setLocalPlayer(null);
+}
+
+export const importCharacter = (character, spawnPosition, spawnRotation) => {
   const engine = getEngine();
   const scene = getScene();
   const camera = getCamera();
 
-  scene.actionManager = new ActionManager(scene);
+  if (!scene.actionManager) {
+    scene.actionManager = new ActionManager(scene);
 
-  scene.actionManager.registerAction(
-    new ExecuteCodeAction(ActionManager.OnKeyDownTrigger, function (evt) {
-      inputMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
-    })
-  );
-
-  scene.actionManager.registerAction(
-    new ExecuteCodeAction(ActionManager.OnKeyUpTrigger, function (evt) {
-      inputMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
-    })
-  );
+    scene.actionManager.registerAction(
+      new ExecuteCodeAction(ActionManager.OnKeyDownTrigger, function (evt) {
+        inputMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
+      })
+    );
+  
+    scene.actionManager.registerAction(
+      new ExecuteCodeAction(ActionManager.OnKeyUpTrigger, function (evt) {
+        inputMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
+      })
+    );
+  }  
 
   SceneLoader.ImportMeshAsync(
     null,
@@ -59,10 +77,10 @@ export const importCharacter = () => {
     setLocalPlayer(mesh);
     setPlayer(mesh);
 
-    mesh.position = new Vector3(-14, 3.1, 0);
+    mesh.position = spawnPosition;
     mesh.scaling.scaleInPlace(0.05);
     mesh.scaling.x *= -1;
-    mesh.rotation = new Vector3(0, -1.57079, 0);
+    mesh.rotation = spawnRotation;
     mesh.ellipsoidOffset = new Vector3(0, 1, 0);
     
     var animating = true;
@@ -75,7 +93,8 @@ export const importCharacter = () => {
     camera.parent = cameraMesh;
 
     // Bind in our pointer input, handles camera and player rotation.
-    scene.onPointerObservable.add(pointerInput.bind(null, engine, camera), PointerEventTypes.POINTERDOWN | PointerEventTypes.POINTERUP | PointerEventTypes.POINTERMOVE);
+    pointerInputBinding = pointerInput.bind(null, engine, camera); // Allow us to cleanup when we change rooms.
+    scene.onPointerObservable.add(pointerInputBinding, PointerEventTypes.POINTERDOWN | PointerEventTypes.POINTERUP | PointerEventTypes.POINTERMOVE);
     
     const walkAnim = scene.getAnimationGroupByName("Walking");
     //  const walkBackAnim = scene.getAnimationGroupByName("WalkingBack");
@@ -83,7 +102,7 @@ export const importCharacter = () => {
     const sambaAnim = scene.getAnimationGroupByName("Samba");
 
     //Rendering loop (executed for everyframe)
-    scene.onBeforeRenderObservable.add(() => {
+    beforeRenderObservable = () => {
       var keydown = false;
 
       mesh.moveWithCollisions(scene.gravity);
@@ -156,7 +175,8 @@ export const importCharacter = () => {
           animating = false;
         }
       }
-    });
+    };
+    scene.onBeforeRenderObservable.add(beforeRenderObservable);
   });
 };
 

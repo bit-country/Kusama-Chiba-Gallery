@@ -15,7 +15,7 @@ export default new (class API {
 
   async getPieces(maxPieces = 10) {
     try {
-      const response = await fetch(`${BASE_URL}/events`);
+      const response = await fetch(`${BASE_URL}/collections`);
       
       if (!response.ok) {
         throw new Error();
@@ -23,11 +23,11 @@ export default new (class API {
       
       const transactions = await response.json();
       
-      const validTransactions = transactions.data.filter(transaction => transaction.validity == "valid");
+      const validTransactions = transactions.data;
       
       let current = 0, index = 0, pieces = [];
       while (current < maxPieces) {
-        const collection = await fetch(`${BASE_URL}/collections/${validTransactions[index++].orbs[0].collection.id}`);
+        const collection = await fetch(`${BASE_URL}/collections/${validTransactions[index++].id}`);
         
         if (!collection.ok) {
           throw new Error();
@@ -41,7 +41,17 @@ export default new (class API {
             break;
           }
 
-          pieces.push({ name: piece.name, image: piece.imgUrl });
+          pieces.push({ 
+            name: piece.name, 
+            image: piece.imgUrl, 
+            address: piece.assetId, 
+            standard: piece.contracts[0].standard,
+            collection: {
+              name: collectionData.data.collection.name,
+              description: collectionData.data.collection.description,
+              id: collectionData.data.collection.id
+            }
+          });
         }
       }
 
@@ -86,7 +96,17 @@ export default new (class API {
           break;
         }
 
-        pieces.push({ name: piece.name, image: piece.imgUrl });
+        pieces.push({ 
+          name: piece.name, 
+          image: piece.imgUrl, 
+          address: piece.assetId, 
+          standard: piece.contracts[0].standard,
+          collection: {
+            name: collectionData.data.collection.name,
+            description: collectionData.data.collection.description,
+            id: collectionData.data.collection.id
+          }
+        });
       }
 
       return pieces;

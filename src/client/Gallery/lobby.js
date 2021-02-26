@@ -5,9 +5,10 @@ import {
   PointerEventTypes,
   Scene, 
   SceneLoader,
+  Texture,
   Vector3,
 } from "@babylonjs/core";
-import { SetShowNavigator, SetShowNFTDetails } from "./hud";
+import { SetShowNavigator, SetShowNFTDetails, showActivePiece, ShowNavigator } from "./hud";
 import Light from "../Model/Light";
 import Slot from "../Model/Slot";
 import { CreateSlot } from "../Utility/slotCreator";
@@ -21,13 +22,13 @@ import {
   setGalleryScene, 
   addPiecePosition, 
   setActiveNavigator, 
-  getLocalPlayer 
+  getLocalPlayer, 
+  getActiveNavigator
 } from "../Model/state";
 import API from "../Integration/API";
 import { FLOOR, WING } from "../constants";
 import dynamicCanvas from "../Utility/dynamicCanvas";
-
-const detailsIcon = document.querySelector("#root .hud .nft-details-item");
+import populatePieceDetails from "../Utility/populatePieceDetails";
 
 // Set up the lobby scene and the associated word logic.
 export default function SetupLobby() {
@@ -37,87 +38,54 @@ export default function SetupLobby() {
   scene.gravity.y = -0.15;
   scene.hoverCursor = "none";
 
-  scene.onPointerObservable.add(pointerInfo => {
-    const { pickInfo } = pointerInfo;
+  scene.onPointerObservable.add(() => {
+    const pickInfo = scene.pick(
+      engine.getInputElement().width / 2, 
+      engine.getInputElement().height / 2);
 
-    if (pickInfo.pickedMesh && 
-      pickInfo.pickedMesh.actionManager && 
-      pickInfo.pickedMesh.actionManager.hasPointerTriggers) {
-      detailsIcon.style = `top: ${scene.pointerY}; left: ${scene.pointerX}`;
+    const player = getLocalPlayer();
+
+    if (pickInfo.pickedMesh) {
+      if (pickInfo.pickedMesh.isArt && Vector3.Distance(player.position, pickInfo.pickedMesh.position) < 10) {
+        SetShowNFTDetails(true);
+        setActivePiece(pickInfo.pickedMesh.ArtDetails);
+      } else if (pickInfo.pickedMesh.isDoor && Vector3.Distance(player.position, pickInfo.pickedPoint) < 10) {
+        SetShowNavigator(true);
+        setActiveNavigator(true);
+      } else {
+        SetShowNFTDetails(false);
+        setActivePiece(null);
+        SetShowNavigator(false);
+        setActiveNavigator(false);
+      }   
     } else {
-      detailsIcon.style = "";
+      SetShowNFTDetails(false);
+      setActivePiece(null);
+      SetShowNavigator(false);
+      setActiveNavigator(false);
     }
   }, PointerEventTypes.POINTERMOVE);
+
+  scene.onPointerObservable.add(() => {
+    const piece = getActivePiece();
+    const navigator = getActiveNavigator();
+
+    if (piece) {
+      showActivePiece();
+    } else if (navigator) {
+      ShowNavigator();
+    }
+  }, PointerEventTypes.POINTERUP);
 
   const glowLayer = new GlowLayer("GlowLayer", scene, { blurKernelSize: 64 });
   glowLayer.intensity = 1;
 
-  function gameTick() {
-    const pieces = getPieces();
-    const player = getLocalPlayer();
-
-    if (!player) {
-      return;
-    }
-
-    const activePiece = getActivePiece();
-
-    if (player.position.x > 8 &&
-      player.position.y < 3 &&
-      player.position.z > -2 && 
-      player.position.z < 2) {
-      SetShowNavigator(true);
-      setActiveNavigator(true);
-    } else {
-      SetShowNavigator(false);
-      setActiveNavigator(false);
-    }
-
-    if (activePiece) {
-      const {
-        position: slotPos,
-        dimensions: slotDimensions,
-        bounds: slotBounds,
-      } = activePiece;
-
-      if (
-        player.position.x < slotPos.x - slotDimensions.width / 2 - slotBounds ||
-        player.position.x > slotPos.x + slotDimensions.width / 2 + slotBounds ||
-        player.position.z < slotPos.z - slotDimensions.depth / 2 - slotBounds ||
-        player.position.z > slotPos.z + slotDimensions.depth / 2 + slotBounds
-      ) {
-        SetShowNFTDetails(false);
-        setActivePiece(null);
-      }
-    }
-
-    for (let piece of pieces) {
-      const {
-        position: slotPos,
-        dimensions: slotDimensions,
-        bounds: slotBounds,
-      } = piece;
-
-      // TODO update to use player, or consider using picking instead.
-      if (
-        player.position.x > slotPos.x - slotDimensions.width / 2 - slotBounds &&
-        player.position.x < slotPos.x + slotDimensions.width / 2 + slotBounds &&
-        player.position.z > slotPos.z - slotDimensions.depth / 2 - slotBounds &&
-        player.position.z < slotPos.z + slotDimensions.depth / 2 + slotBounds
-      ) {
-        SetShowNFTDetails(true);
-        setActivePiece(piece);
-      }
-    }
-  }
-
-  scene.beforeRender = gameTick;
   setGalleryScene(scene);
   
   const light = new HemisphericLight("Skylight", new Vector3(0, 1, 0), scene);
   light.diffuse = new Color3(0.6, 0.5, 0.6);
   
-  SceneLoader.ImportMesh("", "/assets/Building6.obj", "", scene, mesh => {
+  SceneLoader.ImportMesh("", "/assets/Building8.obj", "", scene, mesh => {
     setBuildingMeshes(mesh);
 
     for (let submesh of mesh) {
@@ -127,10 +95,27 @@ export default function SetupLobby() {
       } else if (submesh.name.includes("BottomRightWing")) {
         getSections().bottomLeftWing.push(submesh);
       } else if (submesh.name.includes("BottomFloor")) {
+        if (submesh.name.includes("Door") && !submesh.name.includes("Frame")) {
+          submesh.material.emissiveTexture = new Texture("/assets/Seam-Emissive.png");
+          submesh.material.emissiveColor = new Color3(0.2, 0.2, 0.2);   
+          
+          submesh.isDoor = true;
+        }
+
         getSections().bottomFloor.push(submesh);
       } else if (submesh.name.includes("TopFloorFront")) {
+        if (submesh.name.includes("Door") && !submesh.name.includes("Frame")) {
+          submesh.material.emissiveTexture = new Texture("/assets/Seam-Emissive.png");
+          submesh.material.emissiveColor = new Color3(0.2, 0.2, 0.2);
+        }
+
         getSections().topFrontWing.push(submesh);
       } else if (submesh.name.includes("TopFloorBack")) {
+        if (submesh.name.includes("Kusama")) {
+          submesh.material.emissiveTexture = new Texture("/assets/KusamaBaked-Emissive.png");
+          submesh.material.emissiveColor = new Color3(0.2, 0.2, 0.2);
+        }
+
         getSections().topBackWing.push(submesh);
       } else if (submesh.name.includes("TopRightWing")) {
         getSections().topLeftWing.push(submesh);
@@ -148,7 +133,6 @@ export default function SetupLobby() {
 
     API.getPositionsGallery().then(positions => {
       for (let slot of positions) {
-  
         let floor = FLOOR.BOTTOM; 
         if (slot.position.y >= 3) {
           floor = FLOOR.TOP; 
@@ -205,7 +189,8 @@ export default function SetupLobby() {
       }
     });
   
-    API.getPieces(10).then(pieces => {
+
+    API.getPieces(34).then(pieces => {
       const positions = getPieces(scene);
   
       let index = 0;
@@ -219,6 +204,8 @@ export default function SetupLobby() {
         // Dynamic Canvas
         // Allow for different aspect ratio textures.
         dynamicCanvas(scene, position, piece.image); 
+
+        populatePieceDetails(position, piece);
       }
     })
   })

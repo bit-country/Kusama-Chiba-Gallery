@@ -24,6 +24,7 @@ export class GameRoom extends Room {
 
   onCreate(options) {
     this.setState(new StateHandler());
+
     // event check
     this.onMessage(PLAYER_MOVE, (client, { position, rotation }) => {
       const player = this.state.players[client.sessionId];
@@ -39,6 +40,7 @@ export class GameRoom extends Room {
         { except: client }
       );
     });
+
     this.onMessage(PLAYER_STOP, (client) => {
       this.broadcast(
         BROADCAST_PLAYER_POSITION,
@@ -59,7 +61,7 @@ export class GameRoom extends Room {
         senderId: client.id,
         time: new Date().toLocaleString(),
       };
-      chatService.Write(data, "Chat");
+      //chatService.Write(data, "Chat");
       this.broadcast(BROADCAST_CHAT, data);
     });
   }
@@ -67,21 +69,19 @@ export class GameRoom extends Room {
   onJoin(client, { name }) {
     //  this.clients[0].send()
     if (typeof this.state.players[client.sessionId] === "undefined") {
-      chatService.Read("Chat", { room: this.roomName }).then((chat) => {
-        if (chat) {
-          client.send(BROADCAST_CHAT_INIT, chat);
-        }
-      });
+      // chatService.Read("Chat", { room: this.roomName }).then((chat) => {
+      //   if (chat) {
+      //     client.send(BROADCAST_CHAT_INIT, chat);
+      //   }
+      // });
 
       let player = new Player();
       player.name = name;
 
       player.joinedTime = getCurrentTime();
       player.sessionId = client.sessionId;
-      player.x = randomPosition(-15, -18);
-      player.z = randomPosition(-2.5, 2.5);
-      player.y = 3.1;
       this.state.players[client.sessionId] = player;
+      
       this.broadcast(BROADCAST_PLAYER_JOINED, {
         playerName: name,
       });
@@ -100,11 +100,15 @@ export class GameRoom extends Room {
   }
 
   onLeave(client) {
+    console.log(`${client.sessionId} left`);
+
     this.state.players[client.sessionId].leaveTime = getCurrentTime();
+
     this.broadcast("removePlayer", {
       sessionId: client.sessionId,
       player: this.state.players[client.sessionId],
     });
+
     delete this.state.players[client.sessionId];
   }
 

@@ -31,5 +31,5 @@ app.post("/room/new", (request, response) => {
 });
 
 server.listen(port);
-ConnectToDb();
+//ConnectToDb();
 console.log(`Listening on ${port}`);

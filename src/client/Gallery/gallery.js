@@ -5,9 +5,10 @@ import {
   PointerEventTypes, 
   Scene, 
   SceneLoader, 
+  Texture, 
   Vector3,
 } from "@babylonjs/core";
-import { SetShowNavigator, SetShowNFTDetails } from "./hud";
+import { SetShowNavigator, SetShowNFTDetails, showActivePiece, ShowNavigator } from "./hud";
 import { 
   getPieces, 
   getEngine, 
@@ -16,10 +17,9 @@ import {
   setLobbyScene, 
   setActiveNavigator, 
   setLobbyMesh, 
-  getLocalPlayer 
+  getLocalPlayer, 
+  getActiveNavigator
 } from "../Model/state";
-
-const detailsIcon = document.querySelector("#root .hud .nft-details-item");
 
 // Set up the gallery scenes and their associated word logic.
 export default function SetupGallery() {
@@ -29,88 +29,62 @@ export default function SetupGallery() {
   scene.gravity.y = -0.15;
   scene.hoverCursor = "none";
 
-  scene.onPointerObservable.add(pointerInfo => {
-    const { pickInfo } = pointerInfo;
+  scene.onPointerObservable.add(() => {
+    const pickInfo = scene.pick(
+      engine.getInputElement().width / 2, 
+      engine.getInputElement().height / 2);
 
-    if (pickInfo.pickedMesh && 
-      pickInfo.pickedMesh.actionManager && 
-      pickInfo.pickedMesh.actionManager.hasPointerTriggers) {
-      detailsIcon.style = `top: ${scene.pointerY}; left: ${scene.pointerX}`;
+    const player = getLocalPlayer();
+
+    if (pickInfo.pickedMesh) {
+      if (pickInfo.pickedMesh.isArt && Vector3.Distance(player.position, pickInfo.pickedMesh.position) < 10) {
+        SetShowNFTDetails(true);
+        setActivePiece(pickInfo.pickedMesh.ArtDetails);
+      } else if (pickInfo.pickedMesh.isDoor && Vector3.Distance(player.position, pickInfo.pickedPoint) < 10) {
+        SetShowNavigator(true);
+        setActiveNavigator(true);
+      } else {
+        SetShowNFTDetails(false);
+        setActivePiece(null);
+        SetShowNavigator(false);
+        setActiveNavigator(false);
+      }   
     } else {
-      detailsIcon.style = "";
+      SetShowNFTDetails(false);
+      setActivePiece(null);
+      SetShowNavigator(false);
+      setActiveNavigator(false);
     }
   }, PointerEventTypes.POINTERMOVE);
+
+  scene.onPointerObservable.add(() => {
+    const piece = getActivePiece();
+    const navigator = getActiveNavigator();
+
+    if (piece) {
+      showActivePiece();
+    } else if (navigator) {
+      ShowNavigator();
+    }
+  }, PointerEventTypes.POINTERUP);
 
   const glowLayer = new GlowLayer("GlowLayer", scene, { blurKernelSize: 64 });
   glowLayer.intensity = 1;
 
-  function gameTick() {
-    const pieces = getPieces();
-    const player = getLocalPlayer();
-
-    if (!player) {
-      return;
-    }
-
-    const activePiece = getActivePiece();
-
-    if (player.position.x > 8 &&
-      player.position.y < 3 &&
-      player.position.z > -2 && 
-      player.position.z < 2) {
-      SetShowNavigator(true);
-      setActiveNavigator(true);
-    } else {
-      SetShowNavigator(false);
-      setActiveNavigator(false);
-    }
-
-    if (activePiece) {
-      const {
-        position: slotPos,
-        dimensions: slotDimensions,
-        bounds: slotBounds,
-      } = activePiece;
-
-      if (
-        player.position.x < slotPos.x - slotDimensions.width / 2 - slotBounds ||
-        player.position.x > slotPos.x + slotDimensions.width / 2 + slotBounds ||
-        player.position.z < slotPos.z - slotDimensions.depth / 2 - slotBounds ||
-        player.position.z > slotPos.z + slotDimensions.depth / 2 + slotBounds
-      ) {
-        SetShowNFTDetails(false);
-        setActivePiece(null);
-      }
-    }
-
-    for (let piece of pieces) {
-      const {
-        position: slotPos,
-        dimensions: slotDimensions,
-        bounds: slotBounds,
-      } = piece;
-
-      // TODO update to use player, or consider using picking instead.
-      if (
-        player.position.x > slotPos.x - slotDimensions.width / 2 - slotBounds &&
-        player.position.x < slotPos.x + slotDimensions.width / 2 + slotBounds &&
-        player.position.z > slotPos.z - slotDimensions.depth / 2 - slotBounds &&
-        player.position.z < slotPos.z + slotDimensions.depth / 2 + slotBounds
-      ) {
-        SetShowNFTDetails(true);
-        setActivePiece(piece);
-      }
-    }
-  }
-
-  scene.beforeRender = gameTick;
   setLobbyScene(scene);
   
   const light = new HemisphericLight("Skylight", new Vector3(0, 1, 0), scene);
   light.diffuse = new Color3(0.6, 0.5, 0.6);
   
-  SceneLoader.ImportMesh("", "/assets/Gallery.obj", "", scene, mesh => {
+  SceneLoader.ImportMesh("", "/assets/Gallery2.obj", "", scene, mesh => {
     for (let submesh of mesh) {
+      if (submesh.name.includes("Door") && !submesh.name.includes("Frame")) {
+        submesh.material.emissiveTexture = new Texture("/assets/Seam-Emissive.png");
+        submesh.material.emissiveColor = new Color3(0.2, 0.2, 0.2);   
+        
+        submesh.isDoor = true;
+      }
+
       // Be careful not to exceed max GL vertex buffers
       submesh.material.maxSimultaneousLights = 10;
       submesh.checkCollisions = true;

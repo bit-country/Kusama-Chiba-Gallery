@@ -35,83 +35,88 @@ export function pointerInput(engine, camera, p) {
     return;
   }
 
-  var srcElement = (evt.srcElement || evt.target);
-
-  if (p.type === PointerEventTypes.POINTERDOWN && srcElement) {
-    try {
-      srcElement.setPointerCapture(evt.pointerId);
-    }
-    catch (e) {
-      //Nothing to do with the error. Execution will continue.
-    }
-
-    previousPosition = {
-      x: evt.clientX,
-      y: evt.clientY,
-    };
-
-    if (!noPreventDefault) {
-      evt.preventDefault();
-      element && element.focus();
-    }
-
-    // This is required to move while pointer button is down
-    if (engine.isPointerLock && onMouseMove) {
-      onMouseMove(camera, p.event);
-    }
+  if (p.type === PointerEventTypes.POINTERMOVE) {
+    onMouseMove(engine, camera, p.event);
   }
-  else if (p.type === PointerEventTypes.POINTERUP && srcElement) {
-    try {
-      srcElement.releasePointerCapture(evt.pointerId);
-    }
-    catch (e) {
-      //Nothing to do with the error.
-    }
 
-    previousPosition = null;
+  // var srcElement = (evt.srcElement || evt.target);
 
-    if (!noPreventDefault) {
-      evt.preventDefault();
-    }
-  }
-  else if (p.type === PointerEventTypes.POINTERMOVE) {
-    if (!previousPosition) {
-      if (engine.isPointerLock && onMouseMove) {
-        onMouseMove(camera, p.event);
-      }
+  // if (p.type === PointerEventTypes.POINTERDOWN && srcElement) {
+  //   try {
+  //     srcElement.setPointerCapture(evt.pointerId);
+  //   }
+  //   catch (e) {
+  //     //Nothing to do with the error. Execution will continue.
+  //   }
 
-      return;
-    }
+  //   previousPosition = {
+  //     x: evt.clientX,
+  //     y: evt.clientY,
+  //   };
 
-    var offsetX = evt.clientX - previousPosition.x;
-    var offsetY = evt.clientY - previousPosition.y;
+  //   if (!noPreventDefault) {
+  //     evt.preventDefault();
+  //     element && element.focus();
+  //   }
 
-    if (camera.getScene().useRightHandedSystem) {
-      offsetX *= -1;
-    }
+  //   // This is required to move while pointer button is down
+  //   if (engine.isPointerLock && onMouseMove) {
+  //     onMouseMove(camera, p.event);
+  //   }
+  // }
+  // else if (p.type === PointerEventTypes.POINTERUP && srcElement) {
+  //   try {
+  //     srcElement.releasePointerCapture(evt.pointerId);
+  //   }
+  //   catch (e) {
+  //     //Nothing to do with the error.
+  //   }
 
-    if (camera.parent && camera.parent._getWorldMatrixDeterminant() < 0) {
-      offsetX *= -1;
-    }
+  //   previousPosition = null;
 
-    if (_allowCameraRotation) {
-      camera.parent.parent.addRotation(0, offsetX / angularSensibility, 0);
-      camera.parent.rotation.x += offsetY / angularSensibility;
-    }
+  //   if (!noPreventDefault) {
+  //     evt.preventDefault();
+  //   }
+  // }
+  // else if (p.type === PointerEventTypes.POINTERMOVE) {
+  //   if (!previousPosition) {
+  //     if (engine.isPointerLock && onMouseMove) {
+  //       onMouseMove(camera, p.event);
+  //     }
 
-    previousPosition = {
-      x: evt.clientX,
-      y: evt.clientY,
-    };
+  //     return;
+  //   }
 
-    if (!noPreventDefault) {
-      evt.preventDefault();
-    }
-  }
+  //   var offsetX = evt.clientX - previousPosition.x;
+  //   var offsetY = evt.clientY - previousPosition.y;
+
+  //   if (camera.getScene().useRightHandedSystem) {
+  //     offsetX *= -1;
+  //   }
+
+  //   if (camera.parent && camera.parent._getWorldMatrixDeterminant() < 0) {
+  //     offsetX *= -1;
+  //   }
+
+  //   if (_allowCameraRotation) {
+  //     camera.parent.parent.addRotation(0, offsetX / angularSensibility, 0);
+  //     camera.parent.rotation.x += offsetY / angularSensibility;
+  //   }
+
+  //   previousPosition = {
+  //     x: evt.clientX,
+  //     y: evt.clientY,
+  //   };
+
+  //   if (!noPreventDefault) {
+  //     evt.preventDefault();
+  //   }
+  // }
 }
 
-function onMouseMove(camera, evt) {
-  if (!engine.isPointerLock) {
+function onMouseMove(engine, camera, evt) {
+  //if (!engine.isPointerLock) {
+  if (!engine.isFullscreen) {
     return;
   }
 

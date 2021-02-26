@@ -1,252 +1,7 @@
 <html>
   <head>
-    <style>
-      ::-webkit-scrollbar {
-        width: 10px;
-      }
-      /* Track */
-      ::-webkit-scrollbar-track {
-        border-radius: 10px;
-      }
-
-      /* Handle */
-      ::-webkit-scrollbar-thumb {
-        box-shadow: inset -10px 0px 0px #ff7082;
-        border-radius: 10px;
-      }
-
-      #btnEnterGallery {
-        padding: 5px 12px;
-        border: 1px pink solid;
-        background: transparent;
-        color: white;
-        font-weight: 200;
-        border-radius: 4px;
-      }
-
-      .genderSelected {
-        background: #272424;
-        color: white !important;
-        width: 30% !important;
-      }
-      .chatContainer {
-        height: 30vh;
-        position: absolute;
-        bottom: 0;
-      }
-      .chat {
-        overflow-y: auto;
-        background: #00000066;
-        /* position: absolute; */
-        /* bottom: 0; */
-        width: 30vw;
-        height: 80%;
-      }
-      .chatInput {
-        /* position: absolute; */
-        /* bottom: 0; */
-        width: 30vw;
-        /* height: 10%; */
-        border: none;
-        outline: none;
-        background: #ffffff9c;
-      }
-      .chatInput:focus {
-        background: white;
-      }
-      .chatInput::placeholder {
-        text-align: end;
-        padding: 5px;
-      }
-      .genderSelection:hover {
-        background: #4444449e;
-        color: white !important;
-      }
-      #iptUsername {
-        border: none;
-        padding: 5px;
-        width: 250px;
-        outline: none;
-      }
-      .genderSelection-female {
-        margin: 15px;
-        font-size: 1.4em;
-        border: none;
-        border-radius: 2px;
-        letter-spacing: 1px;
-        width: 18%;
-        height: 120px;
-        color: tomato;
-        font-weight: 600;
-      }
-      .genderSelection-male {
-        margin: 15px;
-        font-size: 1.4em;
-        border-radius: 2px;
-        border: none;
-        letter-spacing: 1px;
-        width: 18%;
-        height: 120px;
-        color: #003b6f;
-        font-weight: 600;
-      }
-
-      #root .hud {
-        width: 0;
-        height: 0;
-      }
-
-      #root .hud > .menu {
-        position: fixed;
-        top: 1em;
-        left: 1em;
-        transition: color 100ms ease-out;
-        cursor: pointer;
-      }
-
-      #root .hud > .menu:hover {
-        color: white;
-      }
-
-      #root .hud > .menu-overlay {
-        position: fixed;
-        top: 3em;
-        left: 1em;
-      }
-
-      #root .hud > .menu-overlay.hidden {
-        display: none;
-      }
-
-      #root .hud > .title {
-        position: fixed;
-        top: 0.9em;
-        left: 3em;
-        color: white;
-      }
-
-      #root .hud > .title h2 {
-        font-size: 1.3em;
-      }
-
-      #root .hud > .login-item {
-        position: fixed;
-        top: 1em;
-        right: 1em;
-        color: white;
-        text-decoration: underline;
-        cursor: pointer;
-      }
-
-      #root .hud > .login-item:hover {
-        color: teal;
-      }
-
-      #root .hud > .nft-details-item,
-      #root .hud > .navigator-item {
-        position: fixed;
-        top: calc(50% - 1em);
-        left: calc(50% - 1em);
-        cursor: none;
-        pointer-events: none;
-      }
-
-      #root .hud > .nft-details-item.hidden,
-      #root .hud > .navigator-item.hidden {
-        display: none;
-      }
-
-      #root .hud > .register-overlay,
-      #root .hud > .login-overlay,
-      #root .hud > .mint-overlay,
-      #root .hud > .details-overlay,
-      #root .hud > .navigator-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      #root .hud > .register-overlay > form,
-      #root .hud > .login-overlay > form,
-      #root .hud > .mint-overlay > form,
-      #root .hud > .details-overlay > .details,
-      #root .hud > .navigator-overlay > .navigator {
-        background-color: #8a8087c2;
-        width: 30em;
-        max-height: 90vh;
-        height: 100%;
-        padding: 1em;
-        border-radius: 1em;
-        box-shadow: rgba(0, 0, 0, 0.25) 0 0 1em 0;
-        opacity: 0.8;
-        transition-property: all 100ms ease-in-out;
-      }
-
-      #root .hud > .register-overlay > form:hover,
-      #root .hud > .login-overlay > form:hover,
-      #root .hud > .mint-overlay > form:hover,
-      #root .hud > .details-overlay > .details:hover,
-      #root .hud > .navigator-overlay > .navigator:hover {
-        opacity: 1;
-      }
-
-      #root .hud > .register-overlay.hidden,
-      #root .hud > .login-overlay.hidden,
-      #root .hud > .mint-overlay.hidden,
-      #root .hud > .details-overlay.hidden,
-      #root .hud > .navigator-overlay.hidden {
-        display: none;
-      }
-
-      #root .hud > .details-overlay > .details {
-        width: 80em;
-      }
-
-      #root .hud > .details-overlay > .details > .row.content {
-        height: 100%;
-        max-height: calc(100% - 8em);
-      }
-
-      #root .hud > .details-overlay > .details > .row.content > .col.image-col {
-        max-height: 100%;
-        overflow: auto;
-      }
-
-      #root .hud > .details-overlay .nft-image {
-        width: 100%;
-        object-fit: contain;
-      }
-
-      #root .hud > .details-overlay .item .title {
-        font-weight: bold;
-      }
-
-      #root .hud .navigator-overlay > .navigator {
-        width: 80em;
-      }
-
-      #root .hud .navigator-overlay > .navigator > #galleries-container {
-        max-height: calc(100% - 8em);
-        overflow: auto;
-      }
-
-      #root
-        .hud
-        .navigator-overlay
-        > .navigator
-        > #galleries-container
-        > div.item
-        img {
-        height: 10em;
-        object-fit: contain;
-      }
-    </style>
     <link rel="stylesheet" href="/css/all.css" />
+    <link rel="stylesheet" href="/css/chiba.css" />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
@@ -273,8 +28,29 @@
       id="root"
       style="position: absolute; top: 0; left: 0; right: 0; bottom: 0"
     >
-      <p id="selectedCharacter" hidden>famale</p>
+      <p id="selectedCharacter" hidden>female</p>
       <div class="hud">
+        <!-- Tutorial for controls -->
+        <div
+          class="tutorial d-flex flex-column justify-content-between p-4 fading invisible"
+        >
+          <h2 class="text-center text-white">Controls (控制)</h2>
+          <div class="row mx-n4">
+            <div
+              class="col-8 d-flex flex-column flex-wrap align-items-center justify-content-between text-white"
+            >
+              Move (移动)
+              <img class="keys" src="assets/arrow-01.png" />
+            </div>
+            <div
+              class="col d-flex flex-column flex-wrap align-items-center justify-content-between border-left text-white"
+            >
+              Look (看)
+              <img class="mouse" src="assets/mouse-01.png" />
+            </div>
+          </div>
+        </div>
+
         <!-- HUD Menu Button and Overlay - Top Left -->
         <div class="menu">
           <i class="fas fa-bars"></i>
@@ -399,7 +175,7 @@
         </div>
 
         <!-- Minting NFT Overlay -->
-        <div class="mint-overlay hidden">
+        <!-- <div class="mint-overlay hidden">
           <form class="needs-validation" novalidate>
             <h2 class="mb-4">Mint</h2>
 
@@ -438,7 +214,9 @@
               </button>
             </div>
           </form>
-        </div>
+        </div> -->
+
+        <!-- Character Selector -->
         <div
           id="characterSelection"
           style="
@@ -460,11 +238,22 @@
               position: relative;
             "
           >
-            <div style="position: absolute; top: 30%; width: 100vw">
+            <div style="position: absolute; top: 10%; width: 100vw">
               <p style="color: white; font-size: 1.4em">
-                Select Your Character
+                Select Your Character (选择你的角色)
               </p>
-              <button value="male" class="genderSelection genderSelection-male">
+              <img
+                class="player-select"
+                id="male-player"
+                src="assets/male-player.png"
+              />
+              <img
+                class="player-select"
+                id="female-player"
+                src="assets/female-player.png"
+              />
+
+              <!-- <button value="male" class="genderSelection genderSelection-male">
                 Male
               </button>
               <button
@@ -472,18 +261,19 @@
                 class="genderSelection genderSelection-female genderSelected"
               >
                 Female
-              </button>
+              </button> -->
               <div style="padding-top: 10px">
                 <input
                   id="iptUsername"
-                  placeholder="Username"
+                  placeholder="Username (用户名)"
                   autofocus
                 />&nbsp;
-                <button id="btnEnterGallery">Enter Gallery</button>
+                <button id="btnEnterGallery">Enter Gallery (进入)</button>
               </div>
             </div>
           </div>
         </div>
+
         <!-- NFT Details Overlay -->
         <div class="details-overlay hidden">
           <div class="details">
@@ -495,22 +285,33 @@
               </div>
               <div class="col">
                 <div class="list-group">
-                  <div class="list-group-item item" name="owner">
-                    <span class="title">Owner:</span>
-                    <span class="value">Someone</span>
+                  <div class="list-group-item item" name="address">
+                    <span class="title">Address:</span>
+                    <span class="value"></span>
                   </div>
                   <div class="list-group-item item" name="name">
                     <span class="title">Name:</span>
-                    <span class="value">Neuromancer</span>
+                    <span class="value"></span>
                   </div>
-                  <div class="list-group-item item" name="artist">
-                    <span class="title">Artist:</span>
-                    <span class="value">William Gibson</span>
+                  <div class="list-group-item item" name="standard">
+                    <span class="title">Type:</span>
+                    <span class="value"></span>
+                  </div>
+                  <div class="list-group-item item" name="collection">
+                    <span class="title">Collection:</span>
+                    <span class="value"></span>
+                  </div>
+                  <div class="list-group-item item" name="description">
+                    <span class="title">Description:</span>
+                    <span class="value"></span>
                   </div>
                 </div>
               </div>
             </div>
             <div class="text-right">
+              <button class="btn btn-info" name="sponsor">
+                Sponsor <i class="bi bi-heart"></i>
+              </button>
               <button class="btn btn-secondary" name="close">Close</button>
             </div>
           </div>

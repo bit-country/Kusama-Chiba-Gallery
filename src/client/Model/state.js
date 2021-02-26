@@ -31,6 +31,8 @@ let state = {
   gameRoom: null,
   collections: [],
   assets: null,
+  username: "Guest",
+  selectedCharacter: null,
 };
 
 export function getSections() {
@@ -125,6 +127,10 @@ export function setLocalPlayer(player) {
   }
 }
 
+export function getPlayers() {
+  return state.players;
+}
+
 export function getPlayer(sessionId) {
   return state.players.find((x) => x.id === sessionId);
 }
@@ -207,4 +213,20 @@ export function setContainer(container) {
   } else {
     state.lobbyContainer = container;
   }
+}
+
+export function setUsername(username) {
+  state.username = username;
+}
+
+export function getUsername() {
+  return state.username;
+}
+
+export function setSelectedCharacter(character) {
+  state.selectedCharacter = character;
+}
+
+export function getSelectedCharacter() {
+  return state.selectedCharacter;
 }
