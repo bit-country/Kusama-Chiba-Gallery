@@ -1,12 +1,21 @@
 import { Texture, VideoTexture } from "@babylonjs/core";
 import API from "../Integration/API";
-import { getActiveNavigator, getActivePiece, getGalleryScene, getGameRoom, getLobbyScene, getScene, setScene, setSelectedCharacter, setUsername } from "../Model/state";
+import {
+  getActiveNavigator,
+  getActivePiece,
+  getGalleryScene,
+  getGameRoom,
+  getLobbyScene,
+  getScene,
+  setScene,
+  setSelectedCharacter,
+  setUsername,
+} from "../Model/state";
 import { ChangeScene, GoToGallery, GoToLobby } from "../Utility/sceneChanger";
 import * as GUI from "babylonjs-gui";
 import { InitialSetup } from "./room";
 
 const canvasElement = document.getElementById("canvas");
-
 
 // Menu section
 const menu = document.querySelector("#root .hud .menu");
@@ -16,13 +25,18 @@ menu.onclick = () => {
   menuOverlay.classList.toggle("hidden");
 };
 
-
 // Login section
-const loginMenuItem = document.querySelector("#root .hud .menu-overlay #login-menu-item");
+const loginMenuItem = document.querySelector(
+  "#root .hud .menu-overlay #login-menu-item"
+);
 const loginTopItem = document.querySelector("#root .hud .login-item");
 const loginOverlay = document.querySelector("#root .hud .login-overlay");
-const loginButton = document.querySelector("#root .hud .login-overlay button[name='login']");
-const loginCancelButton = document.querySelector("#root .hud .login-overlay button[name='cancel']");
+const loginButton = document.querySelector(
+  "#root .hud .login-overlay button[name='login']"
+);
+const loginCancelButton = document.querySelector(
+  "#root .hud .login-overlay button[name='cancel']"
+);
 
 loginMenuItem.onclick = () => {
   loginOverlay.classList.toggle("hidden");
@@ -39,12 +53,17 @@ loginCancelButton.onclick = () => {
   canvasElement.focus();
 };
 
-
 // Register section
-const registerMenuItem = document.querySelector("#root .hud .menu-overlay #register-menu-item");
+const registerMenuItem = document.querySelector(
+  "#root .hud .menu-overlay #register-menu-item"
+);
 const registerOverlay = document.querySelector("#root .hud .register-overlay");
-const registerButton = document.querySelector("#root .hud .register-overlay button[name='register']");
-const registerCancelButton = document.querySelector("#root .hud .register-overlay button[name='cancel']");
+const registerButton = document.querySelector(
+  "#root .hud .register-overlay button[name='register']"
+);
+const registerCancelButton = document.querySelector(
+  "#root .hud .register-overlay button[name='cancel']"
+);
 
 registerMenuItem.onclick = () => {
   registerOverlay.classList.toggle("hidden");
@@ -56,7 +75,6 @@ registerCancelButton.onclick = () => {
   canvasElement.requestPointerLock();
   canvasElement.focus();
 };
-
 
 // Currently we have no API to use.
 // // Mint section
@@ -72,7 +90,7 @@ registerCancelButton.onclick = () => {
 
 // mintButton.onclick = () => {
 //   const piece = getActivePiece();
-  
+
 //   // Check that we are next to a piece.
 //   if (!piece) {
 //     return;
@@ -147,14 +165,30 @@ registerCancelButton.onclick = () => {
 
 // Details section
 const detailsOverlay = document.querySelector("#root .hud .details-overlay");
-const detailsImg = document.querySelector("#root .hud .details-overlay img.nft-image");
-const detailsAddress = document.querySelector("#root .hud .details-overlay .content .list-group .item[name='address'] span.value");
-const detailsName = document.querySelector("#root .hud .details-overlay .content .list-group .item[name='name'] span.value");
-const detailsStandard = document.querySelector("#root .hud .details-overlay .content .list-group .item[name='standard'] span.value");
-const detailsCollection = document.querySelector("#root .hud .details-overlay .content .list-group .item[name='collection'] span.value");
-const detailsDescription = document.querySelector("#root .hud .details-overlay .content .list-group .item[name='description'] span.value");
-const detailsSponsorButton = document.querySelector("#root .hud .details-overlay button[name='sponsor']");
-const detailsCloseButton = document.querySelector("#root .hud .details-overlay button[name='close']");
+const detailsImg = document.querySelector(
+  "#root .hud .details-overlay img.nft-image"
+);
+const detailsAddress = document.querySelector(
+  "#root .hud .details-overlay .content .list-group .item[name='address'] span.value"
+);
+const detailsName = document.querySelector(
+  "#root .hud .details-overlay .content .list-group .item[name='name'] span.value"
+);
+const detailsStandard = document.querySelector(
+  "#root .hud .details-overlay .content .list-group .item[name='standard'] span.value"
+);
+const detailsCollection = document.querySelector(
+  "#root .hud .details-overlay .content .list-group .item[name='collection'] span.value"
+);
+const detailsDescription = document.querySelector(
+  "#root .hud .details-overlay .content .list-group .item[name='description'] span.value"
+);
+const detailsSponsorButton = document.querySelector(
+  "#root .hud .details-overlay button[name='sponsor']"
+);
+const detailsCloseButton = document.querySelector(
+  "#root .hud .details-overlay button[name='close']"
+);
 
 // Shows the "eye" icon to indicate that you can view a piece
 export function SetShowNFTDetails(visible) {
@@ -187,13 +221,13 @@ export function SetDetailsOverVisibility(visible) {
 
 detailsSponsorButton.onclick = () => {
   // If we have an API or something to use, we can sponsor here.
-}
+};
 
 detailsCloseButton.onclick = () => {
   detailsOverlay.classList.toggle("hidden");
   canvasElement.requestPointerLock();
   canvasElement.focus();
-}
+};
 
 // Show the details modal
 export function showActivePiece() {
@@ -213,16 +247,24 @@ export function showActivePiece() {
 }
 
 // Navigator section
-const navigatorOverlay = document.querySelector("#root .hud .navigator-overlay");
-const galleriesContainer = document.querySelector("#root .hud #galleries-container");
-const navigatorGoToLobbyButton = document.querySelector("#root .hud .navigator-overlay button#go-to-lobby")
-const navigatorCloseButton = document.querySelector("#root .hud .navigator-overlay button[name='close']");
+const navigatorOverlay = document.querySelector(
+  "#root .hud .navigator-overlay"
+);
+const galleriesContainer = document.querySelector(
+  "#root .hud #galleries-container"
+);
+const navigatorGoToLobbyButton = document.querySelector(
+  "#root .hud .navigator-overlay button#go-to-lobby"
+);
+const navigatorCloseButton = document.querySelector(
+  "#root .hud .navigator-overlay button[name='close']"
+);
 
 navigatorCloseButton.onclick = () => {
   navigatorOverlay.classList.add("hidden");
   canvasElement.requestPointerLock();
   canvasElement.focus();
-}
+};
 
 navigatorGoToLobbyButton.onclick = () => {
   navigatorOverlay.classList.add("hidden");
@@ -231,14 +273,14 @@ navigatorGoToLobbyButton.onclick = () => {
 
   canvasElement.requestPointerLock();
   canvasElement.focus();
-}
+};
 
 // Shows the "door" icon to indicate that you can navigate to another area
 export function SetShowNavigator(visible) {
   const navigatorIcon = document.querySelector("#root .hud .navigator-item");
 
   if (visible) {
-    navigatorIcon.classList.remove("hidden");  
+    navigatorIcon.classList.remove("hidden");
   } else {
     navigatorIcon.classList.add("hidden");
   }
@@ -256,9 +298,9 @@ export function ShowNavigator() {
 
   document.exitPointerLock();
 
-  API.getCollections().then(collections => {
+  API.getCollections().then((collections) => {
     let child;
-    while (child = galleriesContainer.firstChild) {
+    while ((child = galleriesContainer.firstChild)) {
       galleriesContainer.removeChild(child);
     }
 
@@ -300,17 +342,17 @@ export function ShowNavigator() {
         GoToGallery(collection.id);
 
         navigatorOverlay.classList.add("hidden");
-      }
+      };
 
       const itemButtonIcon = document.createElement("i");
       itemButtonIcon.className = "bi bi-arrow-right-circle";
-      itemButton.appendChild(itemButtonIcon)
+      itemButton.appendChild(itemButtonIcon);
 
       item.appendChild(itemButton);
 
       galleriesContainer.appendChild(itemContainer);
     }
-  });  
+  });
 }
 
 export function ShowTutorial() {
@@ -337,13 +379,12 @@ const initialSetupHUD = () => {
 
     const iptUsername = document.querySelector("#iptUsername").value;
 
-    let selectedCharacter = document.querySelector("#selectedCharacter")
-      .innerHTML;
-    
+    let selectedCharacter = document.querySelector("#selectedCharacter");
+
     const toHide = document.querySelector("#characterSelection");
     toHide.style.visibility = "hidden";
 
-    InitialSetup(iptUsername, selectedCharacter);
+    InitialSetup(iptUsername, selectedCharacter.textContent);
     setUsername(iptUsername || "Guest");
     setSelectedCharacter(selectedCharacter);
 
@@ -353,33 +394,31 @@ const initialSetupHUD = () => {
   for (const btn of playerSelection) {
     btn.addEventListener("click", function (event) {
       let selectedCharacter = document.querySelector("#selectedCharacter");
-      selectedCharacter.innerHTML = event.target.value;
+      selectedCharacter.innerHTML = event.target.id;
 
       if (event.target.className.includes("playerSelected")) {
         event.target.className = event.target.className.replace(
           "playerSelected",
           ""
         );
-        event.target.style.opacity = 0.4
+        event.target.style.opacity = 0.4;
       } else {
         event.target.className += " playerSelected";
-        event.target.style.opacity = 1
-
+        event.target.style.opacity = 1;
       }
-debugger;
+
       if (event.target.id === "female-player") {
         const male = document.querySelector("#male-player");
-        male.style.opacity = 0.4   
+        male.style.opacity = 0.4;
         male.className = male.className.replace("playerSelected", "");
       } else {
         const female = document.querySelector("#female-player");
         female.className = female.className.replace("playerSelected", "");
-        female.style.opacity = 0.4
+        female.style.opacity = 0.4;
       }
     });
   }
 };
-
 
 // Initialise HUD
 export function SetupHUD() {

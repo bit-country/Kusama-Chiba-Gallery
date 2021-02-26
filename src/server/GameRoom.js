@@ -26,7 +26,7 @@ export class GameRoom extends Room {
     this.setState(new StateHandler());
 
     // event check
-    this.onMessage(PLAYER_MOVE, (client, { position, rotation }) => {
+    this.onMessage(PLAYER_MOVE, (client, { position, rotation, direction }) => {
       const player = this.state.players[client.sessionId];
       player.pressedKeys = { x: position._x, y: position._y, z: position._z };
       this.broadcast(
@@ -36,6 +36,7 @@ export class GameRoom extends Room {
           sessionId: client.sessionId,
           position: player.pressedKeys,
           rotation: rotation,
+          direction,
         },
         { except: client }
       );
@@ -66,8 +67,9 @@ export class GameRoom extends Room {
     });
   }
 
-  onJoin(client, { name }) {
+  onJoin(client, { name, character }) {
     //  this.clients[0].send()
+
     if (typeof this.state.players[client.sessionId] === "undefined") {
       // chatService.Read("Chat", { room: this.roomName }).then((chat) => {
       //   if (chat) {
@@ -77,11 +79,11 @@ export class GameRoom extends Room {
 
       let player = new Player();
       player.name = name;
-
+      player.character = character;
       player.joinedTime = getCurrentTime();
       player.sessionId = client.sessionId;
       this.state.players[client.sessionId] = player;
-      
+
       this.broadcast(BROADCAST_PLAYER_JOINED, {
         playerName: name,
       });

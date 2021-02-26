@@ -13,4 +13,5 @@ defineTypes(Player, {
   heading: "number",
   joinedTime: "string",
   leaveTime: "string",
+  character: "string",
 });
