@@ -1,5 +1,6 @@
-<html>
+<html lang="en">
   <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="/css/all.css" />
     <link rel="stylesheet" href="/css/chiba.css" />
     <link
@@ -30,17 +31,25 @@
     >
       <p id="selectedCharacter" hidden>female</p>
       <div class="hud">
+        <!-- Escape to release cursor -->
+        <div class="escape-tutorial">
+          <h5 class="text-center text-white">'esc' release mouse (释放光标)</h5>
+        </div>
         <!-- Tutorial for controls -->
-        <div class="tutorial d-flex flex-column justify-content-between p-4 fading invisible">
-          <h2 class="text-center text-white">Controls (控制)</h2>
-          <div class="row mx-n4">
-            <div class="col-8 d-flex flex-column flex-wrap align-items-center justify-content-between text-white">
+        <div class="tutorial d-flex flex-column justify-content-between p-2 fading invisible">
+          <h4 class="text-center text-white">Controls (控制)</h4>
+          <div class="row mx-n2">
+            <div class="col-9 d-flex flex-column flex-wrap align-items-center justify-content-between text-white">
               Move (移动)
-              <img class="keys" src="assets/arrow-01.png" />
+              <div class="flex-grow-1">
+                <img class="keys w-100" src="assets/arrow-01.png" />
+              </div>
             </div>
-            <div class="col d-flex flex-column flex-wrap align-items-center justify-content-between border-left text-white">
+            <div class="col-3 d-flex flex-column flex-wrap align-items-center justify-content-between border-left text-white">
               Look (看)
-              <img class="mouse" src="assets/mouse-01.png" />
+              <div class="flex-grow-1">
+                <img class="mouse w-100" src="assets/mouse-01.png" />
+              </div>
             </div>
           </div>
         </div>
@@ -51,7 +60,20 @@
         </div>
         <div class="menu-overlay hidden">
           <div class="list-group">
+            <a
+              class="list-group-item list-group-item-action item"
+              id="website-menu-item"
+              href="http://localhost:8081"
+            >
+              Website (网站)
+            </a>
             <button
+              class="list-group-item list-group-item-action item"
+              id="about-menu-item"
+            >
+              About (关于)
+            </button>
+            <!-- <button
               class="list-group-item list-group-item-action item"
               id="login-menu-item"
             >
@@ -70,7 +92,7 @@
               id="mint-menu-item"
             >
               Mint
-            </button>
+            </button> -->
           </div>
         </div>
 
@@ -80,7 +102,12 @@
         </div>
 
         <!-- HUD Item For Login - Top Right -->
-        <div class="login-item">Login</div>
+        <!-- <div class="login-item">Login</div> -->
+
+        <!-- HUD Item For Fullscreen - Top Right -->
+        <div class="fullscreen-item">
+          <i class="bi bi-fullscreen"></i>
+        </div>
 
         <!-- HUD View Details Icon - Centre -->
         <div class="nft-details-item hidden">
@@ -90,6 +117,44 @@
         <!-- HUD Navigator Icon - Centre -->
         <div class="navigator-item hidden">
           <i class="bi bi-door-open-fill text-white"></i>
+        </div>
+
+        <!-- About Overlay -->
+        <div class="about-overlay hidden">
+          <form class="needs-validation" novalidate>
+            <h2 class="mb-4">About (关于)</h2>
+
+            <div class="form-group">
+              <label for="register-name"> Name </label>
+              <input
+                id="register-name"
+                class="form-control"
+                type="text"
+                placeholder="Name"
+                required
+              />
+              <div class="invalid-feedback">You must enter a name.</div>
+            </div>
+            <div class="form-group">
+              <label for="register-password"> Password </label>
+              <input
+                id="register-password"
+                class="form-control"
+                type="password"
+                placeholder="Password"
+                required
+              />
+              <div class="invalid-feedback">You must enter a password.</div>
+            </div>
+            <div class="form-group text-right">
+              <button type="submit" class="btn btn-primary" name="register">
+                Register
+              </button>
+              <button type="button" class="btn btn-secondary" name="cancel">
+                Cancel
+              </button>
+            </div>
+          </form>
         </div>
 
         <!-- Registration Overlay -->

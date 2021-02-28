@@ -20,9 +20,9 @@ import {
 import { PLAYER_MOVE, PLAYER_STOP } from "../../common/MessageTypes";
 import { pointerInput } from "./inputManager";
 
-let meshSpeed = 0.1;
-let meshSpeedBackwards = 0.1;
-let meshRotationSpeed = 0.1;
+let meshSpeed = 6;
+let meshSpeedBackwards = 6;
+let meshRotationSpeed = 6;
 
 const cameraOffset = new Vector3(5, 24, -30);
 
@@ -105,26 +105,32 @@ export const importCharacter = (character, spawnPosition, spawnRotation) => {
     beforeRenderObservable = () => {
       var keydown = false;
 
-      mesh.moveWithCollisions(scene.gravity);
+      const delta = engine.getDeltaTime() / 1000;
+
+      mesh.moveWithCollisions(new Vector3(
+        scene.gravity.x * (delta * 16.667), 
+        scene.gravity.y * (delta * 16.667), 
+        scene.gravity.z * (delta * 16.667)
+      ));
 
       //Manage the movements of the character (e.g. position, direction)
       if (inputMap["w"]) {
-        mesh.moveWithCollisions(mesh.forward.scaleInPlace(meshSpeed));
+        mesh.moveWithCollisions(mesh.forward.scaleInPlace(meshSpeed * delta));
         keydown = true;
       }
 
       if (inputMap["s"]) {
-        mesh.moveWithCollisions(mesh.forward.scaleInPlace(-meshSpeedBackwards));
+        mesh.moveWithCollisions(mesh.forward.scaleInPlace(-(meshSpeedBackwards * delta)));
         keydown = true;
       }
 
       if (inputMap["a"]) {
-        mesh.moveWithCollisions(mesh.right.scaleInPlace(-meshSpeed));
+        mesh.moveWithCollisions(mesh.right.scaleInPlace(-(meshSpeed * delta)));
         keydown = true;
       }
 
       if (inputMap["d"]) {
-        mesh.moveWithCollisions(mesh.right.scaleInPlace(meshSpeed));
+        mesh.moveWithCollisions(mesh.right.scaleInPlace(meshSpeed * delta));
         keydown = true;
       }
 

@@ -1,5 +1,5 @@
 import API from "../Integration/API";
-import { getActiveNavigator, getActivePiece, getScene, setSelectedCharacter, setUsername } from "../Model/state";
+import { getActiveNavigator, getActivePiece, getEngine, getScene, setSelectedCharacter, setUsername } from "../Model/state";
 import { GoToGallery, GoToLobby } from "../Utility/sceneChanger";
 import { InitialSetup } from "./room";
 
@@ -14,24 +14,40 @@ menu.onclick = () => {
   menuOverlay.classList.toggle("hidden");
 };
 
+// Fullscreen section
+const fullscreenItem = document.querySelector("#root .hud > .fullscreen-item");
+
+fullscreenItem.onclick = ActivateFullscreen;
+
+export function ActivateFullscreen() {
+  const engine = getEngine();
+
+  if (!engine.isFullscreen) {
+    document.documentElement.requestFullscreen();
+    engine.getInputElement().requestPointerLock();
+    engine.isFullscreen = true;
+  } else if (!document.pointerLockElement) {
+    engine.getInputElement().requestPointerLock();
+  }
+}
 
 // Login section
-const loginMenuItem = document.querySelector("#root .hud .menu-overlay #login-menu-item");
-const loginTopItem = document.querySelector("#root .hud .login-item");
+// const loginMenuItem = document.querySelector("#root .hud .menu-overlay #login-menu-item");
+// const loginTopItem = document.querySelector("#root .hud .login-item");
 const loginOverlay = document.querySelector("#root .hud .login-overlay");
 const loginCancelButton = document.querySelector("#root .hud .login-overlay button[name='cancel']");
 
-loginMenuItem.onclick = () => {
-  loginOverlay.classList.toggle("hidden");
-  menuOverlay.classList.toggle("hidden");
-};
-loginTopItem.onclick = () => {
-  // loginOverlay.classList.toggle("hidden");
-  // menuOverlay.classList.add("hidden");
-  const result = getScene().pick(canvasElement.clientWidth / 2, canvasElement.clientHeight / 2);
+// loginMenuItem.onclick = () => {
+//   loginOverlay.classList.toggle("hidden");
+//   menuOverlay.classList.toggle("hidden");
+// };
+// loginTopItem.onclick = () => {
+//   // loginOverlay.classList.toggle("hidden");
+//   // menuOverlay.classList.add("hidden");
+//   const result = getScene().pick(canvasElement.clientWidth / 2, canvasElement.clientHeight / 2);
 
-  console.log(result);
-};
+//   console.log(result);
+// };
 
 loginCancelButton.onclick = () => {
   loginOverlay.classList.toggle("hidden");
@@ -41,14 +57,14 @@ loginCancelButton.onclick = () => {
 
 
 // Register section
-const registerMenuItem = document.querySelector("#root .hud .menu-overlay #register-menu-item");
+// const registerMenuItem = document.querySelector("#root .hud .menu-overlay #register-menu-item");
 const registerOverlay = document.querySelector("#root .hud .register-overlay");
 const registerCancelButton = document.querySelector("#root .hud .register-overlay button[name='cancel']");
 
-registerMenuItem.onclick = () => {
-  registerOverlay.classList.toggle("hidden");
-  menuOverlay.classList.toggle("hidden");
-};
+// registerMenuItem.onclick = () => {
+//   registerOverlay.classList.toggle("hidden");
+//   menuOverlay.classList.toggle("hidden");
+// };
 
 registerCancelButton.onclick = () => {
   registerOverlay.classList.toggle("hidden");
@@ -206,9 +222,10 @@ export function showActivePiece() {
 
   if (piece.art && detailsOverlay.classList.contains("hidden")) {
     SetDetailsOverVisibility(true);
-  } else if (mintOverlay.classList.contains("hidden")) {
-    mintOverlay.classList.remove("hidden");
   }
+  //  else if (mintOverlay.classList.contains("hidden")) {
+  //   mintOverlay.classList.remove("hidden");
+  // }
 }
 
 // Navigator section
@@ -317,13 +334,13 @@ export function ShowTutorial() {
 
   tutorial.classList.remove("invisible", "fading");
 
-  window.setTimeout(() => {
-    tutorial.classList.add("fading");
+  // window.setTimeout(() => {
+  //   tutorial.classList.add("fading");
 
-    window.setTimeout(() => {
-      tutorial.classList.add("invisible");
-    }, 1000);
-  }, 5000);
+  //   window.setTimeout(() => {
+  //     tutorial.classList.add("invisible");
+  //   }, 1000);
+  // }, 5000);
 }
 
 // Shows the initial entry setup HUD (username and character selection)

@@ -43,7 +43,7 @@
 #root .hud > .login-item {
   position: fixed;
   top: 1em;
-  right: 1em;
+  right: 3em;
   color: white;
   text-decoration: underline;
   cursor: pointer;
@@ -52,6 +52,21 @@
 #root .hud > .login-item:hover {
   color: teal;
 }
+
+/* Fullscreen button */
+#root .hud > .fullscreen-item {
+  position: fixed;
+  top: 1em;
+  right: 1em;
+  color: white;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+#root .hud > .fullscreen-item:hover {
+  color: teal;
+}
+
 
 /* Indicator elements */
 #root .hud > .nft-details-item,
@@ -147,12 +162,21 @@
 }
 
 /* Tutorial */
+#root .hud .escape-tutorial {
+  position: fixed;
+  top: 0em;
+  left: calc(50vw - 10em);
+  width: 20em;
+  background-color: #100d1052;
+  transition: all 200ms ease-in-out;
+}
+
 #root .hud .tutorial {
   position: fixed;
   bottom: 1em;
   right: 1em;
-  width: 35em;
-  height: 15em;
+  width: 24em;
+  height: 10em;
   background-color: #100d1052;
   transition: all 200ms ease-in-out;
 }
@@ -160,14 +184,6 @@
 #root .hud .tutorial.fading {
   height: 0px;
   opacity: 0;
-}
-
-#root .hud .tutorial img.keys {
-  height: 4em;
-}
-
-#root .hud .tutorial img.mouse {
-  height: 6em;
 }
 
 /* Overlays */

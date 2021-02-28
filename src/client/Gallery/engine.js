@@ -1,26 +1,23 @@
 import { Engine } from "@babylonjs/core";
 import {
+  getEngine,
   getScene,
   setEngine,
 } from "../Model/state";
 
-let pointerDownHandler;
+export function CapturePointer() {
+  const engine = getEngine();
+
+  engine.getInputElement().requestPointerLock();
+}
+
+
 
 // Set up engine, resizing and render loop.
 export default function SetupEngine(canvasElement) {
   const engine = new Engine(canvasElement);
 
-  pointerDownHandler = () => {
-    if (!engine.isFullscreen) {
-      document.documentElement.requestFullscreen();
-      canvasElement.requestPointerLock();
-      engine.isFullscreen = true;
-    } else if (!document.pointerLockElement) {
-      canvasElement.requestPointerLock();
-    }
-  }
-
-  canvasElement.addEventListener("pointerdown", pointerDownHandler);
+  canvasElement.addEventListener("pointerdown", CapturePointer);
 
   const resizeHandler = () => {
     const {

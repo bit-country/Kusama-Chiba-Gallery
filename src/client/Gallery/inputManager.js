@@ -115,8 +115,7 @@ export function pointerInput(engine, camera, p) {
 }
 
 function onMouseMove(engine, camera, evt) {
-  //if (!engine.isPointerLock) {
-  if (!engine.isFullscreen) {
+  if (!engine.isPointerLock) {
     return;
   }
 
@@ -134,10 +133,15 @@ function onMouseMove(engine, camera, evt) {
     offsetX *= -1;
   }
 
-  camera.parent.parent.addRotation(0, offsetX / angularSensibility, 0);
-
+  camera.parent.parent.rotation.y += offsetX / angularSensibility;
+  
   var offsetY = evt.movementY || evt.mozMovementY || evt.webkitMovementY || evt.msMovementY || 0;
   camera.parent.rotation.x += offsetY / angularSensibility;
+  if (camera.parent.rotation.x > 1.1) {
+    camera.parent.rotation.x = 1.1;
+  } else if (camera.parent.rotation.x < -0.8) {
+    camera.parent.rotation.x = -0.8;
+  }
 
   previousPosition = null;
 
