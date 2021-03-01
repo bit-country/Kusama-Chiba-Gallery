@@ -138,7 +138,17 @@ export function getPlayer(sessionId) {
 }
 
 export function setPlayer(player) {
-  state.players.push(player);
+  // update the duplicated obj
+  const playerIndex = state.players.findIndex((x) => x.id === player.id);
+  if (playerIndex !== -1) {
+    state.players.splice(playerIndex, 1, player);
+  } else state.players.push(player);
+}
+export function removePlayer(sessionId) {
+  const playerIndex = state.players.findIndex((x) => x.id === sessionId);
+  state.players[playerIndex].mesh.dispose();
+
+  state.players.splice(playerIndex, 1);
 }
 
 export function getEngine() {
@@ -206,7 +216,9 @@ export function setActiveNavigator(status) {
 }
 
 export function getContainer() {
-  return state.scene == state.gallery ? state.galleryContainer : state.lobbyContainer;
+  return state.scene == state.gallery
+    ? state.galleryContainer
+    : state.lobbyContainer;
 }
 
 export function setContainer(container) {
@@ -234,7 +246,9 @@ export function getSelectedCharacter() {
 }
 
 export function getSlotMesh() {
-  return getScene() == getGalleryScene() ? state.gallerySlotMesh : state.lobbySlotMesh;
+  return getScene() == getGalleryScene()
+    ? state.gallerySlotMesh
+    : state.lobbySlotMesh;
 }
 
 export function setSlotMesh(scene, mesh) {

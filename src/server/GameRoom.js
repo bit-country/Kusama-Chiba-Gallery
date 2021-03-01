@@ -28,13 +28,15 @@ export class GameRoom extends Room {
     // event check
     this.onMessage(PLAYER_MOVE, (client, { position, rotation }) => {
       const player = this.state.players[client.sessionId];
-      player.pressedKeys = { x: position._x, y: position._y, z: position._z };
+      player.x = position._x;
+      player.y = position._y;
+      player.z = position._z;
       this.broadcast(
         BROADCAST_PLAYER_POSITION,
         {
           movement: PLAYER_MOVE,
           sessionId: client.sessionId,
-          position: player.pressedKeys,
+          position: { x: position._x, y: position._y, z: position._z },
           rotation: rotation,
         },
         { except: client }
@@ -77,26 +79,17 @@ export class GameRoom extends Room {
 
       let player = new Player();
       player.name = name;
-
+      player.x = 0;
+      player.y = 0;
+      player.z = 0;
       player.joinedTime = getCurrentTime();
       player.sessionId = client.sessionId;
 
       this.state.players[client.sessionId] = player;
-      
+      console.log(`${client.sessionId} joinged`);
       this.broadcast(BROADCAST_PLAYER_JOINED, {
         playerName: name,
       });
-    }
-  }
-
-  onUpdate(e) {
-    for (const sessionId in this.state.players) {
-      const player = this.state.players[sessionId];
-      if (player.pressedKeys) {
-        player.x = player.pressedKeys.x;
-        player.z = player.pressedKeys.z;
-        player.y = player.pressedKeys.y;
-      }
     }
   }
 

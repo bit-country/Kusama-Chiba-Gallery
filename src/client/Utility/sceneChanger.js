@@ -16,6 +16,7 @@ import {
   getScene, 
   getSelectedCharacter, 
   getUsername, 
+  removePlayer, 
   setScene 
 } from "../Model/state";
 import dynamicCanvas from "./dynamicCanvas";
@@ -38,7 +39,7 @@ export function GoToGallery(id) {
   const scene = getLobbyScene();
 
   ChangeScene(scene);
-  
+  //removePlayer()
   EnterRoom(`gallery-${id}`, getUsername(), getSelectedCharacter(), new Vector3(8, 0, 0), new Vector3(0, 1.57079, 0));
 
   // Clean up
