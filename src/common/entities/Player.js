@@ -3,9 +3,10 @@ import { SceneLoader, Vector3 } from "@babylonjs/core";
 
 export default class Player {
   constructor(player) {
-    const { name, x, y, z, sessionId } = player;
+    const { name, x, y, z, sessionId, character } = player;
 
     this.name = name;
+    this.character = character;
     this.isSelfPlayer = false;
     this.id = sessionId;
 
@@ -13,22 +14,12 @@ export default class Player {
 
     SceneLoader.ImportMeshAsync(
       null,
-      //  `./graphics/character/characters_f.obj`,
-      `./graphics/character/HVGirl.glb`,
+      `./graphics/character/${character === "male-player" ? "boy" : "girl"}.glb`,
       null,
       scene
     ).then(({ meshes, animationGroups }) => {
       let player = meshes[0];
-      // player.forEach((mesh, i) => {
-      //   meshes[i + 1] = mesh;
-      // });
-      // meshes[1].parent = meshes[0];
-      // meshes[2].parent = meshes[1];
-      // meshes[3].parent = meshes[2];
-      // meshes[4].parent = meshes[3];
-      // player.scaling.scaleInPlace(0.1);
-      // player.position = new Vector3(3, y, 3);
-      player.scaling.scaleInPlace(0.05);
+
       player.position = new Vector3(x, y, z);
       player.ellipsoidOffset = new Vector3(0, 1, 0);
       player.checkCollisions = true;

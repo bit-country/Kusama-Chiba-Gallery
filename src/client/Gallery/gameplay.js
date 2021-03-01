@@ -23,7 +23,7 @@ let meshSpeed = 6;
 let meshSpeedBackwards = 6;
 let meshRotationSpeed = 6;
 
-const cameraOffset = new Vector3(5, 24, -30);
+const cameraOffset = new Vector3(0, 1, -5);
 
 // Keyboard events
 let inputMap = {};
@@ -66,10 +66,13 @@ export const importCharacter = (character, spawnPosition, spawnRotation) => {
       })
     );
   }
+  let selectedCharacter = document.querySelector("#selectedCharacter");
 
   SceneLoader.ImportMeshAsync(
     null,
-    `./graphics/character/HVGirl.glb`,
+    `./graphics/character/${
+      selectedCharacter.textContent === "male-player" ? "boy" : "girl"
+    }.glb`,
     null,
     scene
   ).then(({ meshes }) => {
@@ -78,7 +81,7 @@ export const importCharacter = (character, spawnPosition, spawnRotation) => {
     //setPlayer(mesh);
 
     mesh.position = spawnPosition;
-    mesh.scaling.scaleInPlace(0.05);
+    //mesh.scaling.scaleInPlace(0.05);
     mesh.scaling.x *= -1;
     mesh.rotation = spawnRotation;
     mesh.ellipsoidOffset = new Vector3(0, 1, 0);
@@ -101,10 +104,10 @@ export const importCharacter = (character, spawnPosition, spawnRotation) => {
         PointerEventTypes.POINTERMOVE
     );
 
-    const walkAnim = scene.getAnimationGroupByName("Walking");
-    //  const walkBackAnim = scene.getAnimationGroupByName("WalkingBack");
+    const walkAnim = scene.getAnimationGroupByName("WalkingForward");
+    const walkBackAnim = scene.getAnimationGroupByName("WalkingBackward");
     const idleAnim = scene.getAnimationGroupByName("Idle");
-    const sambaAnim = scene.getAnimationGroupByName("Samba");
+    //const sambaAnim = scene.getAnimationGroupByName("Samba");
 
     //Rendering loop (executed for everyframe)
     beforeRenderObservable = () => {
@@ -153,23 +156,23 @@ export const importCharacter = (character, spawnPosition, spawnRotation) => {
         getGameRoom()?.send(PLAYER_MOVE, {
           position: mesh.position,
           rotation: mesh.rotation,
+          direction: inputMap["w"] ? "WalkingForward" : "WalkingBackward",
         });
 
         if (!animating) {
           animating = true;
-          // if (inputMap["s"]) {
-          //   //Walk backwards
-          //   walkBackAnim.start(
-          //     true,
-          //     1.0,
-          //     walkBackAnim.from,
-          //     walkBackAnim.to,
-          //     false
-          //   );
-          // } else
-          if (inputMap["t"]) {
+          if (inputMap["s"]) {
+            //Walk backwards
+            walkBackAnim.start(
+              true,
+              1.0,
+              walkBackAnim.from,
+              walkBackAnim.to,
+              false
+            );
+          } else if (inputMap["t"]) {
             //Samba!
-            sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
+            // sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
           } else {
             //Walk
             walkAnim.start(true, 1.0, walkAnim.from, walkAnim.to, false);
@@ -183,9 +186,9 @@ export const importCharacter = (character, spawnPosition, spawnRotation) => {
           idleAnim.start(true, 1.0, idleAnim.from, idleAnim.to, false);
 
           //Stop all animations besides Idle Anim when no key is down
-          sambaAnim.stop();
+          // sambaAnim.stop();
           walkAnim.stop();
-          // walkBackAnim.stop();
+          walkBackAnim.stop();
 
           //Ensure animation are played only once per rendering loop
           animating = false;

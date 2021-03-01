@@ -126,10 +126,26 @@
   border-radius: 4px;
 }
 
-#root .hud .genderSelected {
-  background: #272424;
-  color: white !important;
-  width: 30% !important;
+#root .hud .playerSelected {
+  border: 5px solid white;
+}
+
+#iptUsername {
+  width: 400px;
+  padding: 5px;
+  font-size: 1em;
+}
+
+#iptUsername:focus {
+  outline: none;
+}
+
+.player-select {
+  margin: 5%;
+  width: 12%;
+  cursor: pointer;
+  border-radius: 5%;
+  background: grey;
 }
 
 #root .hud .genderSelection:hover {
@@ -269,7 +285,13 @@
   overflow: auto;
 }
 
-#root .hud .navigator-overlay > .navigator > #galleries-container > div.item  img  {
+#root
+  .hud
+  .navigator-overlay
+  > .navigator
+  > #galleries-container
+  > div.item
+  img {
   height: 10em;
   object-fit: contain;
 }

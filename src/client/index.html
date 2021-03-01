@@ -297,11 +297,22 @@
               position: relative;
             "
           >
-            <div style="position: absolute; top: 30%; width: 100vw">
+            <div style="position: absolute; top: 10%; width: 100vw">
               <p style="color: white; font-size: 1.4em">
-                Select Your Character
+                Select Your Character (选择你的角色)
               </p>
-              <button value="male" class="genderSelection genderSelection-male">
+              <img
+                class="player-select"
+                id="male-player"
+                src="assets/male-player.png"
+              />
+              <img
+                class="player-select"
+                id="female-player"
+                src="assets/female-player.png"
+              />
+
+              <!-- <button value="male" class="genderSelection genderSelection-male">
                 Male
               </button>
               <button
@@ -309,14 +320,14 @@
                 class="genderSelection genderSelection-female genderSelected"
               >
                 Female
-              </button>
+              </button> -->
               <div style="padding-top: 10px">
                 <input
                   id="iptUsername"
-                  placeholder="Username"
+                  placeholder="Username (用户名)"
                   autofocus
                 />&nbsp;
-                <button id="btnEnterGallery">Enter Gallery</button>
+                <button id="btnEnterGallery">Enter Gallery (进入)</button>
               </div>
             </div>
           </div>
@@ -357,7 +368,9 @@
               </div>
             </div>
             <div class="text-right">
-              <button class="btn btn-info" name="sponsor">Sponsor <i class="bi bi-heart"></i></button>
+              <button class="btn btn-info" name="sponsor">
+                Sponsor <i class="bi bi-heart"></i>
+              </button>
               <button class="btn btn-secondary" name="close">Close</button>
             </div>
           </div>

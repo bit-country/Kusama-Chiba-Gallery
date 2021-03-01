@@ -52,80 +52,89 @@ const JoinOrCreateGallery = (
   spawnPosition,
   spawnRotation
 ) => {
-  client.joinOrCreate(gallery, { name: playerName }).then((room) => {
-    setGameRoom(room);
+  client
+    .joinOrCreate(gallery, { name: playerName, character: character })
+    .then((room) => {
+      setGameRoom(room);
 
-    importCharacter(character, spawnPosition, spawnRotation);
+      importCharacter(character, spawnPosition, spawnRotation);
 
-    ChatSetup();
+      ChatSetup();
 
-    room.state.players.onAdd = (player, currentSession) => {
-      ToChat(
-        `[${player.joinedTime}] ${player.name} has joined the ${room.name}.`
-      );
-      const { sessionId } = room;
-      if (currentSession !== sessionId) {
-        new Player(player);
-      }
-      room.send(PLAYER_MOVE, { position: spawnPosition });
-      room.send(PLAYER_STOP);
-      //TODO: update current player position & sync with the server
-      //const t = getPlayer(currentSession);
-    };
+      room.state.players.onAdd = (player, currentSession) => {
+        ToChat(
+          `[${player.joinedTime}] ${player.name} has joined the ${room.name}.`
+        );
+        const { sessionId } = room;
+        if (currentSession !== sessionId) {
+          new Player(player);
+        } else {
+          //TODO: update current player position & sync with the server
+          //const t = getPlayer(currentSession);
+        }
+      };
 
-    room.onMessage(
-      BROADCAST_PLAYER_POSITION,
-      ({ sessionId, position, rotation, movement }) => {
-        const player = getPlayer(sessionId);
+      room.onMessage(
+        BROADCAST_PLAYER_POSITION,
+        ({ sessionId, position, rotation, movement, direction }) => {
+          const player = getPlayer(sessionId);
+          if (player) {
+            const walking = player.WalkingForward;
+            const walkingBackward = player.WalkingBackward;
+            if (movement === PLAYER_MOVE) {
+              // Update the postion for other player
+              player.mesh.position = new Vector3(
+                position.x,
+                position.y,
+                position.z
+              );
 
-        if (player) {
-          const walking = player.Walking;
-          if (movement === PLAYER_MOVE) {
-            // Update the postion for other player
-            player.mesh.position = new Vector3(
-              position.x,
-              position.y,
-              position.z
-            );
-            if (rotation) {
               player.mesh.rotation = new Vector3(
                 rotation._x,
                 rotation._y,
                 rotation._z
               );
+              if (direction === "walkingForward") {
+                walking.start(true, 1.0, walking.from, walking.to, false);
+              } else {
+                walkingBackward.start(
+                  true,
+                  1.0,
+                  walkingBackward.from,
+                  walkingBackward.to,
+                  false
+                );
+              }
+            } else {
+              // player stop
+              const idle = player.Idle;
+              walking.stop();
+              walkingBackward.stop();
+              idle.start(true, 1.0, idle.from, idle.to, false);
             }
-
-            walking.start(true, 1.0, walking.from, walking.to, false);
-          } else {
-            // player stop
-            const idle = player.Idle;
-            walking.stop();
-            idle.start(true, 1.0, idle.from, idle.to, false);
           }
         }
-      }
-    );
+      );
 
     room.onMessage("removePlayer", ({ player, sessionId }) => {
       removePlayer(sessionId);
 
-      ToChat(`[${player.leaveTime}] ${player.name} left the room.`);
-    });
-
-    room.onMessage(BROADCAST_CHAT, ({ sender, senderId, content }) => {
-      ToChat(
-        `${sender}${room.sessionId === senderId ? " (you)" : ""}: ${content}`
-      );
-    });
-
-    room.onMessage(BROADCAST_CHAT_INIT, (chat) => {
-      chat.forEach(({ sender, content }) => {
-        ToChat(`${sender}: ${content}`);
+        ToChat(`[${player.leaveTime}] ${player.name} left the room.`);
       });
-    });
 
-    room.onLeave(() => {});
-  });
+      room.onMessage(BROADCAST_CHAT, ({ sender, senderId, content }) => {
+        ToChat(
+          `${sender}${room.sessionId === senderId ? " (you)" : ""}: ${content}`
+        );
+      });
+      room.onMessage(BROADCAST_CHAT_INIT, (chat) => {
+        chat.forEach(({ sender, content }) => {
+          ToChat(`${sender}: ${content}`);
+        });
+      });
+
+      room.onLeave(() => {});
+    });
 };
 
 // multiplayer
@@ -143,7 +152,7 @@ export const EnterRoom = (
     if (rooms.length === 0) {
       axios
         .post(`${gameHttpEndpoint}/room/new`, { name: galleryName })
-        .then(() => {
+        .then((res) => {
           return JoinOrCreateGallery(
             galleryName,
             playerName,
