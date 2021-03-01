@@ -6,6 +6,7 @@ import SetupGallery from "./Gallery/gallery";
 import { getGalleryScene } from "./Model/state";
 import { ChangeScene } from "./Utility/sceneChanger";
 import * as LOADERS from "@babylonjs/loaders";
+import { SetupSlotMesh } from "./Utility/slotCreator";
 
 // Basic form validation check, stop default behaviour.
 const forms = document.getElementsByTagName("form");
@@ -31,3 +32,4 @@ SetupGallery();
 SetupHUD();
 
 ChangeScene(getGalleryScene());
+SetupSlotMesh();

@@ -16,14 +16,14 @@ export function CreateLight(slotDimensions, light, parentMesh, containingMeshes,
   artLight.shadowMaxZ = 10;
   artLight.diffuse = light.colour;
 
-  const shadowGenerator = new ShadowGenerator(128, artLight);
-  shadowGenerator.addShadowCaster(parentMesh);
-  for (let mesh of containingMeshes) {
-    shadowGenerator.addShadowCaster(mesh);
-  }
+  // const shadowGenerator = new ShadowGenerator(128, artLight);
+  // shadowGenerator.addShadowCaster(parentMesh);
+  // for (let mesh of containingMeshes) {
+  //   shadowGenerator.addShadowCaster(mesh);
+  // }
 
-  shadowGenerator.useBlurExponentialShadowMap = true;
-  shadowGenerator.filteringQuality = ShadowGenerator.QUALITY_LOW;
+  // shadowGenerator.useBlurExponentialShadowMap = false;
+  // shadowGenerator.filteringQuality = ShadowGenerator.QUALITY_LOW;
 
   return artLight;
 }

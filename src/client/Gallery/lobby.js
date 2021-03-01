@@ -10,7 +10,7 @@ import {
 import { SetShowNavigator, SetShowNFTDetails, showActivePiece, ShowNavigator } from "./hud";
 import Light from "../Model/Light";
 import Slot from "../Model/Slot";
-import { CreateSlot } from "../Utility/slotCreator";
+import { CreateSlot, SetupSlotMesh } from "../Utility/slotCreator";
 import { 
   getPieces, 
   setBuildingMeshes, 
@@ -80,6 +80,8 @@ export default function SetupLobby() {
   glowLayer.intensity = 1;
 
   setGalleryScene(scene);
+
+  SetupSlotMesh(scene);
   
   const light = new HemisphericLight("Skylight", new Vector3(0, 1, 0), scene);
   light.diffuse = new Color3(0.2, 0.2, 0.4);
@@ -114,10 +116,12 @@ export default function SetupLobby() {
       // Be careful not to exceed max GL vertex buffers
       if (submesh.material) {
         submesh.material.maxSimultaneousLights = 10;
+        submesh.material.freeze();
       }
 
       submesh.checkCollisions = true;
       submesh.receiveShadows = true;
+      submesh.freezeWorldMatrix();
     }
 
     API.getPositionsGallery().then(positions => {
@@ -176,26 +180,25 @@ export default function SetupLobby() {
 
         addPiecePosition(scene, slotInfo);
       }
-    });
-  
 
-    API.getPieces(34).then(pieces => {
-      const positions = getPieces(scene);
+      API.getPieces(positions.length).then(pieces => {
+        const positions = getPieces(scene);
+    
+        let index = 0;
+        for (let piece of pieces) {
+          if (index > positions.length) {
+            return;
+          }
   
-      let index = 0;
-      for (let piece of pieces) {
-        if (index > positions.length) {
-          return;
+          const position = positions[index++];
+    
+          // Dynamic Canvas
+          // Allow for different aspect ratio textures.
+          dynamicCanvas(scene, position, piece.image); 
+  
+          populatePieceDetails(position, piece);
         }
-
-        const position = positions[index++];
-  
-        // Dynamic Canvas
-        // Allow for different aspect ratio textures.
-        dynamicCanvas(scene, position, piece.image); 
-
-        populatePieceDetails(position, piece);
-      }
-    })
-  })
+      })
+    });
+  });
 }

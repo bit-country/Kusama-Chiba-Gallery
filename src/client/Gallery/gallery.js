@@ -18,6 +18,7 @@ import {
   getLocalPlayer, 
   getActiveNavigator
 } from "../Model/state";
+import { SetupSlotMesh } from "../Utility/slotCreator";
 
 // Set up the gallery scenes and their associated word logic.
 export default function SetupGallery() {
@@ -70,6 +71,8 @@ export default function SetupGallery() {
   glowLayer.intensity = 1;
 
   setLobbyScene(scene);
+
+  SetupSlotMesh(scene);
   
   const light = new HemisphericLight("Skylight", new Vector3(0, 1, 0), scene);
   light.diffuse = new Color3(0.2, 0.2, 0.4);
@@ -83,10 +86,12 @@ export default function SetupGallery() {
       // Be careful not to exceed max GL vertex buffers
       if (submesh.material) {
         submesh.material.maxSimultaneousLights = 10;
+        submesh.material.freeze();
       }
 
       submesh.checkCollisions = true;
       submesh.receiveShadows = true;
+      submesh.freezeWorldMatrix();
     }
 
     setLobbyMesh(mesh);

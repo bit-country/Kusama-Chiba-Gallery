@@ -47,6 +47,9 @@ export default function dynamicCanvas(scene, position, imageUrl) {
       position.slotMesh.scaling = new Vector3(1, ratio, 1);
     }
 
+    // We've completed our resizing so freeze for improved performance.
+    position.slotMesh.freezeWorldMatrix();
+
     // TODO allow for video possibility.
     position.slotMaterial.diffuseTexture = new Texture(imageUrl, scene);
     position.art = imageUrl;

@@ -1,8 +1,17 @@
 import {
   Color3,
   MeshBuilder, 
-  StandardMaterial} from "@babylonjs/core";
+  StandardMaterial,
+  Vector3} from "@babylonjs/core";
+import { getScene, getSlotMesh, setSlotMesh } from "../Model/state";
 import { CreateLight } from "./lightCreator";
+
+export function SetupSlotMesh(scene) {
+  const baseMesh = MeshBuilder.CreatePlane("ArtPiece", { width: 2, height: 2 }, scene);
+  baseMesh.inUse = false;
+
+  setSlotMesh(scene, baseMesh);
+}
 
 export function CreateSlot(slot, light, containingMeshes, scene, shadowGenerator) {
   const {
@@ -13,7 +22,17 @@ export function CreateSlot(slot, light, containingMeshes, scene, shadowGenerator
     id
   } = slot;
 
-  const artSlot = MeshBuilder.CreatePlane("ArtPiece", { width: slotDimensions.width, height: slotDimensions.height }, scene);
+  const baseMesh = getSlotMesh();
+
+  let artSlot = null;
+
+  if (baseMesh.inUse) {
+    artSlot = baseMesh.clone("artSlot", null, true, true);
+  } else {
+    artSlot = baseMesh;
+    baseMesh.inUse = true;
+  }
+
   artSlot.position = slotPos;
   artSlot.rotation = slotRot;
   artSlot.material = new StandardMaterial("ArtPieceMat", scene);

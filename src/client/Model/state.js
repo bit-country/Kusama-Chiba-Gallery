@@ -18,6 +18,8 @@ let state = {
   lobbyMesh: null,
   galleryContainer: null,
   lobbyContainer: null,
+  gallerySlotMesh: null,
+  lobbySlotMesh: null,
   sections: {
     bottomRightWing: [],
     bottomLeftWing: [],
@@ -229,4 +231,16 @@ export function setSelectedCharacter(character) {
 
 export function getSelectedCharacter() {
   return state.selectedCharacter;
+}
+
+export function getSlotMesh() {
+  return getScene() == getGalleryScene() ? state.gallerySlotMesh : state.lobbySlotMesh;
+}
+
+export function setSlotMesh(scene, mesh) {
+  if (scene == getGalleryScene()) {
+    state.gallerySlotMesh = mesh;
+  } else {
+    state.lobbySlotMesh = mesh;
+  }
 }
