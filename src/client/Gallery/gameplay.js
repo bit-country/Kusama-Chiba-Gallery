@@ -23,7 +23,7 @@ let meshSpeed = 6;
 let meshSpeedBackwards = 6;
 let meshRotationSpeed = 6;
 
-const cameraOffset = new Vector3(0, 1, -5);
+const cameraOffset = new Vector3(0.25, 0.9, -1.5);
 
 // Keyboard events
 let inputMap = {};

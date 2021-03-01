@@ -391,7 +391,7 @@ const initialSetupHUD = () => {
 
     InitialSetup(iptUsername, selectedCharacter.textContent);
     setUsername(iptUsername || "Guest");
-    setSelectedCharacter(selectedCharacter);
+    setSelectedCharacter(selectedCharacter.textContent);
 
     ShowTutorial();
   });
