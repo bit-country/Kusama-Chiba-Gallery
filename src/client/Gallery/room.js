@@ -1,23 +1,36 @@
 import { Vector3 } from "@babylonjs/core";
 import * as Colyseus from "colyseus.js";
 import Player from "../../common/entities/Player";
-import { setGameRoom, getPlayer } from "../Model/state";
+import { setGameRoom, getPlayer, removePlayer } from "../Model/state";
 import {
   PLAYER_MOVE,
   BROADCAST_PLAYER_POSITION,
   BROADCAST_CHAT,
   BROADCAST_CHAT_INIT,
+  PLAYER_STOP,
 } from "../../common/MessageTypes";
 import axios from "axios";
 import { importCharacter } from "./gameplay";
 import { ChatSetup } from "./chat";
 
 // import SetupPlayerHUD from "../gameClient/HUD/HUDPlayerList";
-const gameHttpEndpoint = process.env.NODE_ENV == "production" ? process.env.SERVER_URL : process.env.SERVER_URL_DEV;
-const gameWS = process.env.NODE_ENV == "production" ? process.env.SERVER_WEBSOCKET_URL : process.env.SERVER_WEBSOCKET_URL_DEV;
+const gameHttpEndpoint =
+  process.env.NODE_ENV == "production"
+    ? process.env.SERVER_URL
+    : process.env.SERVER_URL_DEV;
+const gameWS =
+  process.env.NODE_ENV == "production"
+    ? process.env.SERVER_WEBSOCKET_URL
+    : process.env.SERVER_WEBSOCKET_URL_DEV;
 
 export const InitialSetup = (username, character) => {
-  EnterRoom("lobby", username || "Guest", character, new Vector3(-14, 3.1, 0), new Vector3(0, -1.57079, 0));
+  EnterRoom(
+    "lobby",
+    username || "Guest",
+    character,
+    new Vector3(-14, 3.1, 0),
+    new Vector3(0, -1.57079, 0)
+  );
 };
 
 const client = new Colyseus.Client(gameWS);
@@ -32,10 +45,16 @@ const ToChat = (text) => {
   chat.scrollTop = chat.scrollHeight;
 };
 
-const JoinOrCreateGallery = (gallery, playerName, character, spawnPosition, spawnRotation) => {
+const JoinOrCreateGallery = (
+  gallery,
+  playerName,
+  character,
+  spawnPosition,
+  spawnRotation
+) => {
   client.joinOrCreate(gallery, { name: playerName }).then((room) => {
     setGameRoom(room);
-    
+
     importCharacter(character, spawnPosition, spawnRotation);
 
     ChatSetup();
@@ -47,16 +66,18 @@ const JoinOrCreateGallery = (gallery, playerName, character, spawnPosition, spaw
       const { sessionId } = room;
       if (currentSession !== sessionId) {
         new Player(player);
-      } else {
-        //TODO: update current player position & sync with the server
-        //const t = getPlayer(currentSession);
       }
+      room.send(PLAYER_MOVE, { position: spawnPosition });
+      room.send(PLAYER_STOP);
+      //TODO: update current player position & sync with the server
+      //const t = getPlayer(currentSession);
     };
 
     room.onMessage(
       BROADCAST_PLAYER_POSITION,
       ({ sessionId, position, rotation, movement }) => {
         const player = getPlayer(sessionId);
+
         if (player) {
           const walking = player.Walking;
           if (movement === PLAYER_MOVE) {
@@ -66,12 +87,13 @@ const JoinOrCreateGallery = (gallery, playerName, character, spawnPosition, spaw
               position.y,
               position.z
             );
-
-            player.mesh.rotation = new Vector3(
-              rotation._x,
-              rotation._y,
-              rotation._z
-            );
+            if (rotation) {
+              player.mesh.rotation = new Vector3(
+                rotation._x,
+                rotation._y,
+                rotation._z
+              );
+            }
 
             walking.start(true, 1.0, walking.from, walking.to, false);
           } else {
@@ -85,8 +107,7 @@ const JoinOrCreateGallery = (gallery, playerName, character, spawnPosition, spaw
     );
 
     room.onMessage("removePlayer", ({ player, sessionId }) => {
-      const playerUI = getPlayer(sessionId);
-      playerUI.mesh.dispose();
+      removePlayer(sessionId);
 
       ToChat(`[${player.leaveTime}] ${player.name} left the room.`);
     });
@@ -108,17 +129,37 @@ const JoinOrCreateGallery = (gallery, playerName, character, spawnPosition, spaw
 };
 
 // multiplayer
-export const EnterRoom = (galleryName, playerName, character, spawnPosition, spawnRotation) => {
+export const EnterRoom = (
+  galleryName,
+  playerName,
+  character,
+  spawnPosition,
+  spawnRotation
+) => {
+  // clean up player status before joining a room
+
   // check whether the room is defined in the server or not.
   client.getAvailableRooms(galleryName).then((rooms) => {
     if (rooms.length === 0) {
       axios
         .post(`${gameHttpEndpoint}/room/new`, { name: galleryName })
         .then(() => {
-          return JoinOrCreateGallery(galleryName, playerName, character, spawnPosition, spawnRotation);
+          return JoinOrCreateGallery(
+            galleryName,
+            playerName,
+            character,
+            spawnPosition,
+            spawnRotation
+          );
         });
     } else {
-      JoinOrCreateGallery(galleryName, playerName, character, spawnPosition, spawnRotation);
+      JoinOrCreateGallery(
+        galleryName,
+        playerName,
+        character,
+        spawnPosition,
+        spawnRotation
+      );
     }
   });
 };

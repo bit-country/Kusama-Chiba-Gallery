@@ -7,15 +7,14 @@ import {
   UniversalCamera,
   Mesh,
 } from "@babylonjs/core";
-import { 
-  getCamera, 
-  getEngine, 
-  getGameRoom, 
+import {
+  getCamera,
+  getEngine,
+  getGameRoom,
   getLocalPlayer,
-  getScene, 
-  setCamera, 
-  setLocalPlayer, 
-  setPlayer 
+  getScene,
+  setCamera,
+  setLocalPlayer,
 } from "../Model/state";
 import { PLAYER_MOVE, PLAYER_STOP } from "../../common/MessageTypes";
 import { pointerInput } from "./inputManager";
@@ -28,7 +27,8 @@ const cameraOffset = new Vector3(5, 24, -30);
 
 // Keyboard events
 let inputMap = {};
-let pointerInputBinding = null, beforeRenderObservable = null;
+let pointerInputBinding = null,
+  beforeRenderObservable = null;
 
 export function characterCleanup() {
   const scene = getScene();
@@ -59,13 +59,13 @@ export const importCharacter = (character, spawnPosition, spawnRotation) => {
         inputMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
       })
     );
-  
+
     scene.actionManager.registerAction(
       new ExecuteCodeAction(ActionManager.OnKeyUpTrigger, function (evt) {
         inputMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
       })
     );
-  }  
+  }
 
   SceneLoader.ImportMeshAsync(
     null,
@@ -75,14 +75,14 @@ export const importCharacter = (character, spawnPosition, spawnRotation) => {
   ).then(({ meshes }) => {
     let mesh = meshes[0];
     setLocalPlayer(mesh);
-    setPlayer(mesh);
+    //setPlayer(mesh);
 
     mesh.position = spawnPosition;
     mesh.scaling.scaleInPlace(0.05);
     mesh.scaling.x *= -1;
     mesh.rotation = spawnRotation;
     mesh.ellipsoidOffset = new Vector3(0, 1, 0);
-    
+
     var animating = true;
 
     // Set up camera arm to make it easier to reasonable rotations for mouse movement.
@@ -94,8 +94,13 @@ export const importCharacter = (character, spawnPosition, spawnRotation) => {
 
     // Bind in our pointer input, handles camera and player rotation.
     pointerInputBinding = pointerInput.bind(null, engine, camera); // Allow us to cleanup when we change rooms.
-    scene.onPointerObservable.add(pointerInputBinding, PointerEventTypes.POINTERDOWN | PointerEventTypes.POINTERUP | PointerEventTypes.POINTERMOVE);
-    
+    scene.onPointerObservable.add(
+      pointerInputBinding,
+      PointerEventTypes.POINTERDOWN |
+        PointerEventTypes.POINTERUP |
+        PointerEventTypes.POINTERMOVE
+    );
+
     const walkAnim = scene.getAnimationGroupByName("Walking");
     //  const walkBackAnim = scene.getAnimationGroupByName("WalkingBack");
     const idleAnim = scene.getAnimationGroupByName("Idle");
@@ -107,11 +112,13 @@ export const importCharacter = (character, spawnPosition, spawnRotation) => {
 
       const delta = engine.getDeltaTime() / 1000;
 
-      mesh.moveWithCollisions(new Vector3(
-        scene.gravity.x * (delta * 16.667), 
-        scene.gravity.y * (delta * 16.667), 
-        scene.gravity.z * (delta * 16.667)
-      ));
+      mesh.moveWithCollisions(
+        new Vector3(
+          scene.gravity.x * (delta * 16.667),
+          scene.gravity.y * (delta * 16.667),
+          scene.gravity.z * (delta * 16.667)
+        )
+      );
 
       //Manage the movements of the character (e.g. position, direction)
       if (inputMap["w"]) {
@@ -120,7 +127,9 @@ export const importCharacter = (character, spawnPosition, spawnRotation) => {
       }
 
       if (inputMap["s"]) {
-        mesh.moveWithCollisions(mesh.forward.scaleInPlace(-(meshSpeedBackwards * delta)));
+        mesh.moveWithCollisions(
+          mesh.forward.scaleInPlace(-(meshSpeedBackwards * delta))
+        );
         keydown = true;
       }
 
@@ -167,8 +176,9 @@ export const importCharacter = (character, spawnPosition, spawnRotation) => {
           }
         }
       } else {
-        getGameRoom()?.send(PLAYER_STOP);
         if (animating) {
+          getGameRoom()?.send(PLAYER_STOP);
+
           //Default animation is idle when no key is down
           idleAnim.start(true, 1.0, idleAnim.from, idleAnim.to, false);
 
@@ -193,14 +203,10 @@ export function SetupPlayer() {
   let camera = getCamera();
 
   if (!camera) {
-    camera = new UniversalCamera(
-      "playerCamera",
-      new Vector3(-14, 4, 0),
-      scene
-    );
+    camera = new UniversalCamera("playerCamera", new Vector3(-14, 4, 0), scene);
 
     camera.rotation = new Vector3(0, 1.57079, 0);
-  
+
     camera.ellipsoid = new Vector3(0.25, 0.5, 0.25);
     camera.checkCollisions = true;
   }
