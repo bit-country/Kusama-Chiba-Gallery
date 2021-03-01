@@ -2,6 +2,7 @@ import API from "../Integration/API";
 import {
   getActiveNavigator,
   getActivePiece,
+  getEngine,
   getGalleryScene,
   getGameRoom,
   getLobbyScene,
@@ -34,9 +35,11 @@ export function ActivateFullscreen() {
   if (!engine.isFullscreen) {
     document.documentElement.requestFullscreen();
     engine.getInputElement().requestPointerLock();
+    engine.getInputElement().focus();
     engine.isFullscreen = true;
   } else if (!document.pointerLockElement) {
     engine.getInputElement().requestPointerLock();
+    engine.getInputElement().focus();
   }
 }
 
@@ -346,6 +349,14 @@ export function ShowNavigator() {
       itemButton.onclick = () => {
         GoToGallery(collection.id);
 
+        const engine = getEngine();
+        if (!engine) {
+          return;
+        }
+
+        engine.getInputElement().requestPointerLock();
+        engine.getInputElement().focus();
+
         navigatorOverlay.classList.add("hidden");
       };
 
@@ -394,6 +405,14 @@ const initialSetupHUD = () => {
     setSelectedCharacter(selectedCharacter.textContent);
 
     ShowTutorial();
+
+    const engine = getEngine();
+    if (!engine) {
+      return;
+    }
+
+    engine.getInputElement().requestPointerLock();
+    engine.getInputElement().focus();
   });
 
   for (const btn of playerSelection) {

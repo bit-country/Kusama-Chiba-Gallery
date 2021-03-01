@@ -17,7 +17,7 @@ import {
   setLocalPlayer,
 } from "../Model/state";
 import { PLAYER_MOVE, PLAYER_STOP } from "../../common/MessageTypes";
-import { pointerInput } from "./inputManager";
+import { pointerInput } from "./cameraInputManager";
 
 let meshSpeed = 6;
 let meshSpeedBackwards = 6;
@@ -147,6 +147,14 @@ export const importCharacter = (character, spawnPosition, spawnRotation) => {
       if (inputMap["d"]) {
         mesh.moveWithCollisions(mesh.right.scaleInPlace(meshSpeed * delta));
         keydown = true;
+      }
+
+      if (inputMap["Enter"]) {
+        const chatInput = document.querySelector("#chatInput");
+        document.exitPointerLock();
+        inputMap["Enter"] = false;
+
+        chatInput.focus();
       }
 
       // Dance

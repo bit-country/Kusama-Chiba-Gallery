@@ -9,6 +9,7 @@ export function CapturePointer() {
   const engine = getEngine();
 
   engine.getInputElement().requestPointerLock();
+  engine.getInputElement().focus();
 }
 
 
