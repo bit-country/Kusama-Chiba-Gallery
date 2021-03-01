@@ -8,7 +8,7 @@ import { CreateLight } from "./lightCreator";
 
 export function SetupSlotMesh(scene) {
   const baseMesh = MeshBuilder.CreatePlane("ArtPiece", { width: 2, height: 2 }, scene);
-  baseMesh.inUse = false;
+  baseMesh.position = new Vector3(1000, 1000, 1000);
 
   setSlotMesh(scene, baseMesh);
 }
@@ -26,11 +26,10 @@ export function CreateSlot(slot, light, containingMeshes, scene, shadowGenerator
 
   let artSlot = null;
 
-  if (baseMesh.inUse) {
+  if (baseMesh.ArtDetails) {
     artSlot = baseMesh.clone("artSlot", null, true, true);
   } else {
     artSlot = baseMesh;
-    baseMesh.inUse = true;
   }
 
   artSlot.position = slotPos;
