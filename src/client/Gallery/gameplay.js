@@ -34,11 +34,13 @@ export function characterCleanup() {
   const scene = getScene();
   const player = getLocalPlayer();
 
-  scene.onPointerObservable.remove(pointerInputBinding);
-  scene.onBeforeRenderObservable.remove(beforeRenderObservable);
+  scene.onPointerObservable.removeCallback(pointerInputBinding);
+  scene.onBeforeRenderObservable.removeCallback(beforeRenderObservable);
   scene.removeMesh(player, true);
-  for (let animationGroup of scene.animationGroups) {
-    scene.removeAnimationGroup(animationGroup);
+
+  let animation = null;
+  while (animation = scene.animationGroups[0]) {
+    scene.removeAnimationGroup(animation);
   }
 
   player.dispose();
@@ -66,6 +68,7 @@ export const importCharacter = (character, spawnPosition, spawnRotation) => {
       })
     );
   }
+
   let selectedCharacter = document.querySelector("#selectedCharacter");
 
   SceneLoader.ImportMeshAsync(

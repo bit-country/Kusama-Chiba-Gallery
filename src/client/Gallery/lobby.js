@@ -43,6 +43,10 @@ export default function SetupLobby() {
       engine.getInputElement().height / 2);
 
     const player = getLocalPlayer();
+    
+    if (!player) {
+      return;
+    }
 
     if (pickInfo.pickedMesh) {
       if (pickInfo.pickedMesh.isArt && Vector3.Distance(player.position, pickInfo.pickedMesh.position) < 10) {
