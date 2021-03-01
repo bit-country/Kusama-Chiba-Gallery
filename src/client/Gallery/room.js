@@ -59,8 +59,6 @@ const JoinOrCreateGallery = (
 
       importCharacter(character, spawnPosition, spawnRotation);
 
-      ChatSetup();
-
       room.state.players.onAdd = (player, currentSession) => {
         ToChat(
           `[${player.joinedTime}] ${player.name} has joined the ${room.name}.`
@@ -116,8 +114,8 @@ const JoinOrCreateGallery = (
         }
       );
 
-    room.onMessage("removePlayer", ({ player, sessionId }) => {
-      removePlayer(sessionId);
+      room.onMessage("removePlayer", ({ player, sessionId }) => {
+        removePlayer(sessionId);
 
         ToChat(`[${player.leaveTime}] ${player.name} left the room.`);
       });
@@ -127,6 +125,7 @@ const JoinOrCreateGallery = (
           `${sender}${room.sessionId === senderId ? " (you)" : ""}: ${content}`
         );
       });
+
       room.onMessage(BROADCAST_CHAT_INIT, (chat) => {
         chat.forEach(({ sender, content }) => {
           ToChat(`${sender}: ${content}`);

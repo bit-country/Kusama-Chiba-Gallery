@@ -7,6 +7,7 @@ import { getGalleryScene } from "./Model/state";
 import { ChangeScene } from "./Utility/sceneChanger";
 import * as LOADERS from "@babylonjs/loaders";
 import { SetupSlotMesh } from "./Utility/slotCreator";
+import { ChatSetup } from "./Gallery/chat";
 
 // Basic form validation check, stop default behaviour.
 const forms = document.getElementsByTagName("form");
@@ -30,6 +31,7 @@ SetupEngine(result);
 SetupLobby();
 SetupGallery();
 SetupHUD();
+ChatSetup();
 
 ChangeScene(getGalleryScene());
 SetupSlotMesh();
