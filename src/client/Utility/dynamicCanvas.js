@@ -2,7 +2,7 @@ import { Texture, Vector3 } from "@babylonjs/core";
 
 // Related to Dynamic Canvas sizing
 // Max/min dimension scales
-const maxDimensionRatio = 1.25, minDimensionRatio = 0.8;
+const maxDimensionRatio = 1.33, minDimensionRatio = 0.75;
 export default function dynamicCanvas(scene, position, imageUrl) {
   // Dynamic Canvas
   // Allow for different aspect ratio textures.

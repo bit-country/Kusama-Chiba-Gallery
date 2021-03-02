@@ -92,7 +92,6 @@ export default function SetupLobby() {
   
   SceneLoader.ImportMesh("", "/assets/Building12.gltf", "", scene, mesh => {
     setBuildingMeshes(mesh);
-
     for (let submesh of mesh) {
       // Names are flipped.
       if (submesh.name.includes("BottomRightWing")) {
@@ -114,6 +113,7 @@ export default function SetupLobby() {
       } else if (submesh.name.includes("TopRightWing")) {
         getSections().topRightWing.push(submesh);
       } else if (submesh.name.includes("Roof")) {
+        submesh.material.transparencyMode = 2;
         getSections().roof.push(submesh);
       }
 

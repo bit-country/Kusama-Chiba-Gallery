@@ -32,7 +32,7 @@ export function GoToLobby() {
 
   ChangeScene(getGalleryScene());  
   
-  EnterRoom("lobby", getUsername(), getSelectedCharacter(), new Vector3(8, 0, 0), new Vector3(0, 1.57079, 0));
+  EnterRoom("lobby", getUsername(), getSelectedCharacter(), new Vector3(1.5, 0, 0), new Vector3(0, 1.57079, 0));
 }
 
 export function GoToGallery(id) {
