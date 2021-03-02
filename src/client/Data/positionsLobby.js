@@ -14,10 +14,10 @@ export default [
     "height":2,
     "light": {
       "color": {
-      "x": 1,
-      "y": 1,
-      "z": 1
-    },
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
       "angle":1.0471975511966
     }
   },
