@@ -136,9 +136,9 @@ export default function SetupLobby() {
         }
   
         let wing = WING.CENTRE;
-        if (slot.position.z > 3) {
+        if (slot.position.z > 6) {
           wing = WING.LEFT;
-        } else if (slot.position.z < -3) {
+        } else if (slot.position.z < -6) {
           wing = WING.RIGHT;
         } else if (slot.position.x > 3) {
           wing = WING.BACK;
