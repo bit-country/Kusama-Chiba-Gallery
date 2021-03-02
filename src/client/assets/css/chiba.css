@@ -178,21 +178,11 @@
 }
 
 /* Tutorial */
-#root .hud .escape-tutorial {
-  position: fixed;
-  top: 0em;
-  left: calc(50vw - 10em);
-  width: 20em;
-  background-color: #100d1052;
-  transition: all 200ms ease-in-out;
-}
-
 #root .hud .tutorial {
   position: fixed;
   bottom: 1em;
   right: 1em;
   width: 24em;
-  height: 10em;
   background-color: #100d1052;
   transition: all 200ms ease-in-out;
 }
