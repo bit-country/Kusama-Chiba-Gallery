@@ -25,7 +25,7 @@ import {
   getActiveNavigator
 } from "../Model/state";
 import API from "../Integration/API";
-import { FLOOR, WING } from "../constants";
+import { FLOOR, WING } from "../Data/constants";
 import dynamicCanvas from "../Utility/dynamicCanvas";
 import populatePieceDetails from "../Utility/populatePieceDetails";
 
@@ -184,6 +184,8 @@ export default function SetupLobby() {
 
         addPiecePosition(scene, slotInfo);
       }
+
+      engine.hideLoadingUI();
 
       API.getPieces(positions.length).then(pieces => {
         const positions = getPieces(scene);

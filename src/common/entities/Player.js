@@ -42,9 +42,7 @@ export default class Player {
 
     SceneLoader.ImportMeshAsync(
       null,
-      `./graphics/character/${
-        character === "male-player" ? "boy" : "girl"
-      }.glb`,
+      `./assets/character/${character === "male-player" ? "boy" : "girl"}.glb`,
       null,
       scene
     ).then(({ meshes, animationGroups }) => {

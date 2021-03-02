@@ -73,7 +73,7 @@ export const importCharacter = (character, spawnPosition, spawnRotation) => {
 
   SceneLoader.ImportMeshAsync(
     null,
-    `./graphics/character/${
+    `./assets/character/${
       selectedCharacter.textContent === "male-player" ? "boy" : "girl"
     }.glb`,
     null,

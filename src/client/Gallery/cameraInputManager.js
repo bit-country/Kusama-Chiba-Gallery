@@ -9,7 +9,7 @@ const buttons = [0, 1, 2];
 /**
  * Defines the pointer angular sensibility  along the X and Y axis or how fast is the camera rotating.
  */
-const angularSensibility = 300.0;
+const angularSensibility = 500.0;
 let previousPosition = null;
 
 const touchEnabled = false;

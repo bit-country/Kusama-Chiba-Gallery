@@ -1,8 +1,8 @@
 <html lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link rel="stylesheet" href="/css/all.css" />
-    <link rel="stylesheet" href="/css/chiba.css" />
+    <link rel="stylesheet" href="/assets/css/all.css" />
+    <link rel="stylesheet" href="/assets/css/chiba.css" />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
@@ -31,14 +31,31 @@
     >
       <p id="selectedCharacter" hidden>female</p>
       <div class="hud">
-        <!-- Escape to release cursor -->
-        <div class="escape-tutorial">
-          <h5 class="text-center text-white">'esc' release mouse (释放光标)</h5>
+        <!-- Loading Screen -->
+        <div class="loading-screen position-absolute d-flex flex-column align-items-center justify-content-center">
+          <img class="w-50" src="assets/KUSAMA_4.png" />
+          <h1 class="text-white mb-4">Chiba Gallery</h1>
+          <h2 class="text-white"><i class="fas fa-spinner spin-anim text-white"></i> Loading...</h2>
         </div>
+
         <!-- Tutorial for controls -->
         <div class="tutorial d-flex flex-column justify-content-between p-2 fading invisible">
           <h4 class="text-center text-white">Controls (控制)</h4>
-          <div class="row mx-n2">
+          <div class="row mx-n2 border-top py-2">
+            <div class="col-8 d-flex flex-column flex-wrap align-items-center justify-content-between text-white">
+              Release mouse (释放光标)
+              <div class="flex-grow-1 text-center">
+                <img class="esc w-25" src="assets/esc.png" />
+              </div>
+            </div>
+            <div class="col-4 d-flex flex-column flex-wrap align-items-center justify-content-between border-left text-white">
+              Chat (聊天)
+              <div class="flex-grow-1 text-center">
+                <img class="enter w-100" src="assets/enter.png" />
+              </div>
+            </div>
+          </div>
+          <div class="row mx-n2 border-top py-2">
             <div class="col-9 d-flex flex-column flex-wrap align-items-center justify-content-between text-white">
               Move (移动)
               <div class="flex-grow-1">
@@ -311,16 +328,6 @@
                 id="female-player"
                 src="assets/female-player.png"
               />
-
-              <!-- <button value="male" class="genderSelection genderSelection-male">
-                Male
-              </button>
-              <button
-                value="female"
-                class="genderSelection genderSelection-female genderSelected"
-              >
-                Female
-              </button> -->
               <div style="padding-top: 10px">
                 <input
                   id="iptUsername"
