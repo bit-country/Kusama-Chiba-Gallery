@@ -5,9 +5,12 @@ export const ChatSetup = () => {
   const chatInput = document.querySelector("#chatInput");
 
   chatInput.addEventListener("keypress", function (e) {
+    
     if (e.key === "Enter") {
-      getGameRoom().send(PLAYER_CHAT, { content: e.target.value });
-      e.target.value = "";
+      if (e.target.value.trim() !== "") {
+        getGameRoom().send(PLAYER_CHAT, { content: e.target.value });
+        e.target.value = "";
+      }
 
       getEngine().getInputElement().requestPointerLock();
       getEngine().getInputElement().focus();

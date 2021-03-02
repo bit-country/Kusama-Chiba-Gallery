@@ -66,10 +66,11 @@ const JoinOrCreateGallery = (
         const { sessionId } = room;
         if (currentSession !== sessionId) {
           new Player(player);
-        } else {
-          //TODO: update current player position & sync with the server
-          //const t = getPlayer(currentSession);
         }
+        room.send(PLAYER_MOVE, { position: spawnPosition });
+        room.send(PLAYER_STOP);
+        //TODO: update current player position & sync with the server
+        //const t = getPlayer(currentSession);
       };
 
       room.onMessage(
