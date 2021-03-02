@@ -52,7 +52,7 @@ export default class Player {
       player.ellipsoidOffset = new Vector3(0, 1, 0);
       player.checkCollisions = true;
       player.rotation = new Vector3(0, -1.57079, 0);
-
+      //player.scaling.scaleInPlace(0.01)
       player.moveWithCollisions(scene.gravity);
 
       animationGroups.map((x) => (this[x.name] = x));
