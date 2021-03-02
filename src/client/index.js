@@ -3,7 +3,7 @@ import SetupEngine from "./Gallery/engine";
 import SetupLobby from "./Gallery/lobby";
 import { SetupHUD } from "./Gallery/hud";
 import SetupGallery from "./Gallery/gallery";
-import { getGalleryScene } from "./Model/state";
+import { getEngine, getGalleryScene } from "./Model/state";
 import { ChangeScene } from "./Utility/sceneChanger";
 import * as LOADERS from "@babylonjs/loaders";
 import { SetupSlotMesh } from "./Utility/slotCreator";

@@ -5,6 +5,42 @@
   --background-color: #8a8087c2;
 }
 
+/* Loading Screen */
+#root .hud .loading-screen {
+  z-index: 1000;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background:#000022;
+}
+
+#root .hud .loading-screen:not(.invisible) .spin-anim {
+  animation: spin-animation 1.3s infinite linear;
+}
+
+@keyframes spin-animation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(90deg);
+  }
+
+  50% {
+    transform: rotate(180deg);
+  }
+
+  75% {
+    transform: rotate(270deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 /* Menu and Title */
 #root .hud > .menu {
   position: fixed;

@@ -4,6 +4,7 @@ import {
   getScene,
   setEngine,
 } from "../Model/state";
+import LoadingScreen from "./loadingScreen";
 
 export function CapturePointer() {
   const engine = getEngine();
@@ -17,6 +18,9 @@ export function CapturePointer() {
 // Set up engine, resizing and render loop.
 export default function SetupEngine(canvasElement) {
   const engine = new Engine(canvasElement);
+
+  engine.loadingScreen = new LoadingScreen();
+  engine.displayLoadingUI();
 
   canvasElement.addEventListener("pointerdown", CapturePointer);
 
