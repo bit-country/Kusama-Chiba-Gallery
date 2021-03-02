@@ -84,7 +84,7 @@ export const importCharacter = (character, spawnPosition, spawnRotation) => {
     //setPlayer(mesh);
 
     mesh.position = spawnPosition;
-    //mesh.scaling.scaleInPlace(0.05);
+    mesh.scaling.scaleInPlace(1.5);
     mesh.scaling.x *= -1;
     mesh.rotation = spawnRotation;
     mesh.ellipsoidOffset = new Vector3(0, 1, 0);

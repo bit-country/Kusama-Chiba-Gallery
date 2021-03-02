@@ -49,6 +49,7 @@ export default class Player {
       let player = meshes[0];
       showUsername(player, this.name);
       player.position = new Vector3(x, y, z);
+      player.scaling.scaleInPlace(1.5);
       player.ellipsoidOffset = new Vector3(0, 1, 0);
       player.checkCollisions = true;
       player.rotation = new Vector3(0, -1.57079, 0);

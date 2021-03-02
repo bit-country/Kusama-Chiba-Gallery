@@ -90,7 +90,7 @@ export default function SetupLobby() {
   const light = new HemisphericLight("Skylight", new Vector3(0, 1, 0), scene);
   light.diffuse = new Color3(0.2, 0.2, 0.4);
   
-  SceneLoader.ImportMesh("", "/assets/Building10.gltf", "", scene, mesh => {
+  SceneLoader.ImportMesh("", "/assets/Building12.gltf", "", scene, mesh => {
     setBuildingMeshes(mesh);
 
     for (let submesh of mesh) {
@@ -100,7 +100,7 @@ export default function SetupLobby() {
       } else if (submesh.name.includes("BottomLeftWing")) {
         getSections().bottomLeftWing.push(submesh);
       } else if (submesh.name.includes("BottomFloor")) {
-        if (submesh.name.includes("primitive9")) { // 9 is door as of building10
+        if (submesh.name.includes("primitive8")) { // 8 is door as of building12
           submesh.isDoor = true;
         }
 
@@ -136,11 +136,11 @@ export default function SetupLobby() {
         }
   
         let wing = WING.CENTRE;
-        if (slot.position.z > 12) {
+        if (slot.position.z > 3) {
           wing = WING.LEFT;
-        } else if (slot.position.z < -12) {
+        } else if (slot.position.z < -3) {
           wing = WING.RIGHT;
-        } else if (slot.position.x > 10) {
+        } else if (slot.position.x > 3) {
           wing = WING.BACK;
         } else if (slot.position.x < -10) {
           wing = WING.FRONT;
