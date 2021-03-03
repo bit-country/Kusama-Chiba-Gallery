@@ -45,7 +45,7 @@ export function ActivateFullscreen() {
 
 // Login section
 // const loginMenuItem = document.querySelector("#root .hud .menu-overlay #login-menu-item");
-const loginTopItem = document.querySelector("#root .hud .login-item");
+// const loginTopItem = document.querySelector("#root .hud .login-item");
 const loginOverlay = document.querySelector("#root .hud .login-overlay");
 const loginCancelButton = document.querySelector("#root .hud .login-overlay button[name='cancel']");
 
@@ -54,13 +54,13 @@ const loginCancelButton = document.querySelector("#root .hud .login-overlay butt
 //   menuOverlay.classList.toggle("hidden");
 // };
 
-loginTopItem.onclick = () => {
-  // loginOverlay.classList.toggle("hidden");
-  // menuOverlay.classList.add("hidden");
-  const result = getScene().pick(canvasElement.clientWidth / 2, canvasElement.clientHeight / 2);
+// loginTopItem.onclick = () => {
+//   // loginOverlay.classList.toggle("hidden");
+//   // menuOverlay.classList.add("hidden");
+//   const result = getScene().pick(canvasElement.clientWidth / 2, canvasElement.clientHeight / 2);
 
-  console.log(result);
-};
+//   console.log(result);
+// };
 
 loginCancelButton.onclick = () => {
   loginOverlay.classList.toggle("hidden");
