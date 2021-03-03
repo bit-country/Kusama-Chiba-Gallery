@@ -110,6 +110,7 @@ export const importCharacter = (character, spawnPosition, spawnRotation) => {
     const walkAnim = scene.getAnimationGroupByName("WalkingForward");
     const walkBackAnim = scene.getAnimationGroupByName("WalkingBackward");
     const idleAnim = scene.getAnimationGroupByName("Idle");
+    
     //const sambaAnim = scene.getAnimationGroupByName("Samba");
 
     //Rendering loop (executed for everyframe)
