@@ -26,6 +26,8 @@
     "@babylonjs/loaders": "^4.2.0",
     "babel-loader": "^8.2.2",
     "dotenv-webpack": "^6.0.2",
+    "gif.js": "^0.2.0",
+    "gifuct-js": "github:matt-way/gifuct-js#51151379065dad4b580a93b25fe5f91c34944ca4",
     "webpack-bundle-analyzer": "^4.4.0",
     "webpack-node-externals": "^2.5.2"
   },

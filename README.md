@@ -1,0 +1,1 @@
+Credit for GIF textures in Babylon to: https://github.com/sebavan/BabylonjsAnimatedGifSample.git
