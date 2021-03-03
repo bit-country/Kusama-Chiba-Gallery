@@ -3,6 +3,7 @@ import {
   MeshBuilder, 
   StandardMaterial,
   Vector3} from "@babylonjs/core";
+import { AdvancedDynamicTexture, Rectangle, TextBlock } from "@babylonjs/gui";
 import { getScene, getSlotMesh, setSlotMesh } from "../Model/state";
 import { CreateLight } from "./lightCreator";
 
@@ -50,6 +51,34 @@ export function CreateSlot(slot, light, containingMeshes, scene, shadowGenerator
     artLight.includedOnlyMeshes.push(...containingMeshes);
   }
 
+  var plane = MeshBuilder.CreatePlane("plane", { width: 2, height: 1 }, scene);
+  plane.parent = artSlot;
+  plane.position.y = -1.4;
+  plane.position.z = -0.1;
+
+  var advancedTexture = AdvancedDynamicTexture.CreateForMesh(plane);
+
+  var container = new Rectangle();
+  container.cornerRadius = 20;
+  container.color = "white";
+  container.thickness = 0;
+  container.background = "#00000066";
+  container.adaptHeightToChildren = true;
+  container.adaptWidthToChildren = true;
+
+  var label = new TextBlock();
+  label.text = "Loading...";
+  label.fontSize = "68px";
+  label.resizeToFit = true;
+  label.paddingTopInPixels = 
+    label.paddingBottomInPixels =
+    label.paddingLeftInPixels =
+    label.paddingRightInPixels = 10;
+
+  container.addControl(label);
+
+  advancedTexture.addControl(container);
+
   artSlot.ArtDetails = {
     id,
     position: slotPos,
@@ -58,6 +87,8 @@ export function CreateSlot(slot, light, containingMeshes, scene, shadowGenerator
     slotMesh: artSlot,
     slotMaterial: artSlot.material,
     slotLight: artLight,
+    slotLabelMesh: plane,
+    slotLabel: label,
     art: null,
     artist: "",
     owner: "",

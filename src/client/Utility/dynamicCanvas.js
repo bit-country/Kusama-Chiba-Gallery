@@ -67,6 +67,15 @@ export default function dynamicCanvas(scene, position, imageUrl) {
           position.slotMaterial.diffuseTexture = new Texture(imageUrl, scene);
           position.art = imageUrl;
         }
+
+        position.slotLabelMesh.scaling = new Vector3(
+          1 / position.slotMesh.scaling.x, 
+          1 / position.slotMesh.scaling.y, 
+          position.slotMesh.scaling.z
+        );
+        position.slotLabelMesh.position.y *= position.slotLabelMesh.scaling.y;
+
+        position.slotLabel.text = position.name;
       };
     });
 }
