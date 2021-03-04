@@ -164,6 +164,12 @@
 
 #root .hud .playerSelected {
   border: 5px solid white;
+  opacity: 1;
+}
+
+#root .hud .playerNotSelected {
+  opacity: 0.5;
+  border: none;
 }
 
 #iptUsername {
@@ -176,12 +182,18 @@
   outline: none;
 }
 
-.player-select {
-  margin: 5%;
-  width: 12%;
+.playerSelection {
+  width: 22%;
   cursor: pointer;
+  margin: 5%;
   border-radius: 5%;
   background: grey;
+}
+
+@media screen and (min-width: 1200px) {
+  .playerSelection {
+    width: 16%;
+  }
 }
 
 #root .hud .genderSelection:hover {
