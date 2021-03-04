@@ -46,10 +46,10 @@ export function ActivateFullscreen() {
 // Login section
 // const loginMenuItem = document.querySelector("#root .hud .menu-overlay #login-menu-item");
 // const loginTopItem = document.querySelector("#root .hud .login-item");
-const loginOverlay = document.querySelector("#root .hud .login-overlay");
-const loginCancelButton = document.querySelector(
-  "#root .hud .login-overlay button[name='cancel']"
-);
+// const loginOverlay = document.querySelector("#root .hud .login-overlay");
+// const loginCancelButton = document.querySelector(
+//   "#root .hud .login-overlay button[name='cancel']"
+// );
 
 // loginMenuItem.onclick = () => {
 //   loginOverlay.classList.toggle("hidden");
@@ -64,29 +64,29 @@ const loginCancelButton = document.querySelector(
 //   console.log(result);
 // };
 
-loginCancelButton.onclick = () => {
-  loginOverlay.classList.toggle("hidden");
-  canvasElement.requestPointerLock();
-  canvasElement.focus();
-};
+// loginCancelButton.onclick = () => {
+//   loginOverlay.classList.toggle("hidden");
+//   canvasElement.requestPointerLock();
+//   canvasElement.focus();
+// };
 
 // Register section
 // const registerMenuItem = document.querySelector("#root .hud .menu-overlay #register-menu-item");
-const registerOverlay = document.querySelector("#root .hud .register-overlay");
-const registerCancelButton = document.querySelector(
-  "#root .hud .register-overlay button[name='cancel']"
-);
+// const registerOverlay = document.querySelector("#root .hud .register-overlay");
+// const registerCancelButton = document.querySelector(
+//   "#root .hud .register-overlay button[name='cancel']"
+// );
 
 // registerMenuItem.onclick = () => {
 //   registerOverlay.classList.toggle("hidden");
 //   menuOverlay.classList.toggle("hidden");
 // };
 
-registerCancelButton.onclick = () => {
-  registerOverlay.classList.toggle("hidden");
-  canvasElement.requestPointerLock();
-  canvasElement.focus();
-};
+// registerCancelButton.onclick = () => {
+//   registerOverlay.classList.toggle("hidden");
+//   canvasElement.requestPointerLock();
+//   canvasElement.focus();
+// };
 
 // Currently we have no API to use.
 // // Mint section
@@ -413,8 +413,8 @@ const enterGame = () => {
     return;
   }
 
-  engine.getInputElement().requestPointerLock();
   engine.getInputElement().focus();
+  engine.getInputElement().requestPointerLock();
 };
 // Shows the initial entry setup HUD (username and character selection)
 const initialSetupHUD = () => {
