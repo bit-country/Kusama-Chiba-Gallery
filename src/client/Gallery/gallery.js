@@ -84,13 +84,12 @@ export default function SetupGallery() {
     
     SetupSlotMesh(scene);
 
-    // We're happy enough now, so we can allow the one who called
-    // to continue. We can finish up before they need us.
+    // We're happy to allow the caller to continue here.
     resolve();
     
     const assetManager = new AssetsManager(scene);
 
-    SetupCharacterLoadTasks(scene, assetManager);
+    const loaded = SetupCharacterLoadTasks(scene, assetManager);
     
     const buildingTask = assetManager.addMeshTask("LobbyBuilding", "", "", "./assets/Gallery4.gltf");
     buildingTask.onSuccess = task => {
@@ -116,6 +115,8 @@ export default function SetupGallery() {
 
       setLobbyMesh(mesh);
     };
+
+    loaded.then(resolve);
 
     assetManager.load();
   });

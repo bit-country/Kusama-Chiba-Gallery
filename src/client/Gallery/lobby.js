@@ -95,130 +95,137 @@ export default function SetupLobby() {
     
     const assetManager = new AssetsManager(scene);
     
-    SetupCharacterLoadTasks(scene, assetManager);
+    const loaded = SetupCharacterLoadTasks(scene, assetManager);
 
-    const buildingTask = assetManager.addMeshTask("LobbyBuilding", "", "", "./assets/Building12.gltf");
-    buildingTask.onSuccess = task => {
-      const {
-        loadedMeshes: mesh
-      } = task;
-
-      setBuildingMeshes(mesh);
-      for (let submesh of mesh) {
-        if (submesh.name.includes("BottomRightWing")) {
-          getSections().bottomRightWing.push(submesh);
-        } else if (submesh.name.includes("BottomLeftWing")) {
-          getSections().bottomLeftWing.push(submesh);
-        } else if (submesh.name.includes("BottomFloor")) {
-          if (submesh.name.includes("primitive8")) { // 8 is door as of building12
-            submesh.isDoor = true;
-          }
-
-          getSections().bottomFloor.push(submesh);
-        } else if (submesh.name.includes("TopFloorFront")) {
-          getSections().topFrontWing.push(submesh);
-        } else if (submesh.name.includes("TopFloorBack")) {
-          getSections().topBackWing.push(submesh);
-        } else if (submesh.name.includes("TopLeftWing")) {
-          getSections().topLeftWing.push(submesh);
-        } else if (submesh.name.includes("TopRightWing")) {
-          getSections().topRightWing.push(submesh);
-        } else if (submesh.name.includes("Roof")) {
-          submesh.material.transparencyMode = 2;
-          getSections().roof.push(submesh);
-        }
-
-        // Be careful not to exceed max GL vertex buffers
-        if (submesh.material) {
-          submesh.material.maxSimultaneousLights = 10;
-          submesh.material.freeze();
-        }
-
-        submesh.checkCollisions = true;
-        submesh.receiveShadows = true;
-        submesh.freezeWorldMatrix();
-      }
-
-      API.getPositionsGallery().then(positions => {
-        for (let slot of positions) {
-          let floor = FLOOR.BOTTOM; 
-          if (slot.position.y >= 3) {
-            floor = FLOOR.TOP; 
-          }
+    const allLoaded = Promise.all([
+      loaded,
+      new Promise(resolve => {
+        const buildingTask = assetManager.addMeshTask("LobbyBuilding", "", "", "./assets/Building12.gltf");
+        buildingTask.onSuccess = task => {
+          const {
+            loadedMeshes: mesh
+          } = task;
     
-          let wing = WING.CENTRE;
-          if (slot.position.z > 6) {
-            wing = WING.LEFT;
-          } else if (slot.position.z < -6) {
-            wing = WING.RIGHT;
-          } else if (slot.position.x > 3) {
-            wing = WING.BACK;
-          } else if (slot.position.x < -10) {
-            wing = WING.FRONT;
-          } // If none then it's centre
+          setBuildingMeshes(mesh);
+          for (let submesh of mesh) {
+            if (submesh.name.includes("BottomRightWing")) {
+              getSections().bottomRightWing.push(submesh);
+            } else if (submesh.name.includes("BottomLeftWing")) {
+              getSections().bottomLeftWing.push(submesh);
+            } else if (submesh.name.includes("BottomFloor")) {
+              if (submesh.name.includes("primitive8")) { // 8 is door as of building12
+                submesh.isDoor = true;
+              }
     
-          let section = null;
-          switch(wing) {
-            case WING.CENTRE:
-              section = getSections().bottomFloor;
-              break;
-            case WING.LEFT:
-              section = floor == FLOOR.BOTTOM ? getSections().bottomLeftWing : getSections().topLeftWing;
-              break
-            case WING.RIGHT:
-              section = floor == FLOOR.BOTTOM ? getSections().bottomRightWing : getSections().topRightWing;
-              break
-            case WING.FRONT:
-              section = getSections().topFrontWing;
-              break
-            case WING.BACK:
-              section = getSections().topBackWing;
-              break
-          }
-    
-          const slotInfo = CreateSlot(
-            new Slot(
-              new Vector3(slot.position.x, slot.position.y + slot.height / 2, slot.position.z), 
-              new Vector3(slot.rotation.x, slot.rotation.y, slot.rotation.z),
-              { width: slot.width, height: slot.height, depth: 0.25 }, 
-              2, 
-              false,
-              slot._id
-            ), 
-            new Light(
-              new Color3(slot.light.color.x, slot.light.color.y, slot.light.color.z),
-              slot.light.angle
-            ),
-            section,
-            scene
-          );
-
-          addPiecePosition(scene, slotInfo);
-        }
-
-        // We're happy to allow the caller to continue here.
-        resolve();
-
-        API.getPieces(positions.length).then(pieces => {
-          const positions = getPieces(scene);
-      
-          let index = 0;
-          for (let piece of pieces) {
-            if (index > positions.length) {
-              return;
+              getSections().bottomFloor.push(submesh);
+            } else if (submesh.name.includes("TopFloorFront")) {
+              getSections().topFrontWing.push(submesh);
+            } else if (submesh.name.includes("TopFloorBack")) {
+              getSections().topBackWing.push(submesh);
+            } else if (submesh.name.includes("TopLeftWing")) {
+              getSections().topLeftWing.push(submesh);
+            } else if (submesh.name.includes("TopRightWing")) {
+              getSections().topRightWing.push(submesh);
+            } else if (submesh.name.includes("Roof")) {
+              submesh.material.transparencyMode = 2;
+              getSections().roof.push(submesh);
             }
     
-            const position = positions[index++];
-      
-            // Dynamic Canvas
-            // Allow for different aspect ratio textures.
-            dynamicCanvas(scene, position, piece.image); 
+            // Be careful not to exceed max GL vertex buffers
+            if (submesh.material) {
+              submesh.material.maxSimultaneousLights = 10;
+              submesh.material.freeze();
+            }
     
-            populatePieceDetails(position, piece);
+            submesh.checkCollisions = true;
+            submesh.receiveShadows = true;
+            submesh.freezeWorldMatrix();
           }
-        });
-      });
-    };
+    
+          API.getPositionsGallery().then(positions => {
+            for (let slot of positions) {
+              let floor = FLOOR.BOTTOM; 
+              if (slot.position.y >= 3) {
+                floor = FLOOR.TOP; 
+              }
+        
+              let wing = WING.CENTRE;
+              if (slot.position.z > 6) {
+                wing = WING.LEFT;
+              } else if (slot.position.z < -6) {
+                wing = WING.RIGHT;
+              } else if (slot.position.x > 3) {
+                wing = WING.BACK;
+              } else if (slot.position.x < -10) {
+                wing = WING.FRONT;
+              } // If none then it's centre
+        
+              let section = null;
+              switch(wing) {
+                case WING.CENTRE:
+                  section = getSections().bottomFloor;
+                  break;
+                case WING.LEFT:
+                  section = floor == FLOOR.BOTTOM ? getSections().bottomLeftWing : getSections().topLeftWing;
+                  break
+                case WING.RIGHT:
+                  section = floor == FLOOR.BOTTOM ? getSections().bottomRightWing : getSections().topRightWing;
+                  break
+                case WING.FRONT:
+                  section = getSections().topFrontWing;
+                  break
+                case WING.BACK:
+                  section = getSections().topBackWing;
+                  break
+              }
+        
+              const slotInfo = CreateSlot(
+                new Slot(
+                  new Vector3(slot.position.x, slot.position.y + slot.height / 2, slot.position.z), 
+                  new Vector3(slot.rotation.x, slot.rotation.y, slot.rotation.z),
+                  { width: slot.width, height: slot.height, depth: 0.25 }, 
+                  2, 
+                  false,
+                  slot._id
+                ), 
+                new Light(
+                  new Color3(slot.light.color.x, slot.light.color.y, slot.light.color.z),
+                  slot.light.angle
+                ),
+                section,
+                scene
+              );
+    
+              addPiecePosition(scene, slotInfo);
+            }
+    
+            // We're happy to allow the caller to continue here.
+            resolve();
+    
+            API.getPieces(positions.length).then(pieces => {
+              const positions = getPieces(scene);
+          
+              let index = 0;
+              for (let piece of pieces) {
+                if (index > positions.length) {
+                  return;
+                }
+        
+                const position = positions[index++];
+          
+                // Dynamic Canvas
+                // Allow for different aspect ratio textures.
+                dynamicCanvas(scene, position, piece.image); 
+        
+                populatePieceDetails(position, piece);
+              }
+            });
+          });
+        };
+      })
+    ]);
+
+    allLoaded.then(resolve);
 
     assetManager.load();
   });
