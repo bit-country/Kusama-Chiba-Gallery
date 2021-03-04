@@ -10,43 +10,45 @@ import {
 import {
   getCamera,
   getEngine,
+  getGalleryScene,
   getGameRoom,
+  getLobbyScene,
   getLocalPlayer,
+  getPlayerStruct,
   getScene,
+  getSelectedCharacter,
   setCamera,
   setLocalPlayer,
+  setPlayerStruct,
 } from "../Model/state";
 import { PLAYER_MOVE, PLAYER_STOP } from "../../common/MessageTypes";
 import { pointerInput } from "./cameraInputManager";
 
+// Configuration values
 let meshSpeed = 6;
 let meshSpeedBackwards = 6;
 let meshRotationSpeed = 6;
 
-const cameraOffset = new Vector3(0.25, 0.9, -1.5);
+export const cameraOffset = new Vector3(0.25, 0.9, -1.5);
 
 // Keyboard events
 let inputMap = {};
-let pointerInputBinding = null,
-  beforeRenderObservable = null;
 
+
+// Important to cleanup all of the meshes and animations
+// ensures that characters stay animated and we don't end up
+// with "detached" characters (no client input associated)
+let pointerInputBinding = null,
+beforeRenderObservable = null;
 export function characterCleanup() {
   const scene = getScene();
-  const player = getLocalPlayer();
 
   scene.onPointerObservable.removeCallback(pointerInputBinding);
   scene.onBeforeRenderObservable.removeCallback(beforeRenderObservable);
-  scene.removeMesh(player, true);
 
-  let animation = null;
-  while (animation = scene.animationGroups[0]) {
-    scene.removeAnimationGroup(animation);
-  }
-
-  player.dispose();
-
-  setLocalPlayer(null);
+  getPlayerStruct(scene, getSelectedCharacter() == "male-player" ? "boy" : "girl").container.removeAllFromScene();
 }
+
 
 export const importCharacter = (character, spawnPosition, spawnRotation) => {
   const engine = getEngine();
@@ -57,7 +59,7 @@ export const importCharacter = (character, spawnPosition, spawnRotation) => {
     scene.actionManager = new ActionManager(scene);
 
     scene.actionManager.registerAction(
-      new ExecuteCodeAction(ActionManager.OnKeyDownTrigger, function (evt) {
+      new ExecuteCodeAction(ActionManager.OnKeyDownTrigger, function (evt) { 
         inputMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
       })
     );
@@ -71,159 +73,155 @@ export const importCharacter = (character, spawnPosition, spawnRotation) => {
 
   let selectedCharacter = document.querySelector("#selectedCharacter");
 
-  SceneLoader.ImportMeshAsync(
-    null,
-    `./assets/character/${
-      selectedCharacter.textContent === "male-player" ? "boy" : "girl"
-    }.glb`,
-    null,
-    scene
-  ).then(({ meshes }) => {
-    let mesh = meshes[0];
-    setLocalPlayer(mesh);
-    //setPlayer(mesh);
+  const playerStruct = getPlayerStruct(scene, character == "male-player" ? "boy" : "girl");
 
-    mesh.position = spawnPosition;
-    mesh.scaling.scaleInPlace(1.5);
-    mesh.scaling.x *= -1;
-    mesh.rotation = spawnRotation;
-    mesh.ellipsoidOffset = new Vector3(0, 1, 0);
+  playerStruct.container.addAllToScene();
+  
+  setLocalPlayer(playerStruct.mesh);
+  const mesh = playerStruct.mesh;
+  
+  camera.position = new Vector3(cameraOffset.x, 0, cameraOffset.z);
+  camera.rotation = new Vector3(0, 0, 0);
+  
+  // Reset positioning and rotation for parenting.
+  camera.parent.position = new Vector3(0, cameraOffset.y, 0);
+  camera.parent.rotation = new Vector3(0, 0, 0);
+  camera.parent.parent = mesh;
 
-    var animating = true;
+  mesh.position = spawnPosition;
+  mesh.rotation = spawnRotation;
 
-    // Set up camera arm to make it easier to reasonable rotations for mouse movement.
-    const cameraMesh = new Mesh("cameraArm", scene, mesh);
-    cameraMesh.position.y = cameraOffset.y;
-    camera.position = new Vector3(cameraOffset.x, 0, cameraOffset.z);
-    camera.rotation = new Vector3(0, 0, 0);
-    camera.parent = cameraMesh;
+  const idleAnim = playerStruct.animations.find(anim => anim.name == "Idle");
+  const walkAnim = playerStruct.animations.find(anim => anim.name == "WalkingForward");
+  const walkBackAnim = playerStruct.animations.find(anim => anim.name == "WalkingBackward");
 
-    // Bind in our pointer input, handles camera and player rotation.
-    pointerInputBinding = pointerInput.bind(null, engine, camera); // Allow us to cleanup when we change rooms.
-    scene.onPointerObservable.add(
-      pointerInputBinding,
-      PointerEventTypes.POINTERDOWN |
-        PointerEventTypes.POINTERUP |
-        PointerEventTypes.POINTERMOVE
+  var animating = true;
+
+  // Bind in our pointer input, handles camera and player rotation.
+  pointerInputBinding = pointerInput.bind(null, engine, camera); // Allow us to cleanup when we change rooms.
+  scene.onPointerObservable.add(
+    pointerInputBinding,
+    PointerEventTypes.POINTERDOWN |
+      PointerEventTypes.POINTERUP |
+      PointerEventTypes.POINTERMOVE
+  );
+
+  //Rendering loop (executed for everyframe)
+  beforeRenderObservable = () => {
+    var keydown = false;
+
+    const delta = engine.getDeltaTime() / 1000;
+
+    mesh.moveWithCollisions(
+      new Vector3(
+        scene.gravity.x * (delta * 16.667),
+        scene.gravity.y * (delta * 16.667),
+        scene.gravity.z * (delta * 16.667)
+      )
     );
 
-    const walkAnim = scene.getAnimationGroupByName("WalkingForward");
-    const walkBackAnim = scene.getAnimationGroupByName("WalkingBackward");
-    const idleAnim = scene.getAnimationGroupByName("Idle");
-    
-    //const sambaAnim = scene.getAnimationGroupByName("Samba");
+    //Manage the movements of the character (e.g. position, direction)
+    if (inputMap["w"] || inputMap["ArrowUp"]) {
+      mesh.moveWithCollisions(mesh.forward.scaleInPlace(meshSpeed * delta));
+      keydown = true;
+    }
 
-    //Rendering loop (executed for everyframe)
-    beforeRenderObservable = () => {
-      var keydown = false;
-
-      const delta = engine.getDeltaTime() / 1000;
-
+    if (inputMap["s"]|| inputMap["ArrowDown"]) {
       mesh.moveWithCollisions(
-        new Vector3(
-          scene.gravity.x * (delta * 16.667),
-          scene.gravity.y * (delta * 16.667),
-          scene.gravity.z * (delta * 16.667)
-        )
+        mesh.forward.scaleInPlace(-(meshSpeedBackwards * delta))
       );
+      keydown = true;
+    }
 
-      //Manage the movements of the character (e.g. position, direction)
-      if (inputMap["w"]) {
-        mesh.moveWithCollisions(mesh.forward.scaleInPlace(meshSpeed * delta));
-        keydown = true;
-      }
+    if (inputMap["a"]|| inputMap["ArrowLeft"]) {
+      mesh.moveWithCollisions(mesh.right.scaleInPlace(-(meshSpeed * delta)));
+      keydown = true;
+    }
+    
+    if (inputMap["d"]|| inputMap["ArrowRight"]) {
+      mesh.moveWithCollisions(mesh.right.scaleInPlace(meshSpeed * delta));
+      keydown = true;
+    }
 
-      if (inputMap["s"]) {
-        mesh.moveWithCollisions(
-          mesh.forward.scaleInPlace(-(meshSpeedBackwards * delta))
-        );
-        keydown = true;
-      }
+    if (inputMap["Enter"]) {
+      const chatInput = document.querySelector("#chatInput");
+      document.exitPointerLock();
+      inputMap["Enter"] = false;
 
-      if (inputMap["a"]) {
-        mesh.moveWithCollisions(mesh.right.scaleInPlace(-(meshSpeed * delta)));
-        keydown = true;
-      }
+      chatInput.focus();
+    }
 
-      if (inputMap["d"]) {
-        mesh.moveWithCollisions(mesh.right.scaleInPlace(meshSpeed * delta));
-        keydown = true;
-      }
+    // Dance
+    if (inputMap["t"]) {
+      keydown = true;
+    }
 
-      if (inputMap["Enter"]) {
-        const chatInput = document.querySelector("#chatInput");
-        document.exitPointerLock();
-        inputMap["Enter"] = false;
+    //Manage animations to be played
+    if (keydown) {
+      getGameRoom()?.send(PLAYER_MOVE, {
+        position: mesh.position,
+        rotation: mesh.rotation,
+        direction: inputMap["w"] ? "WalkingForward" : "WalkingBackward",
+      });
 
-        chatInput.focus();
-      }
-
-      // Dance
-      if (inputMap["t"]) {
-        keydown = true;
-      }
-
-      //Manage animations to be played
-      if (keydown) {
-        getGameRoom()?.send(PLAYER_MOVE, {
-          position: mesh.position,
-          rotation: mesh.rotation,
-          direction: inputMap["w"] ? "WalkingForward" : "WalkingBackward",
-        });
-
-        if (!animating) {
-          animating = true;
-          if (inputMap["s"]) {
-            //Walk backwards
-            walkBackAnim.start(
-              true,
-              1.0,
-              walkBackAnim.from,
-              walkBackAnim.to,
-              false
-            );
-          } else if (inputMap["t"]) {
-            //Samba!
-            // sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
-          } else {
-            //Walk
-            walkAnim.start(true, 1.0, walkAnim.from, walkAnim.to, false);
-          }
-        }
-      } else {
-        if (animating) {
-          getGameRoom()?.send(PLAYER_STOP);
-
-          //Default animation is idle when no key is down
-          idleAnim.start(true, 1.0, idleAnim.from, idleAnim.to, false);
-
-          //Stop all animations besides Idle Anim when no key is down
-          // sambaAnim.stop();
-          walkAnim.stop();
-          walkBackAnim.stop();
-
-          //Ensure animation are played only once per rendering loop
-          animating = false;
+      if (!animating) {
+        animating = true;
+        if (inputMap["s"]) {
+          //Walk backwards
+          walkBackAnim.start(
+            true,
+            1.0,
+            walkBackAnim.from,
+            walkBackAnim.to,
+            false
+          );
+        } else if (inputMap["t"]) {
+          //Samba!
+          // sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
+        } else {
+          //Walk
+          walkAnim.start(true, 1.0, walkAnim.from, walkAnim.to, false);
         }
       }
-    };
-    scene.onBeforeRenderObservable.add(beforeRenderObservable);
-  });
+    } else {
+      if (animating) {
+        getGameRoom()?.send(PLAYER_STOP);
+
+        //Default animation is idle when no key is down
+        idleAnim.start(true, 1.0, idleAnim.from, idleAnim.to, false);
+
+        //Stop all animations besides Idle Anim when no key is down
+        // sambaAnim.stop();
+        walkAnim.stop();
+        walkBackAnim.stop();
+
+        //Ensure animation are played only once per rendering loop
+        animating = false;
+      }
+    }
+  };
+
+  scene.onBeforeRenderObservable.add(beforeRenderObservable);
 };
 
 // Set up the player, and input.
 // Follow singleton method for camera and local player.
-export function SetupPlayer() {
+export function SetupPlayerCamera() {
   const scene = getScene();
   let camera = getCamera();
 
   if (!camera) {
-    camera = new UniversalCamera("playerCamera", new Vector3(-14, 4, 0), scene);
-
-    camera.rotation = new Vector3(0, 1.57079, 0);
+    camera = new UniversalCamera("playerCamera", new Vector3(0, 0, 0), scene);
 
     camera.ellipsoid = new Vector3(0.25, 0.5, 0.25);
     camera.checkCollisions = true;
+
+    // Set up camera arm to make it easier to reason about rotations for mouse movement.
+    const cameraMesh = new Mesh("cameraArm", scene);
+    cameraMesh.position = new Vector3(-14, 4, 0);
+    cameraMesh.rotation = new Vector3(0, 1.57079, 0);
+
+    camera.parent = cameraMesh;
   }
 
   scene.activeCamera = camera;

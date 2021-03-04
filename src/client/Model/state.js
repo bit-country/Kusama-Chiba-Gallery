@@ -7,6 +7,8 @@ let state = {
   cameraLobby: null,
   playerGallery: null,
   playerLobby: null,
+  playerStructGallery: {},
+  playerStructLobby: {},
   players: [],
   engine: null,
   scene: null,
@@ -245,8 +247,8 @@ export function getSelectedCharacter() {
   return state.selectedCharacter;
 }
 
-export function getSlotMesh() {
-  return getScene() == getGalleryScene()
+export function getSlotMesh(scene) {
+  return scene == getGalleryScene()
     ? state.gallerySlotMesh
     : state.lobbySlotMesh;
 }
@@ -256,5 +258,17 @@ export function setSlotMesh(scene, mesh) {
     state.gallerySlotMesh = mesh;
   } else {
     state.lobbySlotMesh = mesh;
+  }
+}
+
+export function getPlayerStruct(scene, character) {
+  return scene == getGalleryScene() ? state.playerStructGallery[character] : state.playerStructLobby[character];
+}
+
+export function setPlayerStruct(scene, character, playerStruct) {
+  if (scene == getGalleryScene()) {
+    state.playerStructGallery[character] = playerStruct;
+  } else {
+    state.playerStructLobby[character] = playerStruct;
   }
 }

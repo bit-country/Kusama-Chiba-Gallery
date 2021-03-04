@@ -47,7 +47,9 @@ export function ActivateFullscreen() {
 // const loginMenuItem = document.querySelector("#root .hud .menu-overlay #login-menu-item");
 // const loginTopItem = document.querySelector("#root .hud .login-item");
 const loginOverlay = document.querySelector("#root .hud .login-overlay");
-const loginCancelButton = document.querySelector("#root .hud .login-overlay button[name='cancel']");
+const loginCancelButton = document.querySelector(
+  "#root .hud .login-overlay button[name='cancel']"
+);
 
 // loginMenuItem.onclick = () => {
 //   loginOverlay.classList.toggle("hidden");
@@ -71,7 +73,9 @@ loginCancelButton.onclick = () => {
 // Register section
 // const registerMenuItem = document.querySelector("#root .hud .menu-overlay #register-menu-item");
 const registerOverlay = document.querySelector("#root .hud .register-overlay");
-const registerCancelButton = document.querySelector("#root .hud .register-overlay button[name='cancel']");
+const registerCancelButton = document.querySelector(
+  "#root .hud .register-overlay button[name='cancel']"
+);
 
 // registerMenuItem.onclick = () => {
 //   registerOverlay.classList.toggle("hidden");
@@ -277,6 +281,8 @@ navigatorCloseButton.onclick = () => {
 
 navigatorGoToLobbyButton.onclick = () => {
   navigatorOverlay.classList.add("hidden");
+  let currentRoom = document.querySelector("#currentRoom");  
+  currentRoom.textContent =  '| Lobby';
 
   GoToLobby();
 
@@ -348,6 +354,9 @@ export function ShowNavigator() {
       itemButton.className = "btn btn-outline-primary";
       itemButton.textContent = "View ";
       itemButton.onclick = () => {
+        let currentRoom = document.querySelector("#currentRoom");  
+        currentRoom.textContent = ` | ${collection.name}`;
+  
         GoToGallery(collection.id);
 
         const engine = getEngine();
@@ -385,35 +394,42 @@ export function ShowTutorial() {
   //   }, 1000);
   // }, 5000);
 }
+const enterGame = () => {
+  const iptUsername = document.querySelector("#iptUsername").value;
 
+  let selectedCharacter = document.querySelector("#selectedCharacter");
+
+  const toHide = document.querySelector("#characterSelection");
+  toHide.style.visibility = "hidden";
+
+  InitialSetup(iptUsername, selectedCharacter.textContent);
+  setUsername(iptUsername || "Guest");
+  setSelectedCharacter(selectedCharacter.textContent);
+
+  ShowTutorial();
+
+  const engine = getEngine();
+  if (!engine) {
+    return;
+  }
+
+  engine.getInputElement().requestPointerLock();
+  engine.getInputElement().focus();
+};
 // Shows the initial entry setup HUD (username and character selection)
 const initialSetupHUD = () => {
-  const playerSelection = document.querySelectorAll(".player-select");
+  const playerSelection = document.querySelectorAll(".playerSelection");
   const btnEnterGallery = document.querySelector("#btnEnterGallery");
-
+  const iptUsername = document.querySelector("#iptUsername");
+  
+  iptUsername.addEventListener("keyup", function (e) {
+    if (e.key === "Enter" ) {
+      enterGame();
+    }
+  });
   btnEnterGallery.addEventListener("click", function (event) {
     event.preventDefault();
-
-    const iptUsername = document.querySelector("#iptUsername").value;
-
-    let selectedCharacter = document.querySelector("#selectedCharacter");
-
-    const toHide = document.querySelector("#characterSelection");
-    toHide.style.visibility = "hidden";
-
-    InitialSetup(iptUsername, selectedCharacter.textContent);
-    setUsername(iptUsername || "Guest");
-    setSelectedCharacter(selectedCharacter.textContent);
-
-    ShowTutorial();
-
-    const engine = getEngine();
-    if (!engine) {
-      return;
-    }
-
-    engine.getInputElement().requestPointerLock();
-    engine.getInputElement().focus();
+    enterGame();
   });
 
   for (const btn of playerSelection) {
@@ -422,24 +438,26 @@ const initialSetupHUD = () => {
       selectedCharacter.innerHTML = event.target.id;
 
       if (event.target.className.includes("playerSelected")) {
-        event.target.className = event.target.className.replace(
-          "playerSelected",
-          ""
-        );
-        event.target.style.opacity = 0.4;
+        return;
       } else {
-        event.target.className += " playerSelected";
-        event.target.style.opacity = 1;
+        event.target.className = event.target.className.replace(
+          "playerNotSelected",
+          "playerSelected"
+        );
       }
 
       if (event.target.id === "female-player") {
         const male = document.querySelector("#male-player");
-        male.style.opacity = 0.4;
-        male.className = male.className.replace("playerSelected", "");
+        male.className = male.className.replace(
+          "playerSelected",
+          "playerNotSelected"
+        );
       } else {
         const female = document.querySelector("#female-player");
-        female.className = female.className.replace("playerSelected", "");
-        female.style.opacity = 0.4;
+        female.className = female.className.replace(
+          "playerSelected",
+          "playerNotSelected"
+        );
       }
     });
   }

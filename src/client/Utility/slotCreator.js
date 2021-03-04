@@ -23,7 +23,7 @@ export function CreateSlot(slot, light, containingMeshes, scene, shadowGenerator
     id
   } = slot;
 
-  const baseMesh = getSlotMesh();
+  const baseMesh = getSlotMesh(scene);
 
   let artSlot = null;
 

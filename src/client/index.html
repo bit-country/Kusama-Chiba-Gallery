@@ -29,7 +29,7 @@
       id="root"
       style="position: absolute; top: 0; left: 0; right: 0; bottom: 0"
     >
-      <p id="selectedCharacter" hidden>female</p>
+      <p id="selectedCharacter" hidden>male-player</p>
       <div class="hud">
         <!-- Loading Screen -->
         <div class="loading-screen position-absolute d-flex flex-column align-items-center justify-content-center">
@@ -43,7 +43,7 @@
           <h4 class="text-center text-white">Controls (控制)</h4>
           <div class="row mx-n2 border-top py-2">
             <div class="col-8 d-flex flex-column flex-wrap align-items-center justify-content-between text-white">
-              Release mouse (释放光标)
+              Exit (释放光标)
               <div class="flex-grow-1 text-center">
                 <img class="esc w-25" src="assets/esc.png" />
               </div>
@@ -115,7 +115,7 @@
 
         <!-- HUD Title - Top Left -->
         <div class="title">
-          <h2>Chiba Gallery</h2>
+          <h2>Chiba Gallery <span id="currentRoom">| Lobby</span></h2>
         </div>
 
         <!-- HUD Item For Login - Top Right -->
@@ -301,41 +301,39 @@
             background: #000000b0;
             position: absolute;
             bottom: 0;
-            width: 100vw;
-            height: 100vh;
+            text-align: center;
           "
         >
           <div
             style="
-              text-align: center;
-              margin: auto;
-              width: 100%;
               height: 100vh;
               position: relative;
             "
           >
-            <div style="position: absolute; top: 10%; width: 100vw">
-              <p style="color: white; font-size: 1.4em">
+            <div style="width: 100vw">
+              <p style="color: white; font-size: 1.4em; padding-top: 5%;">
                 Select Your Character (选择你的角色)
               </p>
-              <img
-                class="player-select"
-                id="male-player"
-                src="assets/male-player.png"
-              />
-              <img
-                class="player-select"
-                id="female-player"
-                src="assets/female-player.png"
-              />
-              <div style="padding-top: 10px">
+              <div>
+                <img
+                  class="playerSelection playerSelected"
+                  id="male-player"
+                  src="assets/male-player.png"
+                />
+                <img
+                  class="playerSelection playerNotSelected"
+                  id="female-player"
+                  src="assets/female-player.png"
+                />
+              </div>
+            </div>   
+            <div style="padding-top: 10px">
                 <input
                   id="iptUsername"
                   placeholder="Username (用户名)"
                   autofocus
                 />&nbsp;
                 <button id="btnEnterGallery">Enter Gallery (进入)</button>
-              </div>
             </div>
           </div>
         </div>

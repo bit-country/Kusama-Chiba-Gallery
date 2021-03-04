@@ -1,5 +1,5 @@
 import { Color3, Vector3 } from "@babylonjs/core";
-import { characterCleanup, SetupPlayer } from "../Gallery/gameplay";
+import { characterCleanup, SetupPlayerCamera } from "../Gallery/gameplay";
 import { EnterRoom } from "../Gallery/room";
 import API from "../Integration/API";
 import Light from "../Model/Light";
@@ -24,34 +24,34 @@ import populatePieceDetails from "./populatePieceDetails";
 import { CreateSlot } from "./slotCreator";
 
 export function GoToLobby() {
-  const lobby = getGalleryScene();
+  const lobby = getLobbyScene();
 
   if (getScene() == lobby) {
     return;
   }
 
-  ChangeScene(getGalleryScene());  
+  ChangeScene(lobby);  
   
   EnterRoom("lobby", getUsername(), getSelectedCharacter(), new Vector3(1.5, 0, 0), new Vector3(0, 1.57079, 0));
 }
 
 export function GoToGallery(id) {
-  const scene = getLobbyScene();
+  const gallery = getGalleryScene();
 
-  ChangeScene(scene);
+  ChangeScene(gallery);
   //removePlayer()
   EnterRoom(`gallery-${id}`, getUsername(), getSelectedCharacter(), new Vector3(8, 0, 0), new Vector3(0, 1.57079, 0));
 
   // Clean up
-  const pieces = getPieces(scene);
+  const pieces = getPieces(gallery);
 
   for (let piece of pieces) {
-    scene.removeMesh(piece.slotMesh, true);
-    scene.removeMaterial(piece.slotMaterial);
-    scene.removeLight(piece.slotLight);
+    gallery.removeMesh(piece.slotMesh, true);
+    gallery.removeMaterial(piece.slotMaterial);
+    gallery.removeLight(piece.slotLight);
   }
 
-  clearPieces(scene);
+  clearPieces(gallery);
 
 
   // Set up
@@ -80,14 +80,14 @@ export function GoToGallery(id) {
             slot.light.angle
           ),
           mesh,
-          scene
+          gallery
         );
   
-        addPiecePosition(scene, slotInfo);
+        addPiecePosition(gallery, slotInfo);
   
         // Dynamic Canvas
         // Allow for different aspect ratio textures.
-        dynamicCanvas(scene, slotInfo, piece.image);
+        dynamicCanvas(gallery, slotInfo, piece.image);
 
         populatePieceDetails(slotInfo, piece);
       }
@@ -130,7 +130,7 @@ export function ChangeScene(scene) {
     getGalleryScene().detachControl();
   }
 
-  SetupPlayer();
+  SetupPlayerCamera();
   
   // Ensure removal of bindings to allow for proper reconnect.
   scene.detachControl();

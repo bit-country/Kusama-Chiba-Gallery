@@ -13,7 +13,7 @@ import axios from "axios";
 import { importCharacter } from "./gameplay";
 import { ChatSetup } from "./chat";
 
-// import SetupPlayerHUD from "../gameClient/HUD/HUDPlayerList";
+// import SetupPlayerCameraHUD from "../gameClient/HUD/HUDPlayerList";
 const gameHttpEndpoint =
   process.env.NODE_ENV == "production"
     ? process.env.SERVER_URL
@@ -56,7 +56,6 @@ const JoinOrCreateGallery = (
     .joinOrCreate(gallery, { name: playerName, character: character })
     .then((room) => {
       setGameRoom(room);
-
       importCharacter(character, spawnPosition, spawnRotation);
 
       room.state.players.onAdd = (player, currentSession) => {
@@ -69,8 +68,6 @@ const JoinOrCreateGallery = (
         }
         room.send(PLAYER_MOVE, { position: spawnPosition });
         room.send(PLAYER_STOP);
-        //TODO: update current player position & sync with the server
-        //const t = getPlayer(currentSession);
       };
 
       room.onMessage(
