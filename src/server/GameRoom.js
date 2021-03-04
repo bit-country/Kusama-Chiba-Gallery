@@ -20,7 +20,7 @@ function getCurrentTime() {
   return new Date().toLocaleTimeString([], { timeStyle: "short" });
 }
 export class GameRoom extends Room {
-  maxClients = 50;
+  maxClients = 100;
 
   onCreate(options) {
     this.setState(new StateHandler());
@@ -88,7 +88,7 @@ export class GameRoom extends Room {
       player.joinedTime = getCurrentTime();
       player.sessionId = client.sessionId;
       this.state.players[client.sessionId] = player;
-      
+
       this.broadcast(BROADCAST_PLAYER_JOINED, {
         playerName: name,
       });

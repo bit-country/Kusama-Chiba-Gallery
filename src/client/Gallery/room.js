@@ -56,7 +56,6 @@ const JoinOrCreateGallery = (
     .joinOrCreate(gallery, { name: playerName, character: character })
     .then((room) => {
       setGameRoom(room);
-
       importCharacter(character, spawnPosition, spawnRotation);
 
       room.state.players.onAdd = (player, currentSession) => {
@@ -69,8 +68,6 @@ const JoinOrCreateGallery = (
         }
         room.send(PLAYER_MOVE, { position: spawnPosition });
         room.send(PLAYER_STOP);
-        //TODO: update current player position & sync with the server
-        //const t = getPlayer(currentSession);
       };
 
       room.onMessage(

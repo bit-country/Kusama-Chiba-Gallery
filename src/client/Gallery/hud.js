@@ -281,6 +281,8 @@ navigatorCloseButton.onclick = () => {
 
 navigatorGoToLobbyButton.onclick = () => {
   navigatorOverlay.classList.add("hidden");
+  let currentRoom = document.querySelector("#currentRoom");  
+  currentRoom.textContent =  '| Lobby';
 
   GoToLobby();
 
@@ -352,6 +354,9 @@ export function ShowNavigator() {
       itemButton.className = "btn btn-outline-primary";
       itemButton.textContent = "View ";
       itemButton.onclick = () => {
+        let currentRoom = document.querySelector("#currentRoom");  
+        currentRoom.textContent = ` | ${collection.name}`;
+  
         GoToGallery(collection.id);
 
         const engine = getEngine();
