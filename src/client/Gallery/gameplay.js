@@ -57,7 +57,7 @@ export const importCharacter = (character, spawnPosition, spawnRotation) => {
     scene.actionManager = new ActionManager(scene);
 
     scene.actionManager.registerAction(
-      new ExecuteCodeAction(ActionManager.OnKeyDownTrigger, function (evt) {
+      new ExecuteCodeAction(ActionManager.OnKeyDownTrigger, function (evt) { 
         inputMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
       })
     );
@@ -126,26 +126,25 @@ export const importCharacter = (character, spawnPosition, spawnRotation) => {
           scene.gravity.z * (delta * 16.667)
         )
       );
-
       //Manage the movements of the character (e.g. position, direction)
-      if (inputMap["w"]) {
+      if (inputMap["w"] || inputMap["ArrowUp"]) {
         mesh.moveWithCollisions(mesh.forward.scaleInPlace(meshSpeed * delta));
         keydown = true;
       }
 
-      if (inputMap["s"]) {
+      if (inputMap["s"]|| inputMap["ArrowDown"]) {
         mesh.moveWithCollisions(
           mesh.forward.scaleInPlace(-(meshSpeedBackwards * delta))
         );
         keydown = true;
       }
 
-      if (inputMap["a"]) {
+      if (inputMap["a"]|| inputMap["ArrowLeft"]) {
         mesh.moveWithCollisions(mesh.right.scaleInPlace(-(meshSpeed * delta)));
         keydown = true;
       }
 
-      if (inputMap["d"]) {
+      if (inputMap["d"]|| inputMap["ArrowRight"]) {
         mesh.moveWithCollisions(mesh.right.scaleInPlace(meshSpeed * delta));
         keydown = true;
       }
